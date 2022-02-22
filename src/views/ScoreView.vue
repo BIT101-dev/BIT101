@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 23:45:13
- * @LastEditTime: 2022-02-22 15:02:48
+ * @LastEditTime: 2022-02-22 22:17:05
  * @Description: 
  * _(:з」∠)_
 -->
@@ -68,18 +68,28 @@ export default {
     credit_sum: 0,
     score_sum: 0,
     avg_score_sum: 0,
+    time_stamp: 0,
   }),
   created() {
     this.GetList();
   },
   methods: {
     GetList() {
+      let time_stamp = ++this.time_stamp;
       this.$axios
         .get(
           this.$store.state.base_url +
             "/https/77726476706e69737468656265737421fae04c8f69326144300d8db9d6562d/jsxsd/kscj/cjcx_list"
         )
         .then((res) => {
+          if (time_stamp != this.time_stamp) {
+            return;
+          }
+          this.score_list = [];
+          this.credit_sum = 0;
+          this.score_sum = 0;
+          this.avg_score_sum = 0;
+
           let parser = new DOMParser();
           let dom = parser.parseFromString(res.data, "text/html");
           this.name = dom.getElementById("Top1_divLoginName").innerHTML;
@@ -115,6 +125,9 @@ export default {
               this.$axios
                 .get(url)
                 .then((res) => {
+                  if (time_stamp != this.time_stamp) {
+                    return;
+                  }
                   let dom = parser.parseFromString(res.data, "text/html");
                   let data_list = dom.querySelectorAll("td");
                   for (let i of data_list) {
