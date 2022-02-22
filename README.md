@@ -1,4 +1,4 @@
-# biter
+# BITself
 
 ## Project setup
 ```
