@@ -1,36 +1,50 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-02-21 23:27:11
+ * @LastEditTime: 2022-03-10 12:22:31
  * @Description: 
  * _(:з」∠)_
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    base_url: "https://1426531544223608.cn-beijing.fc.aliyuncs.com/2016-08-15/proxy/bitself.LATEST/relay",
-    cookie: "show_vpn=0; wengine_vpn_ticketwebvpn_bit_edu_cn=4e2286b25353b01c; refresh=0",
-  },
-  getters: {
-    get_cookie(state) {
-      state.cookie = (localStorage.getItem('cookie') || "");
-      return state.cookie;
-    }
+    api_url: "http://101.43.182.210:5000",
+    fake_cookie:"",
+    webvpn_cookie: "",
+    webvpn_username:"",
+    webvpn_password:"",
   },
   mutations: {
-    set_cookie(state, s) {
+    set_fake_cookie(state, s) {
       axios.defaults.headers.common['fake_cookie'] = s;
-      state.cookie = s;
-      localStorage.setItem('cookie', s);
+      state.fake_cookie = s;
+    },
+    set_webvpn_cookie(state, s) {
+      state.webvpn_cookie = s;
+    },
+    set_webvpn_login(state,username,password){
+      state.webvpn_username=username;
+      state.webvpn_password=password;
     }
   },
   actions: {
   },
   modules: {
-  }
+  },
+  plugins: [createPersistedState({
+    reducer(val){
+      return {
+        fake_cookie:val.fake_cookie,
+        webvpn_cookie:val.webvpn_cookie,
+        webvpn_username:val.webvpn_username,
+        webvpn_password:val.webvpn_password
+      }
+    }
+  })],
 })

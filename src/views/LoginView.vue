@@ -1,13 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-21 14:18:44
- * @LastEditTime: 2022-02-22 14:54:13
+ * @LastEditTime: 2022-03-10 20:10:44
  * @Description: 
  * _(:з」∠)_
 -->
 <template>
   <v-container>
-    <v-card class="ma-5">
+    <v-card class="ma-4">
       <v-card-text>
         <v-alert v-if="ok == -1" text color="blue" class="text-center"
           >未登录</v-alert
@@ -20,19 +20,34 @@
         <v-text-field
           color="cyan"
           outlined
-          v-model="user"
-          label="你的名字。"
+          v-model="username"
+          label="你的账号。"
         ></v-text-field>
         <v-text-field
           color="cyan"
           outlined
           v-model="password"
           label="你的密码。"
+          :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show_password ? 'text' : 'password'"
+          @click:append="show_password = !show_password"
         ></v-text-field>
 
-        <v-btn block outlined color="cyan" @click="Login" :disabled="ok == -1"
+        <v-btn
+          block
+          outlined
+          color="cyan"
+          @click="Login"
+          :disabled="ok == -1"
+          :loading="ok == -1"
           >登陆</v-btn
         >
+      </v-card-text>
+    </v-card>
+
+    <v-card class="ma-4">
+      <v-card-text>
+        Tips: 使用统一身份认证的账号和密码登录，密码不会被保存至服务器。BITself 奉行「前端匿名」理念，不会主动显示出任何个人信息。
       </v-card-text>
     </v-card>
   </v-container>
@@ -44,52 +59,36 @@ import { encryptPassword } from "@/components/EncryptPassword";
 export default {
   name: "LoginView",
   data: () => ({
-    user: "",
+    username: "",
     password: "",
     ok: -1,
+    show_password:false,
   }),
   methods: {
     Login() {
       this.ok = -1;
-      // 重新登陆
-      this.$store.commit("set_cookie", "");
-      let url =
-        this.$store.state.base_url +
-        "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/login?service=https%3A%2F%2Fwebvpn.bit.edu.cn%2Flogin%3Fcas_login%3Dtrue";
+      this.$store.commit("set_webvpn_login", this.username, this.password);
+      let url = this.$store.state.api_url + "/login/init/";
       this.$axios
         .get(url)
         .then((res) => {
-          this.$store.commit("set_cookie", res.headers["fake_cookie"]);
-
-          let parser = new DOMParser();
-          let dom = parser.parseFromString(res.data, "text/html");
-          let salt = dom.querySelector("#pwdFromId > #pwdEncryptSalt").value;
-          let execution = dom.querySelector("#pwdFromId > #execution").value;
+          let salt = res.data.salt;
+          let execution = res.data.execution;
           let password = encryptPassword(this.password, salt);
+          let cookie = res.data.cookie;
+          this.$store.commit("set_webvpn_cookie", cookie);
 
-          let form_data = {
-            username: this.user,
-            password: password,
-            captcha: "",
-            _eventId: "submit",
-            cllt: "userNameLogin",
-            dllt: "generalLogin",
-            lt: "",
-            execution: execution,
-          };
-          let FormDataBody = new FormData();
-          for (let i in form_data) {
-            FormDataBody.set(i, form_data[i]);
-          }
-
+          let url = this.$store.state.api_url + "/login/";
           this.$axios
-            .post(url, FormDataBody, {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
+            .post(url, {
+              username: this.username,
+              password: password,
+              execution: execution,
+              cookie: cookie,
             })
-            .then(() => {
-              this.CheckLogin();
+            .then((res) => {
+              this.ok = 1;
+              this.$store.commit("set_fake_cookie", res.headers["fake_cookie"]);
             })
             .catch((err) => {
               console.log(err);
@@ -103,13 +102,9 @@ export default {
     },
     CheckLogin() {
       this.$axios
-        .get(this.$store.state.base_url + "/login?cas_login=true")
-        .then((res) => {
-          if (res.data.search("帐号登录或动态码登录") == -1) {
-            this.ok = 1;
-          } else {
-            this.ok = 0;
-          }
+        .get(this.$store.state.api_url)
+        .then(() => {
+          this.ok = 1;
         })
         .catch(() => {
           this.ok = 0;

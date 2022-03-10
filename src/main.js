@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-02-21 23:31:13
+ * @LastEditTime: 2022-03-10 19:23:18
  * @Description: 
  * _(:з」∠)_
  */
@@ -14,7 +14,7 @@ import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
-axios.defaults.headers.common['fake_cookie'] = store.getters.get_cookie
+axios.defaults.headers.common['fake_cookie'] = store.state.fake_cookie
 
 new Vue({
   router,
