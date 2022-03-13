@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-21 14:18:44
- * @LastEditTime: 2022-03-10 20:10:44
+ * @LastEditTime: 2022-03-13 10:10:07
  * @Description: 
  * _(:з」∠)_
 -->
@@ -47,14 +47,15 @@
 
     <v-card class="ma-4">
       <v-card-text>
-        Tips: 使用统一身份认证的账号和密码登录，密码不会被保存至服务器。BITself 奉行「前端匿名」理念，不会主动显示出任何个人信息。
+        Tips: 使用统一身份认证的账号和密码登录，密码不会被发送到服务器。
+        BITself 奉行「前端匿名」理念，不会主动显示出任何个人信息。
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import { encryptPassword } from "@/components/EncryptPassword";
+import { Login } from "@/components/GlobalMethod";
 
 export default {
   name: "LoginView",
@@ -62,43 +63,14 @@ export default {
     username: "",
     password: "",
     ok: -1,
-    show_password:false,
+    show_password: false,
   }),
   methods: {
     Login() {
       this.ok = -1;
-      this.$store.commit("set_webvpn_login", this.username, this.password);
-      let url = this.$store.state.api_url + "/login/init/";
-      this.$axios
-        .get(url)
-        .then((res) => {
-          let salt = res.data.salt;
-          let execution = res.data.execution;
-          let password = encryptPassword(this.password, salt);
-          let cookie = res.data.cookie;
-          this.$store.commit("set_webvpn_cookie", cookie);
-
-          let url = this.$store.state.api_url + "/login/";
-          this.$axios
-            .post(url, {
-              username: this.username,
-              password: password,
-              execution: execution,
-              cookie: cookie,
-            })
-            .then((res) => {
-              this.ok = 1;
-              this.$store.commit("set_fake_cookie", res.headers["fake_cookie"]);
-            })
-            .catch((err) => {
-              console.log(err);
-              this.ok = 0;
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-          this.ok = 0;
-        });
+      Login(this.username, this.password).then((ok) => {
+        this.ok = ok;
+      });
     },
     CheckLogin() {
       this.$axios

@@ -19,23 +19,27 @@ red = redis.StrictRedis(host=config.redis_host,
 
 now = LocalProxy(lambda: request.student_id)
 
+
 # 检查登陆状态装饰器
 def check():
     def decorator(f):
         @wraps(f)
-        def decorated_function(*args,**kwargs):
-            cookie=request.headers.get('Fake-Cookie','')
-            if not cookie: abort(401)
-            student_id=red.get(cookie)
-            if not student_id: abort(401)
-            request.student_id=student_id
-            return f(*args,**kwargs)
+        def decorated_function(*args, **kwargs):
+            cookie = request.headers.get('Fake-Cookie', '')
+            if not cookie:
+                abort(401)
+            student_id = red.get(cookie)
+            if not student_id:
+                abort(401)
+            request.student_id = student_id
+            return f(*args, **kwargs)
         return decorated_function
     return decorator
 
+
 # 账号密码登录
-def login(username, password,execution,cookie, remember):
-    if webvpn.login(username,password,execution,cookie):
+def login(username, password, execution, cookie, remember):
+    if webvpn.login(username, password, execution, cookie):
         cookie = str(uuid.uuid4())
         red.set(cookie, username, ex=config.ex_time)
         return cookie

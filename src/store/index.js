@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-10 12:22:31
+ * @LastEditTime: 2022-03-14 00:01:42
  * @Description: 
  * _(:з」∠)_
  */
@@ -14,7 +14,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    api_url: "http://101.43.182.210:5000",
+    api_url: "http://bitself.flwfdd.xyz:5555",
     fake_cookie:"",
     webvpn_cookie: "",
     webvpn_username:"",
@@ -28,9 +28,9 @@ export default new Vuex.Store({
     set_webvpn_cookie(state, s) {
       state.webvpn_cookie = s;
     },
-    set_webvpn_login(state,username,password){
-      state.webvpn_username=username;
-      state.webvpn_password=password;
+    set_webvpn_login(state,payload){
+      state.webvpn_username=payload.username;
+      state.webvpn_password=payload.password;
     }
   },
   actions: {

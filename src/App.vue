@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-02-21 17:47:35
+ * @LastEditTime: 2022-03-13 10:42:12
  * @Description: 
  * _(:з」∠)_
 -->
@@ -46,7 +46,9 @@
     </v-app-bar>
 
     <v-main>
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </v-main>
 
     <v-footer app>
