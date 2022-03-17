@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-13 10:42:12
+ * @LastEditTime: 2022-03-14 15:19:24
  * @Description: 
  * _(:з」∠)_
 -->
@@ -54,6 +54,15 @@
     <v-footer app>
       <!-- -->
     </v-footer>
+
+    <v-snackbar v-model="snackbar">
+      {{ snackbar_msg }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -65,15 +74,26 @@ export default {
     drawer: false,
     items: [
       { title: "主页", icon: "home", link: "/" },
-      { title: "登录", icon: "fingerprint", link: "/login" },
+      { title: "我的", icon: "fingerprint", link: "/my" },
       { title: "成绩", icon: "school", link: "/score" },
       { title: "关于", icon: "info", link: "/about" },
     ],
+    snackbar: false,
   }),
   methods: {
     Go(url) {
       this.$router.push(url);
     },
   },
+  computed:{
+    snackbar_msg(){
+      return this.$store.state.msg;
+    }
+  },
+  watch:{
+    snackbar_msg(){
+      this.snackbar=true;
+    }
+  }
 };
 </script>

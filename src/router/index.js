@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-02-21 17:47:10
+ * @LastEditTime: 2022-03-14 15:19:44
  * @Description: 
  * _(:з」∠)_
  */
@@ -9,6 +9,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+const originalPush = VueRouter.prototype.push
+
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,9 +36,9 @@ const routes = [
     component: () => import('../views/ScoreView.vue')
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('../views/LoginView.vue')
+    path: '/my',
+    name: 'my',
+    component: () => import('../views/MyView.vue')
   }
 ]
 

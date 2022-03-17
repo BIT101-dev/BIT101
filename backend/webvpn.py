@@ -67,7 +67,9 @@ def login(username, password, execution, cookie):
     r = redirection(login_url, data=data, head=head)
     if r.status_code != 200 or "帐号登录或动态码登录" in r.text:
         return False
-    if not db.User.query.filter_by(student_id=username).first():
+    
+    q=db.User.query.filter_by(student_id=username).first()
+    if not q:
         info = get_account_info(head)
         info.update(get_student_info(username, head))
         info['student_id'] = username
@@ -75,7 +77,9 @@ def login(username, password, execution, cookie):
         for i in info:
             u.__setattr__(i, info[i])
         db.add(u)
-    return True
+        db.commit()
+        q=db.User.query.filter_by(student_id=username).first()
+    return q.id
 
 
 # 获取统一身份认证账号信息
@@ -107,9 +111,10 @@ def get_student_info(username, head):
         dic = json.loads(r.text)['data']
         info = {
             'name': dic['XM'],
-            'class_name': dic['BJDM'],
+            'class_name': dic['BJDM_DISPLAY'],
             'sex': dic['XBDM_DISPLAY'],
-            'college': dic['DWDM_DISPLAY']
+            'college': dic['DWDM_DISPLAY'],
+            'major':dic['ZYDM_DISPLAY']
         }
         return info
     except:

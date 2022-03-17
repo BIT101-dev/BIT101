@@ -14,10 +14,11 @@ import user
 import config
 import db
 import webvpn
+import image_bed
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
-
+app.config['MAX_CONTENT_LENGTH'] = config.max_upload_size
 
 # 数据库设置
 app.config['SQLALCHEMY_DATABASE_URI'] = config.db_url
@@ -44,7 +45,7 @@ def requests_proxy():
 @app.route("/")
 @user.check()
 def say_hello():
-    return "Hello BITself!<br/>id:{}<br/>name:{}".format(request.headers.get('Fake-Cookie'), user.now)
+    return "Hello BITself!<br/>id:{}<br/>name:{}".format(request.headers.get('Fake-Cookie'), user.now_uid)
 
 
 # 登陆
@@ -71,6 +72,21 @@ def login():
 def login_init():
     return webvpn.init_login()
 
+# 登陆准备
+@app.route("/my/info/")
+@user.check()
+def my_info():
+    return user.my_info()
+
+# 修改个人信息
+@app.route("/my/edit_info/")
+@user.check()
+def my_edit_info():
+    nickname=request.args.get('nickname','')
+    motto=request.args.get('motto','')
+    avatar=request.args.get('avatar','')
+    user.edit_info(nickname=nickname,motto=motto,avatar=avatar)
+    return ""
 
 # 成绩查询
 @app.route("/get_score/")
@@ -95,6 +111,15 @@ def get_score_detail():
         return Response(json.dumps(out),  mimetype='application/json')
     else:
         abort(424)
+
+
+# 图片上传
+@app.route('/upload_image/',methods=["POST"])
+@user.check()
+def upload_image():
+    files=request.files.getlist('files')
+    out=image_bed.upload(files)
+    return Response(json.dumps(out),  mimetype='application/json')
 
 
 if __name__ == '__main__': 

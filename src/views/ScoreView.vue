@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 23:45:13
- * @LastEditTime: 2022-03-13 11:48:31
+ * @LastEditTime: 2022-03-16 21:28:52
  * @Description: 
  * _(:з」∠)_
 -->
@@ -28,7 +28,7 @@
             target="_blank"
             href="https://jwc.bit.edu.cn/jwyx/cjgl/fe90fb3818184909bfc9228aada43970.htm"
             >官方公式</a
-          >计算，点击表头可进行排序。
+          >计算。点击表头可进行排序。
         </v-card-text>
         <v-divider />
         <v-card-title>
@@ -36,6 +36,7 @@
             <v-row
               >成寄单
               <v-switch
+                v-if="status!=-3"
                 v-model="detail"
                 color="white"
                 class="my-0 mx-2"
@@ -45,6 +46,10 @@
                   ><span class="white--text">获取详情（加载较慢</span></template
                 >
               </v-switch>
+              <v-btn text v-else @click="GetList" color="white">
+                重试
+                <v-icon>refresh</v-icon>
+              </v-btn>
             </v-row>
 
             <v-row>
@@ -102,7 +107,7 @@
           :items="table_items"
           :items-per-page="233"
           :custom-sort="CustomSort"
-          :loading="status < 0"
+          :loading="status < 0 && status!=-3"
         ></v-data-table>
       </v-card>
     </v-row>
@@ -113,7 +118,7 @@
 import { Login } from "@/components/GlobalMethod";
 
 export default {
-  name: "HomeView",
+  name: "ScoreView",
   data: () => ({
     name: "",
     msg: "2333",
@@ -147,7 +152,7 @@ export default {
   },
   methods: {
     GetList() {
-      if (this.status >= 0) this.status = -1;
+      if (this.status !=-2) this.status = -1;
       this.score_list = [];
       let url =
         this.$store.state.api_url +
@@ -194,6 +199,12 @@ export default {
             ).then(() => {
               this.GetList();
             });
+          }
+          else{
+            this.status=-3;
+            if(err.request.status!=401){
+              this.$store.commit('msg','出错了Orz');
+            }
           }
         });
     },

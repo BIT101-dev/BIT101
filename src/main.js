@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-10 19:23:18
+ * @LastEditTime: 2022-03-14 12:50:43
  * @Description: 
  * _(:з」∠)_
  */
@@ -15,6 +15,15 @@ import axios from 'axios'
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 axios.defaults.headers.common['fake_cookie'] = store.state.fake_cookie
+
+axios.interceptors.response.use(res=> {
+  return res;
+}, err=>{
+  if(err.request.status==401){
+    store.commit('msg','登陆失败Orz');
+  }
+  return Promise.reject(err);
+});
 
 new Vue({
   router,
