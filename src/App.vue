@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-19 23:20:38
+ * @LastEditTime: 2022-03-20 11:29:28
  * @Description: 
  * _(:з」∠)_
 -->
@@ -43,12 +43,15 @@
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-title class="white--text">BITself</v-app-bar-title>
-      <v-spacer/>
+      <v-spacer />
       <v-app-bar-nav-icon color="white" @click="$router.go(-1)">
-              <v-icon>arrow_back</v-icon>
+        <v-icon>arrow_back</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-nav-icon color="white" @click="$router.go(0)">
-              <v-icon>refresh</v-icon>
+        <v-icon>refresh</v-icon>
+      </v-app-bar-nav-icon>
+      <v-app-bar-nav-icon color="white" @click="ClipUrl">
+        <v-icon>share</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
 
@@ -92,16 +95,26 @@ export default {
     Go(url) {
       this.$router.push(url);
     },
+    ClipUrl() {
+      this.$copyText(window.location.href).then(
+        () => {
+          this.$store.commit("msg", "当前链接已复制，快去分享吧~");
+        },
+        () => {
+          this.$store.commit("msg", "复制失败Orz");
+        }
+      );
+    },
   },
-  computed:{
-    snackbar_msg(){
+  computed: {
+    snackbar_msg() {
       return this.$store.state.msg;
-    }
+    },
   },
-  watch:{
-    snackbar_msg(){
-      this.snackbar=true;
-    }
-  }
+  watch: {
+    snackbar_msg() {
+      this.snackbar = true;
+    },
+  },
 };
 </script>

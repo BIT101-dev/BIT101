@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-14 12:50:43
+ * @LastEditTime: 2022-03-20 11:27:46
  * @Description: 
  * _(:з」∠)_
  */
@@ -11,6 +11,9 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios

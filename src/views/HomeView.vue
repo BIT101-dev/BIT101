@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-10 19:54:07
+ * @LastEditTime: 2022-03-20 11:33:38
  * @Description: 
  * _(:з」∠)_
 -->
@@ -19,7 +19,7 @@
         href="https://space.bilibili.com/27482524"
         target="_blank"
       >
-        <v-icon small>mdi-television-classic</v-icon>范滇东
+        <v-icon small>mdi-television-classic</v-icon>bilibili
       </v-chip>
       <v-chip
         color="cyan lighten-3"
