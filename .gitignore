@@ -2,7 +2,8 @@
 node_modules
 /dist
 /backend/__pycache__
-
+/backend/other/*.xlsx
+/backend/other/*.csv
 
 # local env files
 .env.local

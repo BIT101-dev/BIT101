@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-21 14:18:44
- * @LastEditTime: 2022-03-17 20:35:37
+ * @LastEditTime: 2022-03-18 15:58:30
  * @Description: 
  * _(:з」∠)_
 -->
@@ -109,6 +109,7 @@
 
     <v-dialog
       v-model="logout_dialog"
+      max-width="424"
     >
       <v-card>
         <v-card-title>

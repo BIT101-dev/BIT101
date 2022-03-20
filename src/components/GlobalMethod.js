@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-03-11 20:54:42
- * @LastEditTime: 2022-03-14 14:30:56
+ * @LastEditTime: 2022-03-19 11:09:10
  * @Description: 
  * _(:з」∠)_
  */
@@ -50,6 +50,25 @@ async function Login(username, password) {
     return ok;
 }
 
+function FormatDate(t) {
+    if(!t)return "No Time";
+    let dt=new Date().getTime()/1000-t;
+    //console.log(this.music.name,new Date().getTime(),this.data.play_time);
+    if(dt<60)return Math.round(dt)+"秒前";
+    if(dt<60*60)return Math.round(dt/60)+"分钟前";
+    if(dt<12*60*60)return Math.round(dt/60/60)+"小时前"
+
+    let now=new Date(t*1000);
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let date = now.getDate();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let second = now.getSeconds();
+    return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+}
+
 export {
-    Login
+    Login,
+    FormatDate,
 }

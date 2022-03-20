@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 23:45:13
- * @LastEditTime: 2022-03-16 21:28:52
+ * @LastEditTime: 2022-03-19 15:19:57
  * @Description: 
  * _(:з」∠)_
 -->
@@ -108,9 +108,22 @@
           :items-per-page="233"
           :custom-sort="CustomSort"
           :loading="status < 0 && status!=-3"
+          @click:row="ClickRow"
         ></v-data-table>
       </v-card>
     </v-row>
+
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-title>
+          {{dialog_data['课程名称']}}
+          <v-btn outlined color="cyan" class="mx-2" small @click="$router.push('/course?course='+dialog_data['课程编号'])">前往评教</v-btn>
+        </v-card-title>
+        <v-card-text>
+          <p v-for="(value,key,index) in dialog_data" :key="index" v-show="value" class="ma-0">{{key+': '+value}}</p>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -146,6 +159,8 @@ export default {
     course_time_list: [],
     course_time: [],
     detail: false,
+    dialog:false,
+    dialog_data:{},
   }),
   created() {
     this.GetList();
@@ -269,6 +284,10 @@ export default {
       if (x < 60) return 0;
       return 4 - (3 * (100 - x) * (100 - x)) / 1600;
     },
+    ClickRow(item){
+      this.dialog_data=item;
+      this.dialog=true;
+    }
   },
   watch: {
     detail() {

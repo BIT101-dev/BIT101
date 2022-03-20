@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-14 15:19:44
+ * @LastEditTime: 2022-03-19 14:35:09
  * @Description: 
  * _(:з」∠)_
  */
@@ -39,6 +39,17 @@ const routes = [
     path: '/my',
     name: 'my',
     component: () => import('../views/MyView.vue')
+  },
+  {
+    path: '/course',
+    name: 'course',
+    component: () => import('../views/CourseView.vue')
+  }
+  ,
+  {
+    path: '/course/detail',
+    name: 'course_detail',
+    component: () => import('../views/CourseDetailView.vue')
   }
 ]
 

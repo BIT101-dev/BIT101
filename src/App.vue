@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-02-20 22:45:07
- * @LastEditTime: 2022-03-14 15:19:24
+ * @LastEditTime: 2022-03-19 23:20:38
  * @Description: 
  * _(:з」∠)_
 -->
@@ -43,11 +43,18 @@
         @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-title class="white--text">BITself</v-app-bar-title>
+      <v-spacer/>
+      <v-app-bar-nav-icon color="white" @click="$router.go(-1)">
+              <v-icon>arrow_back</v-icon>
+      </v-app-bar-nav-icon>
+      <v-app-bar-nav-icon color="white" @click="$router.go(0)">
+              <v-icon>refresh</v-icon>
+      </v-app-bar-nav-icon>
     </v-app-bar>
 
     <v-main>
       <keep-alive>
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
       </keep-alive>
     </v-main>
 
@@ -76,6 +83,7 @@ export default {
       { title: "主页", icon: "home", link: "/" },
       { title: "我的", icon: "fingerprint", link: "/my" },
       { title: "成绩", icon: "school", link: "/score" },
+      { title: "评教", icon: "class", link: "/course" },
       { title: "关于", icon: "info", link: "/about" },
     ],
     snackbar: false,

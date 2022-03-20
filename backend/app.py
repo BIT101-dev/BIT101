@@ -15,6 +15,7 @@ import config
 import db
 import webvpn
 import image_bed
+import course
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
@@ -121,6 +122,51 @@ def upload_image():
     out=image_bed.upload(files)
     return Response(json.dumps(out),  mimetype='application/json')
 
+
+# 获取单个课程
+@app.route("/course/detail/")
+def course_detail():
+    id=request.args.get('id','')
+    return course.detail(id)
+
+# 评教
+@app.route("/course/rate/")
+@user.check()
+def course_rate():
+    id=request.args.get('id','')
+    rating=request.args.get('rating','')
+    comment=request.args.get('comment','')
+    anonymous=request.args.get('anonymous','0')
+    return course.rate(id,rating,comment,anonymous)
+
+
+# 评教列表
+@app.route("/course/rate_list/")
+@user.check(False)
+def course_rate_list():
+    id=request.args.get('id','')
+    page=request.args.get('page','0')
+    out=course.rate_list(id,int(page))
+    return Response(json.dumps(out),  mimetype='application/json')
+
+
+# 评教点赞
+@app.route("/course/rate_like/")
+@user.check()
+def course_rate_like():
+    id=request.args.get('id','')
+    like=request.args.get('like','0')
+    return course.rate_like(id,bool(int(like)))
+
+
+# 搜索课程
+@app.route("/course/search/")
+def course_search():
+    course_search=request.args.get('course_search','')
+    teacher_search=request.args.get('teacher_search','')
+    page=request.args.get('page','0')
+    out=course.search(course_search,teacher_search,int(page))
+    return Response(json.dumps(out),  mimetype='application/json')
 
 if __name__ == '__main__': 
     app.run(host="0.0.0.0", port=5000)

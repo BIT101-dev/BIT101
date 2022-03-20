@@ -22,17 +22,21 @@ now_uid = LocalProxy(lambda: request.uid)
 
 
 # 检查登陆状态装饰器
-def check():
+def check(strict=True):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            flag=1
             cookie = request.headers.get('Fake-Cookie', '')
             if not cookie:
-                abort(401)
+                flag=0
             uid = red.get(cookie)
             if not uid:
-                abort(401)
-            request.uid = uid
+                flag=0
+            if not flag:
+                if strict: abort(401)
+                else: request.uid=0
+            else: request.uid = uid
             return f(*args, **kwargs)
         return decorated_function
     return decorator
