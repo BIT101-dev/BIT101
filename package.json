@@ -1,36 +1,25 @@
 {
   "name": "bitself",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.26.0",
-    "core-js": "^3.8.3",
-    "vue": "^2.6.14",
-    "vue-clipboard2": "^0.3.3",
-    "vue-router": "^3.5.1",
-    "vuetify": "^2.4.0",
-    "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0"
+    "axios": "^0.27.2",
+    "ts-md5": "^1.2.11",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.15"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "sass": "~1.32.0",
-    "sass-loader": "^10.0.0",
-    "vue-cli-plugin-vuetify": "~2.4.5",
-    "vue-template-compiler": "^2.6.14",
-    "vuetify-loader": "^1.7.0"
+    "@vicons/material": "^0.12.0",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "naive-ui": "^2.29.0",
+    "typescript": "^4.5.4",
+    "unplugin-vue-components": "^0.19.6",
+    "vite": "^2.9.9",
+    "vue-tsc": "^0.34.7"
   }
 }

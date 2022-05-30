@@ -1,0 +1,8 @@
+{
+  "common": {
+    "primaryColor": "#FF8533FF",
+    "primaryColorHover": "#FF9A57FF",
+    "primaryColorSuppl": "#FF9A57FF",
+    "primaryColorPressed": "#CC5200FF"
+  }
+}

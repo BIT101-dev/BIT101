@@ -1,11 +1,12 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-03-09 22:16:44
+LastEditTime: 2022-05-30 01:47:59
 Description: 数据库
 _(:з」∠)_
 '''
 from email.policy import default
+from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import class_mapper
 import datetime
@@ -33,17 +34,11 @@ def to_json(model):
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    student_id = db.Column(db.String(24), unique=True, nullable=False)
-    name = db.Column(db.String(24))
-    birthday = db.Column(db.String(24))
-    account_type = db.Column(db.String(24))
-    class_name = db.Column(db.String(24))
-    college = db.Column(db.String(24))
-    major = db.Column(db.String(24))
-    sex = db.Column(db.String(4))
-    nickname = db.Column(db.String(24), default="BITself")
+    sid = db.Column(db.String(24), unique=True, nullable=False)
+    password=db.Column(db.String(42),nullable=False)
+    nickname = db.Column(db.String(24),unique=True,)
     avatar = db.Column(
-        db.String(42), default="3c3b31a4dc49c0224ebcf93a3f70790c.PNG")
+        db.String(42), default="")
     motto = db.Column(
         db.Text, default="I offer you the BITterness of a man who has looked long and long at the lonely moon.")
     register_time = db.Column(db.DateTime, default=datetime.datetime.now)
