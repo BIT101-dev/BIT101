@@ -1,4 +1,10 @@
-from ctypes import sizeof
+'''
+Author: flwfdd
+Date: 2022-05-29 14:53:56
+LastEditTime: 2022-05-31 00:36:31
+Description: 图床模块
+_(:з」∠)_
+'''
 from PIL import Image
 from io import BytesIO
 import hashlib
@@ -29,7 +35,7 @@ def upload(files):
         data = file.read()
         name = file.filename
         img = Image.open(BytesIO(data))
-        id = hashlib.md5(data).hexdigest()+'.'+img.format
+        id = hashlib.md5(data).hexdigest()+'.'+img.format.lower()
         q = db.Image.query.filter_by(id=id).first()
         if not q:
             img = db.Image(id=id, size=len(data), name=name, user=user.now_uid)

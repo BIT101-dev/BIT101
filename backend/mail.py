@@ -1,8 +1,8 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 16:15:53
-LastEditTime: 2022-05-30 02:32:19
-Description: 发送邮件
+LastEditTime: 2022-05-31 00:36:48
+Description: 邮件服务
 _(:з」∠)_
 '''
 import smtplib
@@ -11,7 +11,7 @@ from email.mime.text import MIMEText
 import config
 
 
-
+# 发送邮件
 def send(to,title,msg):
     message=MIMEText(msg,'html','utf-8')
     message['Subject']=title

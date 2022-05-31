@@ -1,12 +1,14 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-05-30 15:10:07
+LastEditTime: 2022-05-31 20:49:59
 Description: 用户管理
 _(:з」∠)_
 '''
+import base64
 from urllib import request
 import uuid
+from itsdangerous import base64_encode
 import redis
 from functools import wraps
 from flask import request, abort
@@ -58,6 +60,27 @@ def mail_verify(sid):
         return False
 
 
+# 统一身份认证验证初始化
+def webvpn_verify_init(sid):
+    dic=webvpn.init_login()
+    if webvpn.need_captcha(sid):
+        img=webvpn.get_captcha(dic['cookie'])
+        dic['captcha']=base64.b64encode(img).decode()
+    else:
+        dic['captcha']=False
+    return dic
+    
+    
+
+# 统一身份认证
+def webvpn_verify(username, password, execution, cookie,captcha=""):
+    if webvpn.login(username, password, execution, cookie,captcha):
+        verify_code = str(random.randint(0, 999999)).zfill(6)
+        red.set('verify'+username, verify_code, 600)
+        return verify_code
+    return False
+
+
 # 注册
 def register(sid, password, verify_code):
     if red.get('verify'+sid) != verify_code:
@@ -88,16 +111,6 @@ def login(sid, password):
         red.set(cookie, q.id, ex=config.ex_time)
         return cookie
     return False
-
-
-# 账号密码登录
-# def login(username, password, execution, cookie, remember):
-#     uid = webvpn.login(username, password, execution, cookie)
-#     if uid:
-#         cookie = str(uuid.uuid4())
-#         red.set(cookie, uid, ex=config.ex_time)
-#         return cookie
-#     return False
 
 
 # 获取用户信息

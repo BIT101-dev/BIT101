@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-05-30 14:19:03
+LastEditTime: 2022-05-31 20:09:33
 Description: 主程序
 _(:з」∠)_
 '''
@@ -95,29 +95,30 @@ def user_login():
     return res({'msg': '登录失败Orz'}, 500)
 
 
-# 登陆
-# @app.route("/login/", methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     username = data['username']
-#     password = data['password']
-#     execution = data['execution']
-#     cookie = data['cookie']
-#     remember = data.get('remember', False)
-#     fake_cookie = user.login(username, password, execution, cookie, remember)
-#     if fake_cookie:
-#         res = make_response({"status": "ok"})
-#         res.headers['fake_cookie'] = fake_cookie
-#         res.headers['Access-Control-Expose-Headers'] = 'fake_cookie'
-#         return res
-#     else:
-#         abort(401)
-
-
-# 登陆准备
-@app.route("/login/init/")
+# 统一身份认证初始化
+@app.route("/user/webvpn_verify_init/")
 def login_init():
-    return webvpn.init_login()
+    sid = request.args.get('sid', '')
+    return user.webvpn_verify_init(sid)
+
+
+# 登陆
+@app.route("/user/webvpn_verify/", methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username', '')
+    password = data.get('password', '')
+    execution = data.get('execution', '')
+    cookie = data.get('cookie', '')
+    captcha = data.get('captcha', '')
+    if not (username and password and execution and cookie):
+        return res({'msg': '请检查请求参数awa'}, 400)
+    verify_code = user.webvpn_verify(
+        username, password, execution, cookie, captcha)
+    if verify_code:
+        return {'verify_code': verify_code, 'msg': '验证通过啦'}
+    else:
+        return res({'msg': '验证失败Orz'}, 500)
 
 
 # 登陆准备

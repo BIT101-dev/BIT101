@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 14:52:20
-LastEditTime: 2022-03-10 00:21:54
+LastEditTime: 2022-05-31 20:46:39
 Description: webvpn相关服务 尽量解耦方便移植
 _(:з」∠)_
 '''
@@ -15,6 +15,10 @@ import time
 base_url = "https://webvpn.bit.edu.cn"
 login_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/login?service=https%3A%2F%2Fwebvpn.bit.edu.cn%2Flogin%3Fcas_login%3Dtrue"
+need_captcha_url=base_url + \
+    "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/checkNeedCaptcha.htl"
+get_captcha_url=base_url + \
+    "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/getCaptcha.htl"
 account_info_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/login"
 student_info_init_url = base_url + \
@@ -49,14 +53,25 @@ def init_login():
     return {'salt': salt, 'execution': execution, 'cookie': cookie}
 
 
+# 查询是否需要验证码
+def need_captcha(sid):
+    r=redirection(need_captcha_url+"?username="+sid)
+    return json.loads(r.text)['isNeed']
+
+
+# 获取验证码
+def get_captcha(cookie):
+    r=redirection(get_captcha_url,head={'Cookie':cookie})
+    return r.content
+
 # 登录
-def login(username, password, execution, cookie):
+def login(username, password, execution, cookie,captcha=""):
     head = {"Cookie": cookie}
     data = {
         'username': username,
         'password': password,
         'execution': execution,
-        'captcha': "",
+        'captcha': captcha,
         '_eventId': "submit",
         'cllt': "userNameLogin",
         'dllt': "generalLogin",
@@ -67,19 +82,7 @@ def login(username, password, execution, cookie):
     r = redirection(login_url, data=data, head=head)
     if r.status_code != 200 or "帐号登录或动态码登录" in r.text:
         return False
-    
-    q=db.User.query.filter_by(student_id=username).first()
-    if not q:
-        info = get_account_info(head)
-        info.update(get_student_info(username, head))
-        info['student_id'] = username
-        u = db.User()
-        for i in info:
-            u.__setattr__(i, info[i])
-        db.add(u)
-        db.commit()
-        q=db.User.query.filter_by(student_id=username).first()
-    return q.id
+    return True
 
 
 # 获取统一身份认证账号信息

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-05-30 22:07:52
+ * @LastEditTime: 2022-05-31 21:37:55
  * @Description: 主页
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import hitokoto from '@/utils/hitokoto';
 
 <template>
   <div class="container" style="text-align: center;">
-    <h1 style="margin: 0;color:#00BCD4AA">
+    <h1 style="margin: 0;color:#00BCD4">
       欢迎来到 BITself !!
     </h1>
 
