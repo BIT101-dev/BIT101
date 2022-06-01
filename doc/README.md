@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-05-31 18:27:33
+ * @LastEditTime: 2022-06-01 20:07:35
  * @Description: 
  * _(:з」∠)_
 -->
@@ -120,6 +120,54 @@
 }
 ```
 
+### 获取用户信息
+**接口地址**：`GET /user/info/`
+
+**参数说明**：
+可以不携带`fake-cookie`
+* `id`：可选，用户id，传入`0`或不传则返回当前`fake-cookie`用户的信息。
+
+**返回说明**：
+```json
+{
+    "id": 1, //用户编号
+    "sid": "", //学号
+    "avatar": "", //头像URL
+    "motto": "I offer you the BITterness of a man who has looked long and long at the lonely moon.", //格言简介
+    "nickname": "BITself77ff33f3", //昵称
+    "register_time": "Mon, 30 May 2022 02:34:36 GMT" //注册时间
+}
+```
+
+### 修改用户信息
+**接口地址**：`PUT /user/info/`
+
+**参数说明**：
+`PUT`接收`application/json`,需要携带`fake-cookie`
+* `nickname`：昵称
+* `motto`：格言/简介
+* `avatar`：头像`url`（需要先用[图床接口](#上传图片)上传后获取）
+
+**返回说明**：
+无
+
+
+## 文件和图床
+
+关于图床，后端会计算图片的`MD5`，将其视为图片的`id`。尽管现在已经有了较为成熟的碰撞算法，但考虑到`MD5`在自然状态下碰撞概率很低，图片也并不是什么敏感的重要数据，就暂时没有做防碰撞。
+
+### 上传图片
+**接口地址**：`POST /upload/image/`
+
+**参数说明**：
+发送一个`multipart/form-data;`表单，文件在`file`字段下。
+
+**返回说明**：
+```json
+{
+    "url":"" //图片的url
+}
+```
 
 # webvpn
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-05-31 22:51:18
+ * @LastEditTime: 2022-06-01 20:10:50
  * @Description: 
  * _(:з」∠)_
 -->
@@ -12,7 +12,7 @@ import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import MessageContent from './components/MessageContent.vue';
 import { h, ref } from 'vue';
-import { HomeOutlined,FingerprintOutlined } from '@vicons/material';
+import { HomeOutlined,FingerprintOutlined,PersonOutlined } from '@vicons/material';
 
 const themeOverrides: GlobalThemeOverrides = Theme;
 const router = useRouter();
@@ -34,6 +34,11 @@ const menu_options=[
     key: '/login',
     icon: renderIcon(FingerprintOutlined)
   },
+  {
+    label:"我的",
+    key: '/user/0/',
+    icon: renderIcon(PersonOutlined)
+  }
 ]
 function MenuHandler(key:string){
   drawer_model.value=false;
@@ -59,9 +64,9 @@ function MenuHandler(key:string){
         </div>
       </n-layout-header>
 
-      <n-drawer v-model:show="drawer_model" placement="left" width="224">
+      <n-drawer v-model:show="drawer_model" placement="left" :width="224">
         <n-drawer-content title="BITself" body-content-style="padding: 4px;">
-          <n-menu :options="menu_options" @update:value="MenuHandler" indent="24"></n-menu>
+          <n-menu :options="menu_options" @update:value="MenuHandler" :indent="24"></n-menu>
         </n-drawer-content>
       </n-drawer>
 

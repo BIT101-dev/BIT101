@@ -1,13 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-05-31 21:51:09
+ * @LastEditTime: 2022-06-01 19:25:27
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import hitokoto from '@/utils/hitokoto';
-import { reactive, ref } from 'vue';
+import { hitokoto } from '@/utils/tools';
+import { onMounted, reactive, ref } from 'vue';
 import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5/dist/md5"
@@ -85,7 +85,6 @@ function CheckStatus() {
             status.value = true;
         })
 }
-CheckStatus();
 
 const count_down = ref(0); //倒计时
 function MailVerify() {
@@ -187,6 +186,10 @@ function Register() {
     })
 }
 
+onMounted(() => { CheckStatus(); })
+
+function Logout() { store.fake_cookie = "";CheckStatus(); }
+
 </script>
 
 <template>
@@ -205,11 +208,17 @@ function Register() {
 
         <n-card size="small">
             <n-alert :show-icon="false" :type="status ? 'success' : 'error'" title="此时此刻">
-                {{ status ? '已登录' : '未登录' }}
+                <template v-if="status">
+                    已登录<br />
+                    <n-button @click="Logout" text type="primary">注销</n-button>
+                </template>
+                <template v-else>
+                    未登录
+                </template>
             </n-alert>
             <h3 v-if="status" style="text-align:center;color:#3E5C6B;">
-                人不能两次登入同一个账号<br/>
-                你或许可以到<router-link to="/user/" style="color:#FF8533;text-decoration: none;">用户中心</router-link>康康
+                人不能两次登入同一个账号<br />
+                你或许可以到<router-link to="/user/0/" style="color:#FF8533;text-decoration: none;">用户中心</router-link>康康
             </h3>
             <n-tabs v-else class="card-tabs" size="large" animated pane-style="box-sizing: border-box;">
                 <n-tab-pane name="登录" style="padding: 4px;">

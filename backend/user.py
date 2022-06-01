@@ -1,14 +1,13 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-05-31 20:49:59
+LastEditTime: 2022-06-01 19:30:25
 Description: 用户管理
 _(:з」∠)_
 '''
 import base64
 from urllib import request
 import uuid
-from itsdangerous import base64_encode
 import redis
 from functools import wraps
 from flask import request, abort
@@ -19,6 +18,7 @@ import config
 import webvpn
 import db
 import mail
+import saver
 
 red = redis.StrictRedis(host=config.redis_host,
                         port=config.redis_port, decode_responses=True)
@@ -99,7 +99,7 @@ def register(sid, password, verify_code):
         q.password = password
         db.commit()
     cookie = str(uuid.uuid4())
-    red.set(cookie, q.sid, ex=config.ex_time)
+    red.set(cookie, q.id, ex=config.ex_time)
     return cookie
 
 
@@ -114,18 +114,24 @@ def login(sid, password):
 
 
 # 获取用户信息
-def my_info():
-    q = db.User.query.filter_by(id=now_uid).first()
-    return db.to_json(q)
+def get_info(uid):
+    if uid=='0':
+        if not now_uid: abort(401)
+        uid=now_uid
+    q = db.User.query.filter_by(id=uid).first()
+    q.password=""
+    q.avatar=saver.img_url(q.avatar)
+    return db.to_dict(q)
 
 
 # 修改信息
 def edit_info(nickname, motto, avatar):
     u = db.User.query.get(now_uid)
-    if nickname:
-        u.nickname = nickname
-    if motto:
-        u.motto = motto
-    if avatar:
-        u.avatar = avatar
-    db.commit()
+    u.nickname = nickname
+    u.motto = motto
+    u.avatar = saver.img_id(avatar)
+    try:
+        db.commit()
+        return True
+    except:
+        return False

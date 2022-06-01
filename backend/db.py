@@ -1,12 +1,10 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-05-31 00:40:46
+LastEditTime: 2022-06-01 16:30:19
 Description: 数据库
 _(:з」∠)_
 '''
-from email.policy import default
-from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import class_mapper
 import datetime
@@ -26,7 +24,7 @@ def commit():
     db.session.commit()
 
 
-def to_json(model):
+def to_dict(model):
     columns = [c.key for c in class_mapper(model.__class__).columns]
     return dict((c, getattr(model, c)) for c in columns)
 

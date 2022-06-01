@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 08:34:05
- * @LastEditTime: 2022-05-30 03:03:14
+ * @LastEditTime: 2022-06-01 14:33:32
  * @Description: 
  * _(:з」∠)_
  */
@@ -34,7 +34,8 @@ http.interceptors.response.use(
       else window.$message.error('出错了Orz');
     }
     else if(err.request.status==401){
-        // store.commit('msg','登陆失败Orz');
+        if(err.response.data.msg)window.$message.error(err.response.data.msg);
+        else window.$message.error('请先登录awa');
       }
     return Promise.reject(err);
   }

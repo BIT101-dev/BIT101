@@ -1,4 +1,10 @@
-from os import abort
+'''
+Author: flwfdd
+Date: 2022-05-29 14:53:56
+LastEditTime: 2022-06-01 17:42:57
+Description: 
+_(:з」∠)_
+'''
 import db
 import user
 import config
@@ -8,7 +14,7 @@ from sqlalchemy import or_
 # 单个课程详情
 def detail(id):
     course = db.Course.query.filter_by(id=id).first()
-    return db.to_json(course)
+    return db.to_dict(course)
 
 
 # 评教
@@ -81,4 +87,4 @@ def search(course_search, teacher_search, page):
             db.Course.number.like("%{}%".format(course_search))),
         db.Course.teachers_name.like("%{}%".format(teacher_search))).offset(
         page*config.page_size).limit(config.page_size).all()
-    return [db.to_json(i) for i in q]
+    return [db.to_dict(i) for i in q]
