@@ -8,12 +8,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.25.0",
+    "@editorjs/header": "^2.6.2",
+    "@editorjs/list": "^1.7.0",
     "axios": "^0.27.2",
     "ts-md5": "^1.2.11",
     "vue": "^3.2.25",
     "vue-router": "^4.0.15"
   },
   "devDependencies": {
+    "@editorjs/code": "^2.7.0",
+    "@editorjs/image": "^2.6.2",
+    "@editorjs/raw": "^2.3.1",
     "@vicons/material": "^0.12.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "naive-ui": "^2.29.0",

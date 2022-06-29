@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2022-06-01 16:18:41
+ * @LastEditTime: 2022-06-28 20:53:55
  * @Description: 
  * _(:з」∠)_
  */
@@ -24,6 +24,16 @@ const router = createRouter({
       path: '/user/:id',
       name: 'user',
       component: () => import('@/views/User.vue')
+    },
+    {
+      path: '/score',
+      name: 'score',
+      component: () => import('@/views/Score.vue')
+    },
+    {
+      path: '/paper/edit/:id',
+      name: 'paper_edit',
+      component: () => import('@/views/PaperEdit.vue')
     },
   ]
 });

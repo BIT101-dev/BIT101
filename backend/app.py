@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-06-01 18:09:03
+LastEditTime: 2022-06-29 00:12:52
 Description: 主程序
 _(:з」∠)_
 '''
@@ -89,7 +89,7 @@ def user_webvpn_verify():
     verify_code = user.webvpn_verify(
         username, password, execution, cookie, captcha)
     if verify_code:
-        return {'verify_code': verify_code, 'msg': '验证通过啦'}
+        return {'verify_code': verify_code, 'cookie': cookie, 'msg': '验证通过啦'}
     else:
         return res({'msg': '验证失败Orz'}, 500)
 
@@ -140,44 +140,36 @@ def user_edit_info():
     if not (nickname and motto and avatar):
         return res({'msg': '请检查请求参数awa'}, 400)
     if user.edit_info(nickname=nickname, motto=motto, avatar=avatar):
-        return {'msg':'修改成功OvO'}
+        return {'msg': '修改成功OvO'}
     else:
         return res({'msg': '修改失败Orz可能是昵称太长或重复'}, 500)
-
-
-# 查询成绩
-@app.route("/get_score/")
-@user.check()
-def get_score():
-    cookie = request.args.get('cookie', '')
-    out = webvpn.get_score(cookie)
-    if out:
-        return Response(json.dumps(out),  mimetype='application/json')
-    else:
-        abort(424)
-
-
-# 查询成绩细节
-@app.route("/get_score_detail/")
-@user.check()
-@requests_proxy()
-def get_score_detail():
-    cookie = request.args.get('cookie', '')
-    out = webvpn.get_score(cookie, detail=True)
-    if out:
-        return Response(json.dumps(out),  mimetype='application/json')
-    else:
-        abort(424)
 
 
 # 图片上传
 @app.route('/upload/image/', methods=["POST"])
 @user.check()
 def upload_image():
-    file=request.files.get('file','')
-    if not file: abort(500)
-    url = saver.upload_img(file)
-    return {'url':url}
+    file = request.files.get('file', '')
+    if file:
+        url = saver.upload_img(file.read(), file.filename)
+    elif ori_url:
+        ori_url = request.get_json().get('url', '')
+        url = saver.upload_img_by_url(ori_url)
+    else:
+        abort(500)
+    return {'url': url}
+
+
+# 查询成绩
+@app.route("/score/", methods=['GET'])
+def get_score_brief():
+    cookie = request.args.get('cookie', '')
+    detail = request.args.get('detail', False)
+    out = webvpn.get_score(cookie, detail=detail)
+    if out:
+        return res({'data': out, 'msg': '查询成功OvO'}, 200)
+    else:
+        return res({'msg': '未通过统一身份认证Orz'}, 500)
 
 
 # 获取单个课程

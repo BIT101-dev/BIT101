@@ -1,11 +1,11 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-06-01 20:07:35
+ * @LastEditTime: 2022-06-29 21:13:15
  * @Description: 
  * _(:з」∠)_
 -->
-# BITself
+# 序
 
 前端使用`Vue3`+`NaiveUI`+`TypeScript`+`Vite`构建，贯彻落实前后端分离和单页面应用的思想。
 
@@ -22,6 +22,8 @@
 ## API整体说明
 
 所有`API`均返回`JSON`格式的数据，同时返回相应的状态码，状态码含义参考`MDN`的[HTTP 响应状态码](https://developer.mozilla.org/zh-CN/docs/web/http/status)。
+
+对于`POST`接口，若无特殊说明，皆需要发送`application/json`，不能直接用`url`（因为前端用`axios`就默认如此）。
 
 对于大部分接口，都会返回一个`msg`参数说明操作的结果（如“登陆成功”、“参数错误”等），前端可以使用状态码判断操作结果，也可以直接对用户展示`msg`内容。简明起见，之后的接口说明中对状态码和`msg`参数都不作特别说明。
 
@@ -69,7 +71,7 @@
 **接口地址**：`POST /user/webvpn_verify/`
 
 **参数说明**：
-考虑到`execution`较大，限制只能通过`POST`接收`application/json`，不能直接用`url`
+考虑到`execution`较大，限制只能通过`POST`发送`application/json`，不能直接用`url`
 ```json
 {
     "username":"", //学号
@@ -81,9 +83,11 @@
 ```
 
 **返回说明**：
+`verify_code`为注册验证码，`cookie`可用于进行`webvpn`相关操作。
 ```json
 {
-    "verify_code":""
+    "verify_code":"",
+    "cookie":""
 }
 ```
 
@@ -143,7 +147,7 @@
 **接口地址**：`PUT /user/info/`
 
 **参数说明**：
-`PUT`接收`application/json`,需要携带`fake-cookie`
+`PUT`发送`application/json`,需要携带`fake-cookie`
 * `nickname`：昵称
 * `motto`：格言/简介
 * `avatar`：头像`url`（需要先用[图床接口](#上传图片)上传后获取）
@@ -160,7 +164,9 @@
 **接口地址**：`POST /upload/image/`
 
 **参数说明**：
-发送一个`multipart/form-data;`表单，文件在`file`字段下。
+有两种不同的调用方式。
+1. 发送一个`multipart/form-data;`表单，文件在`file`字段下。
+2. 发送`application/json`，有一个`url`参数为图片链接，服务器会下载该图片并保存。
 
 **返回说明**：
 ```json
@@ -169,9 +175,28 @@
 }
 ```
 
+
+## webvpn相关
+
+### 成绩查询
+**接口地址**：`GET /score/`
+
+后端通过`webvpn`调用相关接口获取成绩，可以在前端计算均分绩点等。详细成绩需要批量请求可能速度较慢，尽量不要调用。
+
+**参数说明**：
+* `cookie`：`webvpn`的`cookie`，获取见[统一身份认证验证](#统一身份认证验证)
+* `detail`：可选，不为空则查询详细信息
+
+**返回说明**：
+```json
+{
+    "data":[] //二维表格，第一行为表头，之后每行为一条成绩信息
+}
+```
+
 # webvpn
 
-`webvpn`是从外网访问学校内网的转发系统，通过分析调用`webvpn`即可实现对学校接口的操作。有一个学长做过一个非常好用的[转换工具](https://webvpn.vercel.app/)。
+`webvpn`是从外网访问学校内网的转发系统，通过分析调用`webvpn`即可实现对学校接口的操作。有一位学长做过一个非常好用的[转换工具](https://webvpn.vercel.app/)。
 
 ## webvpn网址备份
 

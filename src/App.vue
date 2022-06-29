@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-06-01 20:10:50
+ * @LastEditTime: 2022-06-28 20:55:08
  * @Description: 
  * _(:з」∠)_
 -->
@@ -10,9 +10,10 @@ import { GlobalThemeOverrides,NIcon } from 'naive-ui'
 import { MenuRound } from '@vicons/material'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
-import MessageContent from './components/MessageContent.vue';
 import { h, ref } from 'vue';
-import { HomeOutlined,FingerprintOutlined,PersonOutlined } from '@vicons/material';
+import { HomeOutlined,FingerprintOutlined,PersonOutlined,SchoolOutlined } from '@vicons/material';
+import GlobalComponents from './components/GlobalComponents.vue';
+import { hitokoto } from './utils/tools';
 
 const themeOverrides: GlobalThemeOverrides = Theme;
 const router = useRouter();
@@ -38,6 +39,11 @@ const menu_options=[
     label:"我的",
     key: '/user/0/',
     icon: renderIcon(PersonOutlined)
+  },
+  {
+    label:"成绩",
+    key: '/score/',
+    icon: renderIcon(SchoolOutlined)
   }
 ]
 function MenuHandler(key:string){
@@ -48,9 +54,7 @@ function MenuHandler(key:string){
 
 <template>
   <n-config-provider :theme-overrides="themeOverrides">
-    <n-message-provider>
-      <MessageContent />
-    </n-message-provider>
+    <GlobalComponents></GlobalComponents>
     <n-layout>
       <n-layout-header bordered style="background-color:#FF9A57;">
         <div class="container" style="height:42px;display: flex;align-items: center;padding: 4px;">
@@ -79,7 +83,9 @@ function MenuHandler(key:string){
         </router-view>
       </n-layout-content>
 
+      
       <n-layout-footer>
+        <h4 style="color: #607d8b;margin: auto;text-align: center;">{{ hitokoto }}</h4>
         <div class="container" style="text-align:center">Powered by fdd.</div>
       </n-layout-footer>
     </n-layout>

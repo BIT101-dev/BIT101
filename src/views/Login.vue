@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-06-01 19:25:27
+ * @LastEditTime: 2022-06-28 20:57:21
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -12,7 +12,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5/dist/md5"
 import store from '@/utils/store';
-import { encryptPassword } from "@/utils/EncryptPassword"
+import {webvpn,WebvpnVerify} from '@/utils/tools'
 
 const user = reactive({
     sid: "",
@@ -84,6 +84,9 @@ function CheckStatus() {
         .then(() => {
             status.value = true;
         })
+        .catch(() => {
+            status.value = false;
+        })
 }
 
 const count_down = ref(0); //倒计时
@@ -97,55 +100,6 @@ function MailVerify() {
             }, 1000);
         })
 }
-
-const webvpn = reactive({
-    model: false,
-    loading: false,
-    data: {
-        execution: "",
-        cookie: "",
-        salt: "",
-        captcha: "",
-        captcha_text: "",
-        password: ""
-    }
-})
-//webvpn验证初始化
-function WebvpnVerifyInit() {
-    webvpn.loading = true;
-    http.get("/user/webvpn_verify_init/?sid=" + user.sid)
-        .then((res) => {
-            webvpn.data = res.data;
-            webvpn.data.password = encryptPassword(user.webvpn_password, webvpn.data.salt);
-            if (webvpn.data.captcha) {
-                webvpn.data.captcha = "data:image/png;base64," + webvpn.data.captcha;
-                webvpn.data.captcha_text = "";
-                webvpn.model = true;
-            }
-            else WebvpnVerify();
-        })
-}
-
-//webvpn验证
-function WebvpnVerify() {
-    webvpn.model = false;
-    http.post("/user/webvpn_verify/", {
-        username: user.sid,
-        password: webvpn.data.password,
-        execution: webvpn.data.execution,
-        cookie: webvpn.data.cookie,
-        captcha: webvpn.data.captcha_text
-    })
-        .then((res) => {
-            user.verify_code = res.data.verify_code;
-            window.$message.info("填写完信息后即可点击注册哦");
-            webvpn.loading = false;
-        })
-        .catch(() => {
-            webvpn.loading = false;
-        });
-}
-
 
 function Login() {
     form_ref.value?.validate((err) => {
@@ -188,29 +142,17 @@ function Register() {
 
 onMounted(() => { CheckStatus(); })
 
-function Logout() { store.fake_cookie = "";CheckStatus(); }
+function Logout() { store.fake_cookie = ""; CheckStatus(); }
 
 </script>
 
 <template>
     <div class="container">
-        <n-modal v-model:show="webvpn.model" :mask-closable="false">
-            <n-card title="人 工 智 能 识 别" style="width: 224px;text-align: center;">
-                <p style="margin-top:0px;">越人工 越智能</p>
-                <n-image :src="webvpn.data.captcha" />
-                <n-input v-model:value="webvpn.data.captcha_text" placeholder="不会看不出来吧"></n-input>
-                <template #footer>
-                    <n-button @click="WebvpnVerify" :disabled="!webvpn.data.captcha_text">确认</n-button>
-                </template>
-            </n-card>
-
-        </n-modal>
-
         <n-card size="small">
             <n-alert :show-icon="false" :type="status ? 'success' : 'error'" title="此时此刻">
                 <template v-if="status">
                     已登录<br />
-                    <n-button @click="Logout" text type="primary">注销</n-button>
+                    抑或你想<n-button @click="Logout" text type="primary">注销</n-button>
                 </template>
                 <template v-else>
                     未登录
@@ -279,7 +221,7 @@ function Logout() { store.fake_cookie = "";CheckStatus(); }
                                         show-password-on="click" placeholder="学校统一身份认证密码" />
                                 </n-form-item-gi>
                                 <n-gi span="4">
-                                    <n-button @click="WebvpnVerifyInit" :disabled="!user.webvpn_password || !user.sid"
+                                    <n-button @click="WebvpnVerify(user.sid,user.webvpn_password)" :disabled="!user.webvpn_password || !user.sid"
                                         :loading="webvpn.loading" block>验证</n-button>
                                 </n-gi>
                             </n-grid>
@@ -304,9 +246,6 @@ function Logout() { store.fake_cookie = "";CheckStatus(); }
             </n-tabs>
         </n-card>
         <br />
-        <n-card>
-            <h4 style="color: #607d8b;margin: auto;">{{ hitokoto }}</h4>
-        </n-card>
     </div>
 
 </template>

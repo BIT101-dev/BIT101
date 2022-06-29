@@ -21,7 +21,8 @@
         "src/*"
       ]
     },
-    "allowJs": true
+    "allowJs": true,
+    "suppressImplicitAnyIndexErrors": true,
   },
   "include": [
     "src/**/*.ts",
@@ -33,5 +34,5 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
 }

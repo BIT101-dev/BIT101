@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-06-01 17:49:04
+LastEditTime: 2022-06-28 23:57:54
 Description: 图床模块
 _(:з」∠)_
 '''
@@ -9,6 +9,8 @@ from PIL import Image
 from io import BytesIO
 import os
 import hashlib
+import requests
+
 import db
 import user
 import config
@@ -31,9 +33,7 @@ def save(data, name):
 
 
 # 上传图片 返回链接
-def upload_img(file):
-    data = file.read()
-    name = file.filename
+def upload_img(data,name):
     img = Image.open(BytesIO(data))
     id = hashlib.md5(data).hexdigest()+'.'+img.format.lower()
     q = db.Image.query.filter_by(id=id).first()
@@ -52,3 +52,8 @@ def img_url(id):
 
 def img_id(url):
     return os.path.basename(url)
+
+# 通过链接上传图片 返回链接
+def upload_img_by_url(url):
+    r=requests.get(url)
+    return upload_img(r.content,url)

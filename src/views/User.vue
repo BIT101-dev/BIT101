@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-06-01 18:05:35
+ * @LastEditTime: 2022-06-28 20:57:09
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -88,7 +88,7 @@ function EditInfo(){
             </n-card>
         </n-modal>
 
-        <n-card title="你好鸭ヾ(´▽｀))">
+        <n-card title="编辑Paper">
             <div style="display: flex;align-items: center;">
                 <n-avatar size="large" round :src="user.avatar" />
                 <span style="margin-left: 4px;">
@@ -105,8 +105,5 @@ function EditInfo(){
         </n-card>
 
         <br />
-        <n-card>
-            <h4 style="color: #607d8b;margin: auto;">{{ hitokoto }}</h4>
-        </n-card>
     </div>
 </template>
