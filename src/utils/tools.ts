@@ -1,16 +1,16 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-06-26 20:03:38
+ * @LastEditTime: 2022-06-29 22:32:54
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
 import { ref,reactive } from 'vue'
 import http from '@/utils/request';
 import { encryptPassword } from './EncryptPassword';
-const hitokoto = ref("")
 
 //一言
+const hitokoto = ref("")
 function UpHitokoto() {
   http.get("https://v1.hitokoto.cn/")
     .then((res) => {
