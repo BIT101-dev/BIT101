@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-06-28 20:57:09
+ * @LastEditTime: 2022-07-10 19:26:41
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -30,7 +30,7 @@ function GetInfo(uid: any) {
             user.nickname = res.data.nickname;
             user.avatar = res.data.avatar;
             user.motto = res.data.motto;
-            user.register_time = FormatTime(new Date(res.data.register_time));
+            user.register_time = FormatTime(res.data.register_time);
         })
 }
 
@@ -53,7 +53,7 @@ function UploadHandler({file,event}:{file:UploadFileInfo,event:ProgressEvent}){
 }
 
 function EditInfo(){
-    http.put("/user/info/",{
+    http.post("/user/info/",{
         avatar:user.avatar,
         nickname:user.nickname,
         motto:user.motto
@@ -88,7 +88,7 @@ function EditInfo(){
             </n-card>
         </n-modal>
 
-        <n-card title="编辑Paper">
+        <n-card title="你好鸭ヾ(´▽｀))">
             <div style="display: flex;align-items: center;">
                 <n-avatar size="large" round :src="user.avatar" />
                 <span style="margin-left: 4px;">

@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 08:34:05
- * @LastEditTime: 2022-06-01 14:33:32
+ * @LastEditTime: 2022-07-10 20:19:11
  * @Description: 
  * _(:з」∠)_
  */
@@ -36,6 +36,10 @@ http.interceptors.response.use(
     else if(err.request.status==401){
         if(err.response.data.msg)window.$message.error(err.response.data.msg);
         else window.$message.error('请先登录awa');
+      }
+      else if(err.request.status==400){
+        if(err.response.data.msg)window.$message.error(err.response.data.msg);
+        else window.$message.error('请检查请求参数awa');
       }
     return Promise.reject(err);
   }

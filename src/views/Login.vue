@@ -1,13 +1,12 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-06-28 20:57:21
+ * @LastEditTime: 2022-07-10 15:07:05
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { hitokoto } from '@/utils/tools';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5/dist/md5"
@@ -101,6 +100,10 @@ function MailVerify() {
         })
 }
 
+watch(()=>webvpn.verify_code,()=>{
+    user.verify_code=webvpn.verify_code;
+})
+
 function Login() {
     form_ref.value?.validate((err) => {
         if (!err) {
@@ -180,7 +183,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
 
                 <n-tab-pane name="注册或重置" style="padding: 4px;">
                     <n-alert title="Tips" :show-icon="false" :closable="true" type="info" style="margin-bottom: 11px;">
-                        <p style="font-size: 11px;color: grey;">1. BITself奉行「前端匿名」理念，不会主动公开任何个人信息，你在登录后可以设置供展示的头像、昵称等。
+                        <p style="font-size: 11px;color: grey;">1. BIT101奉行「前端匿名」理念，不会主动公开任何个人信息，你在登录后可以设置供展示的头像、昵称等。
                         </p>
                         <p style="font-size: 11px;color: grey;">2. 密码将被不可逆加密后传输到服务器。</p>
                         <p style="font-size: 11px;color: grey;">3. 你需要选择统一身份认证或学校邮箱以证明自己的身份。</p>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-06-29 21:13:15
+ * @LastEditTime: 2022-07-10 22:59:42
  * @Description: 
  * _(:з」∠)_
 -->
@@ -138,16 +138,16 @@
     "sid": "", //学号
     "avatar": "", //头像URL
     "motto": "I offer you the BITterness of a man who has looked long and long at the lonely moon.", //格言简介
-    "nickname": "BITself77ff33f3", //昵称
+    "nickname": "BIT101-77ff33f3", //昵称
     "register_time": "Mon, 30 May 2022 02:34:36 GMT" //注册时间
 }
 ```
 
 ### 修改用户信息
-**接口地址**：`PUT /user/info/`
+**接口地址**：`POST /user/info/`
 
 **参数说明**：
-`PUT`发送`application/json`,需要携带`fake-cookie`
+需要携带`fake-cookie`
 * `nickname`：昵称
 * `motto`：格言/简介
 * `avatar`：头像`url`（需要先用[图床接口](#上传图片)上传后获取）
@@ -174,6 +174,49 @@
     "url":"" //图片的url
 }
 ```
+
+## 文章模块
+
+### 获取文章
+**接口地址**：`GET /paper/`
+
+**参数说明**：
+* `id`：文章`id`
+
+**返回说明**：
+```json
+{
+    "id":1,
+    "title":"俺是标题！",
+    "intro":"简介",
+    "data":"{}", //字符串化的editor.js数据
+    "create_time":"Sun, 10 Jul 2022 21:58:41 GMT",
+    "update_time":"Sun, 10 Jul 2022 22:15:08 GMT",
+    "user":1,
+}
+```
+
+
+### 发布文章
+**接口地址**：`POST /paper/`
+
+**参数说明**：
+需要携带`fake_cookie`。
+* `id`：文章`id`，为`0`则为新建文章。
+* `title`：标题
+* `intro`：简介
+* `data`：文章内容，使用`editor.js`
+* `last_time`：文章开始编辑之前的`UNIX`时间戳，用于防撞车
+* `now_time`：文章最后编辑的`UNIX`时间戳
+* `anonymous`：是否匿名，为`1`匿名
+
+**返回说明**：
+```json
+{
+    "id":"" //文章id
+}
+```
+
 
 
 ## webvpn相关

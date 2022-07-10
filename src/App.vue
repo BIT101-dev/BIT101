@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-06-28 20:55:08
+ * @LastEditTime: 2022-07-11 00:09:47
  * @Description: 
  * _(:з」∠)_
 -->
@@ -64,12 +64,12 @@ function MenuHandler(key:string){
               <MenuRound />
             </n-icon>
           </n-button>
-          <n-button @click="router.push('/')" text style="font-size: 24px;color:#FFF">BITself</n-button>
+          <n-button @click="router.push('/')" text style="font-size: 24px;color:#FFF">BIT101</n-button>
         </div>
       </n-layout-header>
 
       <n-drawer v-model:show="drawer_model" placement="left" :width="224">
-        <n-drawer-content title="BITself" body-content-style="padding: 4px;">
+        <n-drawer-content title="BIT101" body-content-style="padding: 4px;">
           <n-menu :options="menu_options" @update:value="MenuHandler" :indent="24"></n-menu>
         </n-drawer-content>
       </n-drawer>
@@ -85,8 +85,8 @@ function MenuHandler(key:string){
 
       
       <n-layout-footer>
-        <h4 style="color: #607d8b;margin: auto;text-align: center;">{{ hitokoto }}</h4>
-        <div class="container" style="text-align:center">Powered by fdd.</div>
+        <h4 style="color: #607d8b;margin: auto;text-align: center;font-size: 14px;">{{ hitokoto }}</h4>
+        <div style="text-align:center;font-size: 14px;">Powered by fdd.</div>
       </n-layout-footer>
     </n-layout>
   </n-config-provider>
@@ -98,6 +98,7 @@ body {
   font-family: Noto Serif SC;
   font-style: normal;
   font-weight: 500;
+  font-size: 16px;
 }
 
 .container {

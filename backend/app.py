@@ -1,10 +1,11 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-06-29 00:12:52
+LastEditTime: 2022-07-10 22:12:18
 Description: 主程序
 _(:з」∠)_
 '''
+from crypt import methods
 from flask import Flask, request, abort, make_response, Response
 from flask_cors import CORS
 from functools import wraps
@@ -16,6 +17,7 @@ import db
 import webvpn
 import saver
 import course
+import paper
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
@@ -51,7 +53,7 @@ def res(data, status=200):
 @app.route("/")
 @user.check()
 def say_hello():
-    return "Hello BITself!<br/>id:{}<br/>name:{}".format(request.headers.get('Fake-Cookie'), user.now_uid)
+    return "Hello BIT101!<br/>id:{}<br/>name:{}".format(request.headers.get('Fake-Cookie'), user.now_uid)
 
 
 # 用户系统-----------------------------------------------------------------------------
@@ -130,7 +132,7 @@ def user_get_info():
 
 
 # 修改个人信息
-@app.route("/user/info/", methods=['PUT'])
+@app.route("/user/info/", methods=['POST'])
 @user.check()
 def user_edit_info():
     data = request.get_json()
@@ -152,16 +154,18 @@ def upload_image():
     file = request.files.get('file', '')
     if file:
         url = saver.upload_img(file.read(), file.filename)
-    elif ori_url:
-        ori_url = request.get_json().get('url', '')
-        url = saver.upload_img_by_url(ori_url)
     else:
-        abort(500)
+        ori_url = request.get_json().get('url', '')
+        if ori_url:
+            url = saver.upload_img_by_url(ori_url)
+        else:
+            abort(500)
     return {'url': url}
 
 
 # 查询成绩
 @app.route("/score/", methods=['GET'])
+@requests_proxy()
 def get_score_brief():
     cookie = request.args.get('cookie', '')
     detail = request.args.get('detail', False)
@@ -170,6 +174,36 @@ def get_score_brief():
         return res({'data': out, 'msg': '查询成功OvO'}, 200)
     else:
         return res({'msg': '未通过统一身份认证Orz'}, 500)
+
+
+# 获取文章
+@app.route("/paper/",methods=['GET'])
+def paper_get():
+    id=request.args.get('id')
+    if not id:
+        return res({'msg': '请检查请求参数awa'}, 400)
+    return paper.get(id)
+
+
+# 上传文章
+@app.route("/paper/",methods=['POST'])
+@user.check()
+def paper_post():
+    dic = request.get_json()
+    id=dic.get('id')
+    title = dic.get('title')
+    intro = dic.get('intro')
+    data = dic.get('data')
+    last_time = dic.get('last_time','0')
+    now_time=dic.get('now_time')
+    anonymous=dic.get('anonymous','0')
+    if not (id and title and intro and data and now_time and now_time):
+        return res({'msg': '请检查请求参数awa'}, 400)
+    id=paper.post(id,title,intro,data,last_time,now_time,anonymous)
+    if id:
+        return res({'msg':'发布成功OvO','id':id}, 200)
+    else:
+        return res({'msg':'请基于文章最新版本编辑~'},500)
 
 
 # 获取单个课程

@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-06-01 19:30:25
+LastEditTime: 2022-07-11 01:51:17
 Description: 用户管理
 _(:з」∠)_
 '''
@@ -54,7 +54,7 @@ def check(strict=True):
 def mail_verify(sid):
     verify_code = str(random.randint(0, 999999)).zfill(6)
     red.set('verify'+sid, verify_code, 600)
-    if mail.send(sid+'@bit.edu.cn', '[BITself]验证码', '【{}】 是你的验证码ヾ(^▽^*)))'.format(verify_code)):
+    if mail.send(sid+'@bit.edu.cn', '[BIT101]验证码', '【{}】 是你的验证码ヾ(^▽^*)))'.format(verify_code)):
         return True
     else:
         return False
@@ -89,7 +89,7 @@ def register(sid, password, verify_code):
     if not q:
         qq = True
         while qq:
-            nickname = 'BITself'+str(uuid.uuid4())[:8]
+            nickname = 'BIT101-'+str(uuid.uuid4())[:8]
             qq = db.User.query.filter_by(nickname=nickname).first()
         u = db.User(sid=sid, password=password, nickname=nickname)
         db.add(u)
@@ -115,12 +115,15 @@ def login(sid, password):
 
 # 获取用户信息
 def get_info(uid):
+    if uid=='-1':
+        return {'id':-1,'sid':'','avatar':saver.img_url(''),'motto':'匿名者也缄口不言','nickname':'匿名者','register_time':'Wed, 01 Sep 2021 09:00:00 GMT'}
     if uid=='0':
         if not now_uid: abort(401)
         uid=now_uid
     q = db.User.query.filter_by(id=uid).first()
     q.password=""
     q.avatar=saver.img_url(q.avatar)
+    if uid!=q.id: q.sid=""
     return db.to_dict(q)
 
 

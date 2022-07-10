@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-29 22:48:31
- * @LastEditTime: 2022-07-06 18:42:22
+ * @LastEditTime: 2022-07-11 02:13:25
  * @Description: 
  * _(:з」∠)_
 -->
@@ -15,8 +15,21 @@ defineProps(['paper'])
 
 <style>
 a {
-  text-decoration: none;
   color: #FF8533;
+}
+
+b{
+  font-weight: 900;
+  color:#00293D;
+}
+
+.inline-code{
+  background-color: rgba(250,239,240,0.78);
+  color:#b44437;
+  padding:3px 4px;
+  border-radius: 5px;
+  margin:0 1px;
+  font-family: inherit;
 }
 </style>
 
@@ -28,12 +41,12 @@ a {
     </template>
 
     <template v-else-if="i.type == 'header'">
-      <component :is="'h' + i.data.level" style="color:#3983A8;" v-html="i.data.text"></component>
+      <component :is="'h' + i.data.level" style="color:#FF8533;" v-html="i.data.text"></component>
     </template>
 
     <template v-else-if="i.type == 'image'">
       <div style="text-align:center;margin-top: 11px;margin-bottom: 11px;">
-        <n-image :src="i.data.file.url" width="424" :alt="i.data.caption" />
+        <n-image :src="i.data.file.url" width="424" :img-props="{'style':'max-width:100%;'}" :alt="i.data.caption" />
         <div style="color:#6291A8" v-html="i.data.caption"></div>
       </div>
     </template>

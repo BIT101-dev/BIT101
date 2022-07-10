@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-06-01 16:30:19
+LastEditTime: 2022-07-10 20:54:42
 Description: 数据库
 _(:з」∠)_
 '''
@@ -19,6 +19,8 @@ def add(x):
 def add_all(x):
     db.session.add_all(x)
 
+def flush():
+    db.session.flush()
 
 def commit():
     db.session.commit()
@@ -50,8 +52,46 @@ class Image(db.Model):
     size = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(424), nullable=False)
     time = db.Column(db.DateTime, default=datetime.datetime.now)
-    user = db.Column(db.Integer, db.ForeignKey('user.id')) #上传者
+    user = db.Column(db.Integer, nullable=False)  # 上传者
 
+
+# 文章
+class Paper(db.Model):
+    __tablename__ = 'paper'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(66), nullable=False)
+    intro = db.Column(db.String(233), nullable=False)
+    data = db.Column(db.Text, nullable=False)
+    create_time = db.Column(
+        db.DateTime, nullable=False)
+    update_time = db.Column(
+        db.DateTime, nullable=False)
+    user = db.Column(db.Integer, nullable=False)
+    anonymous = db.Column(db.Boolean, default=False)
+
+
+# 文章历史记录
+class PaperHistory(db.Model):
+    __tablename__ = 'paper_history'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    paper_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(66), nullable=False)
+    intro = db.Column(db.String(233), nullable=False)
+    data = db.Column(db.Text, nullable=False)
+    create_time = db.Column(db.DateTime, nullable=False)
+    user = db.Column(db.Integer, nullable=False)
+    anonymous = db.Column(db.Boolean, default=False)
+
+
+# 文章点赞
+# class PaperLike(db.Model):
+#     __tablename__ = 'paper_like'
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     user_id = db.Column(db.Integer, nullable=False)
+#     paper_id = db.Column(db.Integer, nullable=False)
+#     like = db.Column(db.Boolean, default=True)
+#     time = db.Column(db.DateTime, default=datetime.datetime.now,
+#                      onupdate=datetime.datetime.now)
 
 # 课程老师多对多关系表
 course_teacher_table = db.Table('course_teacher_table',
