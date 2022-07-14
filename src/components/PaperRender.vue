@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-29 22:48:31
- * @LastEditTime: 2022-07-11 02:13:25
+ * @LastEditTime: 2022-07-12 23:15:14
  * @Description: 
  * _(:з」∠)_
 -->
@@ -15,7 +15,7 @@ defineProps(['paper'])
 
 <style>
 a {
-  color: #FF8533;
+  color: #00A9BF;
 }
 
 b{
@@ -24,8 +24,8 @@ b{
 }
 
 .inline-code{
-  background-color: rgba(250,239,240,0.78);
-  color:#b44437;
+  background-color: #FFF6F0;
+  color:#FF8533;
   padding:3px 4px;
   border-radius: 5px;
   margin:0 1px;

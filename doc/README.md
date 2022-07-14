@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-10 22:59:42
+ * @LastEditTime: 2022-07-14 21:28:45
  * @Description: 
  * _(:з」∠)_
 -->
@@ -178,6 +178,7 @@
 ## 文章模块
 
 ### 获取文章
+可以不携带`fake-cookie`
 **接口地址**：`GET /paper/`
 
 **参数说明**：
@@ -192,16 +193,19 @@
     "data":"{}", //字符串化的editor.js数据
     "create_time":"Sun, 10 Jul 2022 21:58:41 GMT",
     "update_time":"Sun, 10 Jul 2022 22:15:08 GMT",
-    "user":1,
+    "user":1, //发表者 匿名为-1
+    "like_num":1,
+    "comment_num":1,
+    "like":true, // 当前用户的点赞状态
 }
 ```
 
 
-### 发布文章
+### 发表文章
 **接口地址**：`POST /paper/`
 
 **参数说明**：
-需要携带`fake_cookie`。
+需要携带`fake_cookie`
 * `id`：文章`id`，为`0`则为新建文章。
 * `title`：标题
 * `intro`：简介
@@ -218,6 +222,27 @@
 ```
 
 
+## 交互反馈模块
+
+包括点赞、评论等。由于各种东西的点赞、评论都是类似的，所以就可复用，统一使用，而操作的对象使用`obj`进行标识，以下是`obj`的不同种类，`obj`由类型标识符+对应`id`组成，如`1`号文章的`obj`为`paper1`。
+
+* `paper`
+
+
+### 点赞
+**接口地址**：`POST /reaction/like/`
+
+**参数说明**：
+需要携带`fake_cookie`
+* `obj`：操作对象的标识字符串
+
+**返回说明**：
+```json
+{
+    "like":true, //操作后的点赞状态
+    "like_num":1, //操作后的点赞数
+}
+```
 
 ## webvpn相关
 

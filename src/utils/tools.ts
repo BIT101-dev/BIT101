@@ -1,13 +1,14 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-07-10 15:46:36
+ * @LastEditTime: 2022-07-13 00:13:52
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
 import { ref, reactive } from 'vue'
 import http from '@/utils/request';
 import { encryptPassword } from './EncryptPassword';
+import useClipboard from 'vue-clipboard3'
 
 //一言
 const hitokoto = ref("")
@@ -101,10 +102,23 @@ function WebvpnVerify2() {
     });
 }
 
+//复制
+const {toClipboard}=useClipboard();
+async function Clip(s:string,msg="已复制到剪贴板OvO"){
+  try {
+    await toClipboard(s)
+    window.$message.success(msg);
+  } catch (e) {
+    console.error(e)
+    window.$message.error("复制失败Orz");
+  }
+}
+
 export {
   hitokoto,
   FormatTime,
   webvpn,
   WebvpnVerify,
   WebvpnVerify2,
+  Clip,
 }

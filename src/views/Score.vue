@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2022-07-06 18:46:06
+ * @LastEditTime: 2022-07-12 01:30:47
  * @Description: 
  * _(:з」∠)_
 -->
@@ -82,7 +82,7 @@ const columns = [
 ]
 
 const ori_data = ref([] as any);
-const data = ref([] as any)
+const data = ref([] as any);
 const loading = ref(false);
 const detail = ref(false);
 const search = ref("");
@@ -235,14 +235,14 @@ watch(() => webvpn.cookie, () => {
         </n-button>
       </n-space>
       <n-space vertical v-else>
-        <n-button v-if="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
+        <n-button v-show="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
           查询详细信息（较慢）
         </n-button>
         <n-select v-model:value="course_type.filter" multiple :options="course_type.list"
           max-tag-count="responsive" />
         <n-select v-model:value="course_time.filter" multiple :options="course_time.list"
           max-tag-count="responsive" />
-        <n-button block @click="Filter">筛选</n-button>
+        <n-button block @click="Filter" :disabled="loading">筛选</n-button>
       </n-space>
 
     </n-card>

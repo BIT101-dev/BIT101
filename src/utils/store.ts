@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 09:18:09
- * @LastEditTime: 2022-07-10 14:30:55
+ * @LastEditTime: 2022-07-14 19:46:51
  * @Description: 全局状态管理
  * _(:з」∠)_
  */
@@ -15,7 +15,7 @@ else x={};
 
 const store = reactive({
     version: package_json.version,
-    api_url: "http://172.27.71.145:5000",
+    api_url: "http://172.17.231.201:5000",
     fake_cookie: x.fake_cookie||"Here's fake_cookie",
 })
 

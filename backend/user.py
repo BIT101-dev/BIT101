@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-07-11 01:51:17
+LastEditTime: 2022-07-13 00:24:02
 Description: 用户管理
 _(:з」∠)_
 '''
@@ -116,7 +116,7 @@ def login(sid, password):
 # 获取用户信息
 def get_info(uid):
     if uid=='-1':
-        return {'id':-1,'sid':'','avatar':saver.img_url(''),'motto':'匿名者也缄口不言','nickname':'匿名者','register_time':'Wed, 01 Sep 2021 09:00:00 GMT'}
+        return {'id':-1,'sid':'','avatar':saver.img_url(''),'motto':'面对愚昧，匿名者自己也缄口不言。','nickname':'匿名者','register_time':'Wed, 01 Sep 2021 09:00:00 GMT'}
     if uid=='0':
         if not now_uid: abort(401)
         uid=now_uid

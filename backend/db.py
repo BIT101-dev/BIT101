@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-07-10 20:54:42
+LastEditTime: 2022-07-14 21:11:34
 Description: 数据库
 _(:з」∠)_
 '''
@@ -68,6 +68,8 @@ class Paper(db.Model):
         db.DateTime, nullable=False)
     user = db.Column(db.Integer, nullable=False)
     anonymous = db.Column(db.Boolean, default=False)
+    like_num=db.Column(db.Integer, default=0)
+    comment_num=db.Column(db.Integer, default=0)
 
 
 # 文章历史记录
@@ -83,15 +85,26 @@ class PaperHistory(db.Model):
     anonymous = db.Column(db.Boolean, default=False)
 
 
-# 文章点赞
-# class PaperLike(db.Model):
-#     __tablename__ = 'paper_like'
+# 点赞
+class Like(db.Model):
+    __tablename__ = 'like'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    obj = db.Column(db.String(24), nullable=False) # 操作的对象 用一个字符串标识
+    show = db.Column(db.Boolean, default=True)
+    time = db.Column(db.DateTime, default=datetime.datetime.now,
+                     onupdate=datetime.datetime.now)
+
+# # 评论
+# class Comment(db.Model):
+#     __tablename__ = 'comment'
 #     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 #     user_id = db.Column(db.Integer, nullable=False)
-#     paper_id = db.Column(db.Integer, nullable=False)
-#     like = db.Column(db.Boolean, default=True)
-#     time = db.Column(db.DateTime, default=datetime.datetime.now,
-#                      onupdate=datetime.datetime.now)
+#     obj = db.Column(db.String(24), nullable=False) # 操作的对象 用一个字符串标识
+#     show = db.Column(db.Boolean, default=True)
+#     time = db.Column(db.DateTime, default=datetime.datetime.now)
+#     anonymous = db.Column(db.Boolean, default=False)
+#     parent_id=db.Column(db.Integer, default=0)
 
 # 课程老师多对多关系表
 course_teacher_table = db.Table('course_teacher_table',

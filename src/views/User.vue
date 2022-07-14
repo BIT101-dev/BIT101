@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-07-10 19:26:41
+ * @LastEditTime: 2022-07-13 00:24:56
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -100,7 +100,7 @@ function EditInfo(){
             <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space: pre-wrap;" >
                 {{ user.motto}}
             </n-alert>
-            <p style="color: #abc;">于 {{ user.register_time }} 来到BITself</p>
+            <p style="color: #abc;">于 {{ user.register_time }} 来到BIT101</p>
             <n-button v-if="route.params.id == '0'" @click="edit_model = true" block>编辑信息</n-button>
         </n-card>
 

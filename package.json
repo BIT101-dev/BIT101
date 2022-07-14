@@ -19,6 +19,7 @@
     "highlight.js": "^11.5.1",
     "ts-md5": "^1.2.11",
     "vue": "^3.2.25",
+    "vue-clipboard3": "^2.0.0",
     "vue-router": "^4.0.15"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2022-07-11 02:08:26
+ * @LastEditTime: 2022-07-14 21:34:52
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import store from '@/utils/store';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime } from '@/utils/tools';
+import { FormatTime,Clip } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 
 //文章数据
@@ -27,8 +27,8 @@ const paper = reactive({
     nickname: "",
     avatar: "",
   },
-  anonymous: false,
-  like: false
+  like_num:0,
+  like: false,
 })
 
 function GetUserInfo() {
@@ -50,10 +50,23 @@ function LoadPaper() {
       paper.data = JSON.parse(res.data.data);
       paper.create_time = FormatTime(res.data.create_time);
       paper.update_time = FormatTime(res.data.update_time);
-      paper.anonymous = res.data.anonymous;
       paper.user.id = res.data.user;
+      paper.like_num=res.data.like_num;
+      paper.like=res.data.like;
       GetUserInfo();
     })
+}
+
+function Like(){
+  http.post("/reaction/like/",{'obj':'paper'+paper.id})
+  .then(res=>{
+    paper.like=res.data.like;
+    paper.like_num=res.data.like_num;
+  })
+}
+
+function ClipUrl(){
+  Clip(window.location.href,"文章链接已复制OvO");
 }
 
 const router = useRouter();
@@ -79,7 +92,7 @@ onMounted(() => {
     </router-link>
 
     <n-space style="margin-top:4px">
-      <n-button @click="paper.like = !paper.like" icon-placement="right"  color="#fb7299"
+      <n-button @click="Like" icon-placement="right"  color="#fb7299"
         :ghost="!paper.like">
         <template #icon>
           <n-icon>
@@ -87,9 +100,9 @@ onMounted(() => {
             <ThumbUpOutlined v-else />
           </n-icon>
         </template>
-        赞同
+        {{paper.like_num}}人赞同
       </n-button>
-      <n-button icon-placement="right" ghost>
+      <n-button @click="ClipUrl" icon-placement="right" ghost>
         <template #icon>
           <n-icon>
             <ShareOutlined />
@@ -104,10 +117,10 @@ onMounted(() => {
     <n-divider style="color:#809BA8;font-size:14px;"><n-button @click="router.push('/paper/edit/'+paper.id)" icon-placement="right" text>
         <template #icon>
           <n-icon>
-            <edit-outlined />
+            <EditOutlined />
           </n-icon>
         </template>
-        编辑此Paper
+        编辑此篇Paper
       </n-button></n-divider>
     <div style="color:#809BA8;">
       <div style="font-size:14px;"></div>

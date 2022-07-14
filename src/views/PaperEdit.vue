@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2022-07-11 02:03:24
+ * @LastEditTime: 2022-07-14 19:50:12
  * @Description: 
  * _(:з」∠)_
 -->
@@ -154,7 +154,7 @@ onMounted(() => {
   LoadPaper();
 })
 
-//发布文章
+//发表文章
 const posting = ref(false);
 function PostPaper() {
   posting.value = true;
@@ -201,7 +201,14 @@ function PostPaper() {
         <n-input v-model:value="paper.intro" placeholder="请输入简介" maxlength="101" show-count clearable></n-input>
         <n-space>
           <n-button @click="PreviewPaper" type="info" ghost>预览</n-button>
-          <n-button @click="PostPaper" :disabled="posting" type="success" ghost>发Paper</n-button>
+          
+          <n-popconfirm  @positive-click="PostPaper" :show-icon="false" positive-text="确定" negative-text="取消">
+            <template #trigger>
+              <n-button :disabled="posting" type="success" ghost>发Paper</n-button>
+            </template>
+            汝真发表耶？
+          </n-popconfirm>
+
           <n-button @click="paper.anonymous = !paper.anonymous" ghost>匿名:{{ paper.anonymous ? '是' : '否' }}</n-button>
         </n-space>
       </n-space>

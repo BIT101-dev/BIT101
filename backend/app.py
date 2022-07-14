@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-10 22:12:18
+LastEditTime: 2022-07-14 21:25:04
 Description: 主程序
 _(:з」∠)_
 '''
@@ -18,6 +18,7 @@ import webvpn
 import saver
 import course
 import paper
+import reaction
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
@@ -178,6 +179,7 @@ def get_score_brief():
 
 # 获取文章
 @app.route("/paper/",methods=['GET'])
+@user.check(False)
 def paper_get():
     id=request.args.get('id')
     if not id:
@@ -201,10 +203,18 @@ def paper_post():
         return res({'msg': '请检查请求参数awa'}, 400)
     id=paper.post(id,title,intro,data,last_time,now_time,anonymous)
     if id:
-        return res({'msg':'发布成功OvO','id':id}, 200)
+        return res({'msg':'发表成功OvO','id':id}, 200)
     else:
         return res({'msg':'请基于文章最新版本编辑~'},500)
 
+
+# 点赞
+@app.route("/reaction/like/",methods=['POST'])
+@user.check()
+def post_reaction_like():
+    dic = request.get_json()
+    obj=dic.get('obj')
+    return reaction.post_like(obj)
 
 # 获取单个课程
 @app.route("/course/detail/")

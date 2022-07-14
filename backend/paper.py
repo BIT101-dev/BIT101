@@ -1,13 +1,14 @@
 '''
 Author: flwfdd
 Date: 2022-07-10 17:19:45
-LastEditTime: 2022-07-10 22:13:08
+LastEditTime: 2022-07-14 21:25:52
 Description: 文章模块
 _(:з」∠)_
 '''
 import db
 import user
 import datetime
+import reaction
 
 
 # 上传或修改文章
@@ -45,6 +46,7 @@ def post(id, title, intro, data, last_time, now_time, anonymous):
 def get(id):
     p = db.Paper.query.filter_by(id=id).first()
     dic=db.to_dict(p)
+    dic['like']=reaction.get_like_status('paper'+str(id))
     if dic['anonymous']:
         dic['user']=-1
     return dic
