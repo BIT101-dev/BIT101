@@ -1,11 +1,12 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-29 22:48:31
- * @LastEditTime: 2022-07-12 23:15:14
+ * @LastEditTime: 2022-07-17 13:24:54
  * @Description: 
  * _(:з」∠)_
 -->
 <script setup lang="ts">
+import store from '@/utils/store';
 import hljs from "highlight.js"
 import "highlight.js/styles/vs2015.css"
 
@@ -46,7 +47,7 @@ b{
 
     <template v-else-if="i.type == 'image'">
       <div style="text-align:center;margin-top: 11px;margin-bottom: 11px;">
-        <n-image :src="i.data.file.url" width="424" :img-props="{'style':'max-width:100%;'}" :alt="i.data.caption" />
+        <n-image  :preview-src="i.data.file.url" :src="i.data.file.url+store.img_suffix" width="424" :img-props="{'style':'max-width:100%;'}" :alt="i.data.caption" />
         <div style="color:#6291A8" v-html="i.data.caption"></div>
       </div>
     </template>

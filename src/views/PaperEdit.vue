@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2022-07-14 19:50:12
+ * @LastEditTime: 2022-07-17 02:39:58
  * @Description: 
  * _(:з」∠)_
 -->
@@ -181,7 +181,7 @@ function PostPaper() {
       data: JSON.stringify(data),
       last_time: paper.last_time,
       now_time: Math.round(data.time / 1000),
-      anonymous: paper.anonymous ? '1' : '0',
+      anonymous: paper.anonymous ? '1' : '',
     }).then((res) => {
       router.push('/paper/show/' + res.data.id);
     }).catch(() => {
@@ -193,7 +193,7 @@ function PostPaper() {
 
 <template>
   <div class="container">
-    <n-card :title="paper.id == '0' ? '新建Paper' : '编辑Paper-' + paper.id">
+    <n-card :title="paper.id == '0' ? '新建 Paper' : '编辑 Paper ' + paper.id">
       <n-space vertical>
         <div>标题</div>
         <n-input v-model:value="paper.title" placeholder="请输入标题" maxlength="42" show-count size="large"></n-input>

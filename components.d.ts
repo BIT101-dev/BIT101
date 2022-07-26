@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Comment: typeof import('./src/components/Comment.vue')['default']
     GlobalComponents: typeof import('./src/components/GlobalComponents.vue')['default']
     MessageContent: typeof import('./src/components/MessageContent.vue')['default']
     NAlert: typeof import('naive-ui')['NAlert']
@@ -34,11 +35,14 @@ declare module '@vue/runtime-core' {
     NPopconfirm: typeof import('naive-ui')['NPopconfirm']
     NRadioButton: typeof import('naive-ui')['NRadioButton']
     NRadioGroup: typeof import('naive-ui')['NRadioGroup']
+    NScrollbar: typeof import('naive-ui')['NScrollbar']
     NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
+    NSwitch: typeof import('naive-ui')['NSwitch']
     NTable: typeof import('naive-ui')['NTable']
     NTabPane: typeof import('naive-ui')['NTabPane']
     NTabs: typeof import('naive-ui')['NTabs']
+    NThing: typeof import('naive-ui')['NThing']
     NUpload: typeof import('naive-ui')['NUpload']
     PaperRender: typeof import('./src/components/PaperRender.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

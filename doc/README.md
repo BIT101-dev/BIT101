@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-14 21:28:45
+ * @LastEditTime: 2022-07-26 22:39:24
  * @Description: 
  * _(:з」∠)_
 -->
@@ -193,7 +193,7 @@
     "data":"{}", //字符串化的editor.js数据
     "create_time":"Sun, 10 Jul 2022 21:58:41 GMT",
     "update_time":"Sun, 10 Jul 2022 22:15:08 GMT",
-    "user":1, //发表者 匿名为-1
+    "user":{}, //同/user/info/接口
     "like_num":1,
     "comment_num":1,
     "like":true, // 当前用户的点赞状态
@@ -212,7 +212,7 @@
 * `data`：文章内容，使用`editor.js`
 * `last_time`：文章开始编辑之前的`UNIX`时间戳，用于防撞车
 * `now_time`：文章最后编辑的`UNIX`时间戳
-* `anonymous`：是否匿名，为`1`匿名
+* `anonymous`：可选，是否匿名，为非空值即匿名，默认不匿
 
 **返回说明**：
 ```json
@@ -227,6 +227,7 @@
 包括点赞、评论等。由于各种东西的点赞、评论都是类似的，所以就可复用，统一使用，而操作的对象使用`obj`进行标识，以下是`obj`的不同种类，`obj`由类型标识符+对应`id`组成，如`1`号文章的`obj`为`paper1`。
 
 * `paper`
+* `comment`
 
 
 ### 点赞
@@ -243,6 +244,63 @@
     "like_num":1, //操作后的点赞数
 }
 ```
+
+### 获取评论
+**接口地址**：`GET /reaction/comment/`
+
+**参数说明**：
+可以不携带`fake_cookie`
+* `obj`：操作对象的标识字符串
+* `order`：排序方式，`default`|`new`|`old`
+* `page`：分页，从`0`开始
+
+**返回说明**：
+一个列表，其中每一个元素如
+```json
+{
+    "anonymous":false,
+    "comment_num":0, //子评论数量
+    "create_time":"2022-07-18 10:25:12", //发表时间
+    "id":1,
+    "like":true, //当前用户是否点赞该评论
+    "like_num":1, //赞数量
+    "obj":"paper1", //评论的对象
+    "own":true, //是否是当前用户评论的
+    "rate":0, //评分
+    "reply_user":{}, //回复的用户（格式同/user/info/），如果没有回复的用户则为0
+    "show":true,
+    "text":"",
+    "sub":[], //子评论，嵌套格式（其中每一个元素格式都同这一个）
+    "update_time":"2022-07-26 21:39:43", //状态更新时间（被点赞也算）
+    "user":{} //同/user/info/接口
+}
+```
+
+### 评论
+**接口地址**：`POST /reaction/comment/`
+
+**参数说明**：
+需要携带`fake_cookie`
+* `obj`：操作对象的标识字符串
+* `text`：评论内容
+* `anonymous`：可选，非空即匿名
+* `reply_user`：可选，回复的用户id
+* `rate`：可选，打分，1~10整数
+
+**返回说明**：
+发表后的评论，形式同获取评论中的一个元素。
+
+
+### 删除评论
+**接口地址**：`DELETE /reaction/comment/`
+
+**参数说明**：
+需要携带`fake_cookie`
+* `id`：要删除的评论id
+
+**返回说明**：
+无返回值。
+
 
 ## webvpn相关
 
