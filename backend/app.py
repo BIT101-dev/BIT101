@@ -1,11 +1,11 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-14 21:25:04
+LastEditTime: 2022-07-27 16:18:28
 Description: 主程序
 _(:з」∠)_
 '''
-from crypt import methods
+from datetime import datetime,date
 from flask import Flask, request, abort, make_response, Response
 from flask_cors import CORS
 from functools import wraps
@@ -31,7 +31,6 @@ db.db.app = app
 db.db.init_app(app)
 db.db.create_all()
 
-
 # 代理请求
 def requests_proxy():
     def decorator(f):
@@ -47,7 +46,15 @@ def requests_proxy():
 
 # 返回
 def res(data, status=200):
-    return Response(json.dumps(data), status=status, mimetype='application/json')
+    class ComplexEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, datetime):
+                return obj.strftime('%Y-%m-%d %H:%M:%S')
+            elif isinstance(obj, date):
+                return obj.strftime('%Y-%m-%d')
+            else:
+                return json.JSONEncoder.default(self, obj)
+    return Response(json.dumps(data,cls=ComplexEncoder), status=status, mimetype='application/json')
 
 
 # 路由
@@ -184,7 +191,7 @@ def paper_get():
     id=request.args.get('id')
     if not id:
         return res({'msg': '请检查请求参数awa'}, 400)
-    return paper.get(id)
+    return res(paper.get(id), 200)
 
 
 # 上传文章
@@ -194,18 +201,21 @@ def paper_post():
     dic = request.get_json()
     id=dic.get('id')
     title = dic.get('title')
-    intro = dic.get('intro')
+    intro = dic.get('intro','')
     data = dic.get('data')
     last_time = dic.get('last_time','0')
     now_time=dic.get('now_time')
-    anonymous=dic.get('anonymous','0')
-    if not (id and title and intro and data and now_time and now_time):
+    anonymous=dic.get('anonymous',False)
+    share=dic.get('share',True)
+    if not (id and title and data and now_time and now_time):
         return res({'msg': '请检查请求参数awa'}, 400)
-    id=paper.post(id,title,intro,data,last_time,now_time,anonymous)
-    if id:
+    id=paper.post(id,title,intro,data,last_time,now_time,anonymous,share)
+    if id>0:
         return res({'msg':'发表成功OvO','id':id}, 200)
-    else:
+    elif id==0:
         return res({'msg':'请基于文章最新版本编辑~'},500)
+    else:
+        return res({'msg':'没有编辑权限'},500)
 
 
 # 点赞
@@ -214,7 +224,47 @@ def paper_post():
 def post_reaction_like():
     dic = request.get_json()
     obj=dic.get('obj')
+    if not obj: return res({'msg': '请检查请求参数awa'}, 400)
     return reaction.post_like(obj)
+
+
+# 获取评论
+@app.route("/reaction/comments/",methods=['GET'])
+@user.check(False)
+def get_reaction_comments():
+    obj=request.args.get('obj')
+    order=request.args.get('order','default')
+    page=request.args.get('page','0')
+    if not (obj and page.isdigit()): return res({'msg': '请检查请求参数awa'}, 400)
+    dic= reaction.get_comments(obj,order,page)
+    return res(dic, 200)
+
+
+# 评论
+@app.route("/reaction/comment/",methods=['POST'])
+@user.check()
+def post_reaction_comment():
+    dic = request.get_json()
+    obj=dic.get('obj')
+    anonymous=dic.get('anonymous',False)
+    text=dic.get('text')
+    reply_user=str(dic.get('reply_user',''))
+    if not reply_user: reply_user='0'
+    rate=str(dic.get('rate','0'))
+    if not (obj and text and reply_user and rate): return res({'msg': '请检查请求参数awa'}, 400)
+    dic=reaction.post_comment(obj,text,anonymous,reply_user,rate)
+    dic['msg']='评论成功OvO'
+    return dic
+
+
+# 删除评论
+@app.route("/reaction/comment/",methods=['DELETE'])
+@user.check()
+def delete_reaction_comment():
+    id=request.args.get('id','')
+    if not id: return res({'msg': '请检查请求参数awa'}, 400)
+    reaction.delete_comment(id)
+    return res({'msg': '删除成功OvO'}, 200)
 
 # 获取单个课程
 @app.route("/course/detail/")

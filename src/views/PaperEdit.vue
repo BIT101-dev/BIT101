@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2022-07-17 02:39:58
+ * @LastEditTime: 2022-07-27 16:23:08
  * @Description: 
  * _(:з」∠)_
 -->
@@ -31,6 +31,8 @@ const paper = reactive({
   data: {},
   last_time: 0,
   anonymous: false,
+  share: true,
+  own:true,
 })
 
 //通过文件上传图片
@@ -144,6 +146,8 @@ function LoadPaper() {
       paper.data = JSON.parse(res.data.data);
       paper.last_time = Math.round(paper.data.time / 1000);
       paper.anonymous = res.data.anonymous;
+      paper.share=res.data.share;
+      paper.own=res.data.own;
       InitEditor(true);
     })
 }
@@ -182,6 +186,7 @@ function PostPaper() {
       last_time: paper.last_time,
       now_time: Math.round(data.time / 1000),
       anonymous: paper.anonymous ? '1' : '',
+      share: paper.share ? '1' : '',
     }).then((res) => {
       router.push('/paper/show/' + res.data.id);
     }).catch(() => {
@@ -201,15 +206,14 @@ function PostPaper() {
         <n-input v-model:value="paper.intro" placeholder="请输入简介" maxlength="101" show-count clearable></n-input>
         <n-space>
           <n-button @click="PreviewPaper" type="info" ghost>预览</n-button>
-          
-          <n-popconfirm  @positive-click="PostPaper" :show-icon="false" positive-text="确定" negative-text="取消">
+          <n-popconfirm @positive-click="PostPaper" :show-icon="false" positive-text="确定" negative-text="取消">
             <template #trigger>
               <n-button :disabled="posting" type="success" ghost>发Paper</n-button>
             </template>
             汝真发表耶？
           </n-popconfirm>
-
           <n-button @click="paper.anonymous = !paper.anonymous" ghost>匿名:{{ paper.anonymous ? '是' : '否' }}</n-button>
+          <n-button v-if="paper.own" @click="paper.share = !paper.share" ghost>其他人可编辑:{{ paper.share ? '是' : '否' }}</n-button>
         </n-space>
       </n-space>
     </n-card>

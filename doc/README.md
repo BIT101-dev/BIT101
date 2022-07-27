@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-26 22:39:24
+ * @LastEditTime: 2022-07-27 15:59:12
  * @Description: 
  * _(:з」∠)_
 -->
@@ -197,6 +197,8 @@
     "like_num":1,
     "comment_num":1,
     "like":true, // 当前用户的点赞状态
+    "share":true,
+    "own":false, //对文章的拥有状态（是否可编辑）
 }
 ```
 
@@ -213,6 +215,7 @@
 * `last_time`：文章开始编辑之前的`UNIX`时间戳，用于防撞车
 * `now_time`：文章最后编辑的`UNIX`时间戳
 * `anonymous`：可选，是否匿名，为非空值即匿名，默认不匿
+* `share`：可选，其他人是否可编辑，默认可以
 
 **返回说明**：
 ```json

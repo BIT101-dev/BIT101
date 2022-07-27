@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-07-14 21:11:34
+LastEditTime: 2022-07-27 16:11:52
 Description: 数据库
 _(:з」∠)_
 '''
@@ -19,14 +19,18 @@ def add(x):
 def add_all(x):
     db.session.add_all(x)
 
+
 def flush():
     db.session.flush()
+
 
 def commit():
     db.session.commit()
 
 
 def to_dict(model):
+    if type(model)==list:
+        return [to_dict(i) for i in model]
     columns = [c.key for c in class_mapper(model.__class__).columns]
     return dict((c, getattr(model, c)) for c in columns)
 
@@ -43,6 +47,7 @@ class User(db.Model):
     motto = db.Column(
         db.Text, default="I offer you the BITterness of a man who has looked long and long at the lonely moon.")
     register_time = db.Column(db.DateTime, default=datetime.datetime.now)
+    level = db.Column(db.Integer, default=1)
 
 
 # 图床
@@ -68,8 +73,11 @@ class Paper(db.Model):
         db.DateTime, nullable=False)
     user = db.Column(db.Integer, nullable=False)
     anonymous = db.Column(db.Boolean, default=False)
-    like_num=db.Column(db.Integer, default=0)
-    comment_num=db.Column(db.Integer, default=0)
+    like_num = db.Column(db.Integer, default=0)
+    comment_num = db.Column(db.Integer, default=0)
+    show = db.Column(db.Boolean, default=True)
+    owner=db.Column(db.Integer, nullable=False)
+    share = db.Column(db.Boolean, default=True)
 
 
 # 文章历史记录
@@ -89,22 +97,30 @@ class PaperHistory(db.Model):
 class Like(db.Model):
     __tablename__ = 'like'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    obj = db.Column(db.String(24), nullable=False) # 操作的对象 用一个字符串标识
+    user = db.Column(db.Integer, nullable=False)
+    obj = db.Column(db.String(24), nullable=False)  # 操作的对象 用一个字符串标识
     show = db.Column(db.Boolean, default=True)
     time = db.Column(db.DateTime, default=datetime.datetime.now,
                      onupdate=datetime.datetime.now)
 
-# # 评论
-# class Comment(db.Model):
-#     __tablename__ = 'comment'
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     user_id = db.Column(db.Integer, nullable=False)
-#     obj = db.Column(db.String(24), nullable=False) # 操作的对象 用一个字符串标识
-#     show = db.Column(db.Boolean, default=True)
-#     time = db.Column(db.DateTime, default=datetime.datetime.now)
-#     anonymous = db.Column(db.Boolean, default=False)
-#     parent_id=db.Column(db.Integer, default=0)
+
+# 评论
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user = db.Column(db.Integer, nullable=False)
+    obj = db.Column(db.String(24), nullable=False)  # 操作的对象 用一个字符串标识
+    text = db.Column(db.Text, nullable=False)
+    show = db.Column(db.Boolean, default=True)
+    create_time = db.Column(db.DateTime, default=datetime.datetime.now)
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    anonymous = db.Column(db.Boolean, default=False)
+    like_num = db.Column(db.Integer, default=0)
+    comment_num = db.Column(db.Integer, default=0)  # 子评论数量
+    reply_user = db.Column(db.Integer, default=0)
+    rate=db.Column(db.Integer, default=0)
+
 
 # 课程老师多对多关系表
 course_teacher_table = db.Table('course_teacher_table',

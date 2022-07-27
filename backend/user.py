@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-07-13 00:24:02
+LastEditTime: 2022-07-18 10:35:44
 Description: 用户管理
 _(:з」∠)_
 '''
@@ -49,6 +49,10 @@ def check(strict=True):
         return decorated_function
     return decorator
 
+
+# 操作权限检查
+def ifown(id):
+    return str(id)==str(now_uid)
 
 # 发送邮箱验证码
 def mail_verify(sid):
@@ -115,16 +119,18 @@ def login(sid, password):
 
 # 获取用户信息
 def get_info(uid):
+    uid=str(uid)
     if uid=='-1':
         return {'id':-1,'sid':'','avatar':saver.img_url(''),'motto':'面对愚昧，匿名者自己也缄口不言。','nickname':'匿名者','register_time':'Wed, 01 Sep 2021 09:00:00 GMT'}
     if uid=='0':
         if not now_uid: abort(401)
         uid=now_uid
     q = db.User.query.filter_by(id=uid).first()
-    q.password=""
-    q.avatar=saver.img_url(q.avatar)
-    if uid!=q.id: q.sid=""
-    return db.to_dict(q)
+    q=db.to_dict(q)
+    q['password']=""
+    q['avatar']=saver.img_url(q['avatar'])
+    if uid!=q['id']: q['sid']=""
+    return q
 
 
 # 修改信息

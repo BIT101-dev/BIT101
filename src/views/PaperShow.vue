@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2022-07-26 15:33:52
+ * @LastEditTime: 2022-07-27 16:32:49
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -32,6 +32,8 @@ const paper = reactive({
   like: false,
   like_loading: false,
   comment_num:0,
+  share:true,
+  own:false,
 })
 
 //加载文章
@@ -48,6 +50,8 @@ function LoadPaper() {
       paper.comment_num=res.data.comment_num;
       paper.like = res.data.like;
       paper.user = res.data.user;
+      paper.share=res.data.share;
+      paper.own=res.data.own;
     })
 }
 
@@ -114,7 +118,7 @@ onMounted(() => {
     <n-divider style="color:#809BA8;font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
     <PaperRender :paper="paper" />
     <n-divider style="color:#809BA8;font-size:14px;">
-      <n-button @click="router.push('/paper/edit/' + paper.id)" icon-placement="right" text>
+      <n-button v-if="(paper.share || paper.own)" @click="router.push('/paper/edit/' + paper.id)" icon-placement="right" text>
         <template #icon>
           <n-icon>
             <EditOutlined />
@@ -122,6 +126,7 @@ onMounted(() => {
         </template>
         编辑此篇Paper
       </n-button>
+      <template v-else>不允许编辑</template>
     </n-divider>
     <n-space style="margin-top:4px" justify="end">
       <n-button @click="ClipUrl" icon-placement="right" ghost>

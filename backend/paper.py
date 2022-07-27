@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-07-10 17:19:45
-LastEditTime: 2022-07-14 21:25:52
+LastEditTime: 2022-07-27 16:20:58
 Description: 文章模块
 _(:з」∠)_
 '''
@@ -9,31 +9,35 @@ import db
 import user
 import datetime
 import reaction
+from sqlalchemy import and_
 
 
 # 上传或修改文章
-def post(id, title, intro, data, last_time, now_time, anonymous):
+def post(id, title, intro, data, last_time, now_time, anonymous,share):
     last_t = datetime.datetime.fromtimestamp(int(last_time))
     now_t = datetime.datetime.fromtimestamp(int(now_time))
-    anonymous =(anonymous == '1')
+    anonymous =bool(anonymous)
+    share=bool(share)
     if id == '0':
         p = db.Paper(title=title, intro=intro, data=data, create_time=now_t,
-                     update_time=now_t, user=user.now_uid, anonymous=anonymous)
+                     update_time=now_t, user=user.now_uid, anonymous=anonymous,share=share,owner=user.now_uid)
         db.add(p)
-        db.flush()
         db.commit()
         id = p.id
     else:
-        p = db.Paper.query.filter_by(id=id).first()
-        print(p.update_time,last_t)
+        p = db.Paper.query.filter(and_(db.Paper.id==id,db.Paper.show==True)).first()
+        if not (p.share or user.ifown(p.owner)):
+            return -1
         if p.update_time > last_t:
-            return False
+            return 0
         p.title=title
         p.intro=intro
         p.data=data
         p.update_time=now_t
         p.user=user.now_uid
         p.anonymous=anonymous
+        if user.ifown(p.owner):
+            p.share=share
         db.commit()
     ph = db.PaperHistory(paper_id=id, title=title, intro=intro, data=data,
                          create_time=now_t, user=user.now_uid, anonymous=anonymous)
@@ -44,9 +48,12 @@ def post(id, title, intro, data, last_time, now_time, anonymous):
 
 # 获取文章
 def get(id):
-    p = db.Paper.query.filter_by(id=id).first()
+    p = db.Paper.query.filter(and_(db.Paper.id==id,db.Paper.show==True)).first()
     dic=db.to_dict(p)
     dic['like']=reaction.get_like_status('paper'+str(id))
-    if dic['anonymous']:
-        dic['user']=-1
+    if dic['anonymous'] and dic['user']!=user.now_uid:
+        dic['user']='-1'
+    dic['user']=user.get_info(dic['user'])
+    dic['own']=user.ifown(dic['owner'])
+    dic['owner']=''
     return dic
