@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-27 16:18:28
+LastEditTime: 2022-07-28 16:15:33
 Description: 主程序
 _(:з」∠)_
 '''
@@ -19,6 +19,7 @@ import saver
 import course
 import paper
 import reaction
+import variable
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
@@ -136,7 +137,7 @@ def user_login():
 @user.check(False)
 def user_get_info():
     uid = request.args.get('id', '0')
-    return user.get_info(uid)
+    return res(user.get_info(uid), 200)
 
 
 # 修改个人信息
@@ -187,7 +188,7 @@ def get_score_brief():
 # 获取文章
 @app.route("/paper/",methods=['GET'])
 @user.check(False)
-def paper_get():
+def get_paper():
     id=request.args.get('id')
     if not id:
         return res({'msg': '请检查请求参数awa'}, 400)
@@ -197,7 +198,7 @@ def paper_get():
 # 上传文章
 @app.route("/paper/",methods=['POST'])
 @user.check()
-def paper_post():
+def post_paper():
     dic = request.get_json()
     id=dic.get('id')
     title = dic.get('title')
@@ -216,6 +217,15 @@ def paper_post():
         return res({'msg':'请基于文章最新版本编辑~'},500)
     else:
         return res({'msg':'没有编辑权限'},500)
+
+
+# 获取文章列表
+@app.route("/papers/",methods=['GET'])
+def get_papers():
+    search=request.args.get('search','')
+    order=request.args.get('order','default')
+    page=request.args.get('page','0')
+    return res(paper.list(search,order,page), 200)
 
 
 # 点赞
@@ -266,6 +276,26 @@ def delete_reaction_comment():
     reaction.delete_comment(id)
     return res({'msg': '删除成功OvO'}, 200)
 
+
+# 设置变量
+@app.route("/variable/",methods=['POST'])
+@user.check_admin()
+def post_variable():
+    dic = request.get_json()
+    obj=dic.get('obj')
+    data=dic.get('data')
+    variable.post(obj,data)
+    return res({'msg':"设置成功OvO"},200)
+
+
+# 获取变量
+@app.route("/variable/",methods=['GET'])
+def get_variable():
+    obj=request.args.get('obj','')
+    out=variable.get(obj)
+    return out
+
+
 # 获取单个课程
 @app.route("/course/detail/")
 def course_detail():
@@ -315,3 +345,4 @@ def course_search():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
+    variable.init()

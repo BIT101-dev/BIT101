@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-07-27 16:11:52
+LastEditTime: 2022-07-28 14:14:59
 Description: 数据库
 _(:з」∠)_
 '''
@@ -29,7 +29,7 @@ def commit():
 
 
 def to_dict(model):
-    if type(model)==list:
+    if type(model) == list:
         return [to_dict(i) for i in model]
     columns = [c.key for c in class_mapper(model.__class__).columns]
     return dict((c, getattr(model, c)) for c in columns)
@@ -41,7 +41,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     sid = db.Column(db.String(24), unique=True, nullable=False)  # 学号
     password = db.Column(db.String(42), nullable=False)
-    nickname = db.Column(db.String(24), unique=True,)
+    nickname = db.Column(db.String(24), unique=True)
     avatar = db.Column(
         db.String(42), default="")
     motto = db.Column(
@@ -76,7 +76,7 @@ class Paper(db.Model):
     like_num = db.Column(db.Integer, default=0)
     comment_num = db.Column(db.Integer, default=0)
     show = db.Column(db.Boolean, default=True)
-    owner=db.Column(db.Integer, nullable=False)
+    owner = db.Column(db.Integer, nullable=False)
     share = db.Column(db.Boolean, default=True)
 
 
@@ -119,7 +119,15 @@ class Comment(db.Model):
     like_num = db.Column(db.Integer, default=0)
     comment_num = db.Column(db.Integer, default=0)  # 子评论数量
     reply_user = db.Column(db.Integer, default=0)
-    rate=db.Column(db.Integer, default=0)
+    rate = db.Column(db.Integer, default=0)
+
+
+# 变量
+class Variable(db.Model):
+    __tablename__ = 'variable'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    obj = db.Column(db.String(24), unique=True)
+    data = db.Column(db.Text)
 
 
 # 课程老师多对多关系表

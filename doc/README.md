@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-27 15:59:12
+ * @LastEditTime: 2022-07-28 16:16:39
  * @Description: 
  * _(:з」∠)_
 -->
@@ -139,7 +139,7 @@
     "avatar": "", //头像URL
     "motto": "I offer you the BITterness of a man who has looked long and long at the lonely moon.", //格言简介
     "nickname": "BIT101-77ff33f3", //昵称
-    "register_time": "Mon, 30 May 2022 02:34:36 GMT" //注册时间
+    "register_time": "2022-07-17 12:56:49" //注册时间
 }
 ```
 
@@ -191,14 +191,36 @@
     "title":"俺是标题！",
     "intro":"简介",
     "data":"{}", //字符串化的editor.js数据
-    "create_time":"Sun, 10 Jul 2022 21:58:41 GMT",
-    "update_time":"Sun, 10 Jul 2022 22:15:08 GMT",
+    "create_time":"2022-07-18 10:25:12",
+    "update_time":"2022-07-26 21:39:43",
     "user":{}, //同/user/info/接口
     "like_num":1,
     "comment_num":1,
     "like":true, // 当前用户的点赞状态
     "share":true,
     "own":false, //对文章的拥有状态（是否可编辑）
+}
+```
+
+
+### 获取文章列表
+**接口地址**：`GET /papers/`
+
+**参数说明**：
+* `search`：搜索关键字
+* `order`：排序方式，`rand`|`new`|`like`，默认`rand`
+* `page`：页数，从`0`开始
+
+**返回说明**：
+一个列表，其中每一个元素如
+```json
+{
+    "id":1,
+    "title":"俺是标题！",
+    "intro":"简介",
+    "update_time":"2022-07-27 16:33:43",
+    "like_num":1,
+    "comment_num":1,
 }
 ```
 
@@ -300,6 +322,33 @@
 **参数说明**：
 需要携带`fake_cookie`
 * `id`：要删除的评论id
+
+**返回说明**：
+无返回值。
+
+
+## 变量模块
+
+不知道叫什么名字好，变量、设置还是什么的，暂且意会一下就好。这个是在做轮播图的时候想到的，由于轮播图也就个位数，也不需要大量的增删改，是半静态的东西，而且其他地方一定也是存在类似的需求的，为此建很多数据库表感觉实在是太麻烦了，于是就创建一张表统一来存，当然这样对于修改时的鲁棒性是比较低的（只能依靠前端），但确实足够简单。
+
+
+### 获取变量
+**接口地址**：`GET /variable/`
+
+**参数说明**：
+* `obj`：变量名
+
+**返回说明**：
+直接返回`data`的值，是一个字符串。
+
+
+### 设置变量
+**接口地址**：`POST /variable/`
+
+**参数说明**：
+需要携带`fake_cookie`且用户为管理员
+* `obj`：变量名
+* `data`：变量值
 
 **返回说明**：
 无返回值。

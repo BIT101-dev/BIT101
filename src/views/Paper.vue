@@ -1,0 +1,94 @@
+<!--
+ * @Author: flwfdd
+ * @Date: 2022-07-27 17:09:21
+ * @LastEditTime: 2022-07-28 11:19:23
+ * @Description: 
+ * _(:з」∠)_
+-->
+<script setup lang="ts">
+import router from '@/router';
+import http from '@/utils/request';
+import { FormatTime } from '@/utils/tools';
+import { onMounted, reactive } from 'vue';
+
+const papers = reactive({
+  search: "",
+  order: "rand",
+  page: 0,
+  end: false,
+  loading: false,
+  list: [],
+})
+
+function LoadPapers() {
+  papers.loading = true;
+  http.get("/papers/", {
+    params: {
+      search: papers.search,
+      order: papers.order,
+      page: papers.page,
+    }
+  }).then(res => {
+    if (res.data.length == 0) papers.end = true;
+    else {
+      papers.list = papers.list.concat(res.data);
+      if(papers.order!='rand')papers.page++;
+    }
+    papers.loading = false;
+  }).catch(() => { papers.loading = false; })
+}
+
+onMounted(() => {
+  LoadPapers();
+})
+
+function Go(id: any) {
+  router.push('/paper/show/' + id);
+}
+
+function Search() {
+  papers.list = [];
+  papers.page = 0;
+  papers.end = false;
+  LoadPapers();
+}
+
+</script>
+
+<template>
+  <div class="container">
+    <n-card>
+      <n-collapse>
+        <n-collapse-item title="Paper检索">
+          <n-space vertical>
+            <div>搜索</div>
+            <n-input v-model:value="papers.search" placeholder="请输入关键词" maxlength="42"></n-input>
+            <n-radio-group v-model:value="papers.order" name="排序方式">
+              <n-space>
+                排序方式
+                <n-radio value="rand"> 随机</n-radio>
+                <n-radio value="new"> 最新</n-radio>
+                <n-radio value="like"> 赞数</n-radio>
+              </n-space>
+            </n-radio-group>
+            <n-button @click="Search" ghost block>检索</n-button>
+          </n-space>
+        </n-collapse-item>
+      </n-collapse>
+    </n-card>
+
+    <n-divider></n-divider>
+
+    <n-card v-for="i in papers.list" @click="Go(i['id'])" hoverable style="margin-bottom:11px;" embedded>
+      <h3 style="margin:0;color:#0087A8;">{{ i['title'] }}</h3>
+      <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
+        {{ i['intro'] }}
+      </n-ellipsis>
+      <div style="color:#809BA8;font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评论 |
+        {{ FormatTime(i['update_time']) }}更新</div>
+    </n-card>
+
+    <n-button block @click="LoadPapers()" :disabled="papers.end" :loading="papers.loading">
+      {{ papers.end ? '木有更多了' : '加载更多' }}</n-button>
+  </div>
+</template>

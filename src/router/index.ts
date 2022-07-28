@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2022-07-10 23:12:16
+ * @LastEditTime: 2022-07-28 13:15:13
  * @Description: 
  * _(:з」∠)_
  */
@@ -31,6 +31,11 @@ const router = createRouter({
       component: () => import('@/views/Score.vue')
     },
     {
+      path: '/paper',
+      name: 'paper',
+      component: () => import('@/views/Paper.vue')
+    },
+    {
       path: '/paper/edit/:id',
       name: 'paper_edit',
       component: () => import('@/views/PaperEdit.vue')
@@ -39,6 +44,12 @@ const router = createRouter({
       path: '/paper/show/:id',
       name: 'paper_show',
       component: () => import('@/views/PaperShow.vue')
+    },
+
+    {
+      path: '/admin/carousel/',
+      name: 'admin_carousel',
+      component: () => import('@/views/admin/Carousel.vue')
     },
   ]
 });

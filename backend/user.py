@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-07-18 10:35:44
+LastEditTime: 2022-07-28 13:56:07
 Description: 用户管理
 _(:з」∠)_
 '''
@@ -43,6 +43,29 @@ def check(strict=True):
                     abort(401)
                 else:
                     request.uid = 0
+            else:
+                request.uid = uid
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+# 检查登陆状态装饰器
+def check_admin():
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            flag = 1
+            cookie = request.headers.get('Fake-Cookie', '')
+            if not cookie:
+                flag = 0
+            uid = red.get(cookie)
+            if not uid:
+                flag = 0
+            else:
+                q=db.User.query.filter_by(id=uid).first()
+                if not (q and q.level==0): flag=0
+            if not flag:
+                abort(401)
             else:
                 request.uid = uid
             return f(*args, **kwargs)

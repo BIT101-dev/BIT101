@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-07-26 21:50:48
+ * @LastEditTime: 2022-07-27 23:50:06
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -145,7 +145,7 @@ onMounted(() => {
     <n-divider></n-divider>
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
-        <router-link :to="'/user/' + i['user']['id']" target="_blank">
+        <router-link :to="'/user/' + i['user']['id']">
           <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
         </router-link>
       </div>
@@ -229,7 +229,7 @@ onMounted(() => {
     <n-scrollbar style="max-height:624px">
       <div style="display: flex;align-items: top;color:#3E5C6B;">
         <div>
-          <router-link :to="'/user/' + sub_comments.parent['user']['id']" target="_blank">
+          <router-link :to="'/user/' + sub_comments.parent['user']['id']">
             <n-avatar :src="sub_comments.parent['user']['avatar'] + store.img_suffix" />
           </router-link>
         </div>
@@ -244,7 +244,7 @@ onMounted(() => {
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>
-            <router-link :to="'/user/' + i['user']['id']" target="_blank">
+            <router-link :to="'/user/' + i['user']['id']">
               <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
             </router-link>
           </div>
@@ -252,7 +252,7 @@ onMounted(() => {
             <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;">
-              <router-link v-if="i['reply_user']" :to="'/user/' + i['reply_user']['id']" target="_blank" style="text-decoration: none;">
+              <router-link v-if="i['reply_user']" :to="'/user/' + i['reply_user']['id']" style="text-decoration: none;">
                 @{{ i['reply_user']['nickname'] }}</router-link>
                 {{ i['text'] }}
             </div>
