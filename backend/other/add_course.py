@@ -1,3 +1,10 @@
+'''
+Author: flwfdd
+Date: 2022-05-29 14:53:56
+LastEditTime: 2022-07-29 20:28:22
+Description: 
+_(:з」∠)_
+'''
 from flask import Flask
 import csv
 import sys 
@@ -13,7 +20,7 @@ db.db.app = app
 db.db.init_app(app)
 db.db.create_all()
 
-f=open("2021-2022-1.csv","r")
+f=open("2021-2022-2.csv","r")
 dic=csv.DictReader(f)
 
 def get_teachers(name_l,number_l):
@@ -23,7 +30,7 @@ def get_teachers(name_l,number_l):
         if q:
             out.append(q)
         else:
-            out.append(db.Teacher(number=number_l[i],name=name_l[i]))
+            out.append(db.Teacher(number=number_l[i],name=name_l[i].replace("[辅讲]","")))
     return out
 
 for i in dic:
@@ -40,5 +47,6 @@ for i in dic:
         course.name=i['课程名']
         course.teachers_name=i['上课教师']
         course.teachers=get_teachers(name_l,number_l)
+        course.teachers_number=','.join([i.number for i in course.teachers])
         db.add(course)
         db.commit()

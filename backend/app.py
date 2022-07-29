@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-28 16:15:33
+LastEditTime: 2022-07-29 21:21:01
 Description: 主程序
 _(:з」∠)_
 '''
@@ -263,8 +263,11 @@ def post_reaction_comment():
     rate=str(dic.get('rate','0'))
     if not (obj and text and reply_user and rate): return res({'msg': '请检查请求参数awa'}, 400)
     dic=reaction.post_comment(obj,text,anonymous,reply_user,rate)
-    dic['msg']='评论成功OvO'
-    return dic
+    if dic:
+        dic['msg']='评论成功OvO'
+        return dic
+    else:
+        return res({'msg':'不能重复评价'},500)
 
 
 # 删除评论
@@ -297,50 +300,21 @@ def get_variable():
 
 
 # 获取单个课程
-@app.route("/course/detail/")
+@app.route("/course/",methods=['GET'])
+@user.check(False)
 def course_detail():
     id = request.args.get('id', '')
-    return course.detail(id)
-
-
-# 评教
-@app.route("/course/rate/")
-@user.check()
-def course_rate():
-    id = request.args.get('id', '')
-    rating = request.args.get('rating', '')
-    comment = request.args.get('comment', '')
-    anonymous = request.args.get('anonymous', '0')
-    return course.rate(id, rating, comment, anonymous)
-
-
-# 评教列表
-@app.route("/course/rate_list/")
-@user.check(False)
-def course_rate_list():
-    id = request.args.get('id', '')
-    page = request.args.get('page', '0')
-    out = course.rate_list(id, int(page))
-    return Response(json.dumps(out),  mimetype='application/json')
-
-
-# 评教点赞
-@app.route("/course/rate_like/")
-@user.check()
-def course_rate_like():
-    id = request.args.get('id', '')
-    like = request.args.get('like', '0')
-    return course.rate_like(id, bool(int(like)))
+    return res(course.detail(id),200)
 
 
 # 搜索课程
-@app.route("/course/search/")
+@app.route("/courses/",methods=['GET'])
 def course_search():
-    course_search = request.args.get('course_search', '')
-    teacher_search = request.args.get('teacher_search', '')
+    search = request.args.get('search', '')
+    order=request.args.get('order','default')
     page = request.args.get('page', '0')
-    out = course.search(course_search, teacher_search, int(page))
-    return Response(json.dumps(out),  mimetype='application/json')
+    out = course.list(search,order,page)
+    return res(out,200)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-07-27 23:50:06
+ * @LastEditTime: 2022-07-29 22:12:52
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -14,12 +14,13 @@ import { FormatTime } from '@/utils/tools';
 import { ThumbUpOutlined, ThumbUpFilled, DeleteOutlined, ReplyOutlined } from '@vicons/material';
 
 
-const props = defineProps(['obj'])
+const props = defineProps(['obj', 'rate'])
 
 const now_comment = reactive({
   text: '',
   anonymous: false,
   loading: false,
+  rate: 0.5,
 })
 
 const sub_comment = reactive({
@@ -53,12 +54,15 @@ function Comment(obj: string, parent_list: any, reply_user = '0') {
     text: now_comment.text,
     anonymous: now_comment.anonymous ? '1' : '',
     reply_user: reply_user,
+    rate: props.rate ? Math.round(now_comment.rate * 2) : 0,
   }).then(res => {
     parent_list.unshift(res.data);
     now_comment.text = "";
     now_comment.anonymous = false;
     now_comment.loading = false;
+    now_comment.rate = 0.5;
     sub_comment.modal = false;
+    sub_comments.modal = false;
   }).catch(() => {
     now_comment.loading = false;
   })
@@ -68,6 +72,7 @@ function OpenReplyModal(parent: any, reply_user = '0') {
   sub_comment.modal = true;
   sub_comment.parent = parent;
   sub_comment.reply_user = reply_user;
+  now_comment.rate = 0;
 }
 
 function LoadComments(obj: string, cmts: any) {
@@ -123,6 +128,7 @@ onMounted(() => {
 
 <template>
   <n-space vertical>
+    <n-rate v-if="props.rate" v-model:value="now_comment.rate" allow-half size="large" />
     <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" />
     <n-space justify="space-between">
       <n-button @click="now_comment.anonymous = !now_comment.anonymous" ghost>匿名:{{ now_comment.anonymous ? '是' :
@@ -152,6 +158,7 @@ onMounted(() => {
       <span style="margin-left: 4px;margin-top:-6px">
         <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
         <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
+        <n-rate v-if="props.rate" :value="i['rate'] / 2" allow-half size="large" readonly />
         <div style="white-space: pre-wrap;margin-top:4px;">{{ i['text'] }}</div>
         <n-space>
           <n-button @click="Like(i)" color="#fb7299" text :loading="i['like_loading']" :disabled="i['like_loading']">
@@ -191,10 +198,10 @@ onMounted(() => {
         <div v-if="i['comment_num'] != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
           <div v-for="j in i.sub.slice(0, 3)" style="margin:4px;">
             {{ j['user']['nickname'] }}：
-            <span v-if="j['reply_user']">@{{ j['reply_user']['nickname'] }}</span>
+            <span v-if="j['reply_user']">@{{ j['reply_user']['nickname'] + ' ' }}</span>
             <span style="white-space: pre-wrap;margin-top:4px;">{{ j['text'] }}</span>
           </div>
-          <n-button @click="OpenSubComments(i)" text>共 {{ i['comment_num'] }} 条回复>></n-button>
+          <n-button @click="OpenSubComments(i)" text>共{{ i['comment_num'] }}条回复>></n-button>
         </div>
       </span>
     </div>
@@ -239,7 +246,7 @@ onMounted(() => {
           <div style="white-space: pre-wrap;margin-top:4px;">{{ sub_comments.parent['text'] }}</div>
         </span>
       </div>
-      
+
       <template v-for="i in sub_comments.list">
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
@@ -252,9 +259,10 @@ onMounted(() => {
             <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;">
-              <router-link v-if="i['reply_user']" :to="'/user/' + i['reply_user']['id']" style="text-decoration: none;">
+              <router-link v-if="i['reply_user']" :to="'/user/' + i['reply_user']['id']"
+                style="text-decoration:none;color:#FF8533">
                 @{{ i['reply_user']['nickname'] }}</router-link>
-                {{ i['text'] }}
+              {{ i['text'] }}
             </div>
             <n-space>
               <n-button @click="Like(i)" color="#fb7299" text :loading="i['like_loading']"

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-07-28 12:12:57
+ * @LastEditTime: 2022-07-29 22:42:09
  * @Description: 
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import { MenuRound } from '@vicons/material'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref } from 'vue';
-import { HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined } from '@vicons/material';
+import { HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined,BookOutlined } from '@vicons/material';
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
 
@@ -44,6 +44,11 @@ const menu_options = [
     label: "文章",
     key: '/paper/',
     icon: renderIcon(ArticleOutlined)
+  },
+  {
+    label: "课程",
+    key: '/course/',
+    icon: renderIcon(BookOutlined)
   },
   {
     label: "成绩",

@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-07-28 14:14:59
+LastEditTime: 2022-07-29 22:34:31
 Description: 数据库
 _(:з」∠)_
 '''
@@ -145,12 +145,16 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     number = db.Column(db.String(24))
     name = db.Column(db.String(224), nullable=False)
-    rating_sum = db.Column(db.Integer, default=0)
-    rater_sum = db.Column(db.Integer, default=0)
+    like_num = db.Column(db.Integer, default=0)
+    comment_num = db.Column(db.Integer, default=0)
+    rate_sum = db.Column(db.Integer, default=0)
+    rate = db.Column(db.Float, default=0)
     teachers_name = db.Column(db.String(224), nullable=False)
+    teachers_number = db.Column(db.String(224), nullable=False)
     teachers = db.relationship(
         'Teacher', secondary=course_teacher_table, backref=db.backref('courses'))
-    rates = db.relationship("CourseRate", backref='course')
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
 
 # 老师
@@ -159,30 +163,3 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     number = db.Column(db.String(24), unique=True)
     name = db.Column(db.String(42), nullable=False)
-
-
-# 课程评分
-class CourseRate(db.Model):
-    __tablename__ = 'course_rate'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    course_id = db.Column(db.Integer, db.ForeignKey(
-        "course.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
-    comment = db.Column(db.Text, nullable=False)
-    anonymous = db.Column(db.Boolean, default=False)
-    like_sum = db.Column(db.Integer, default=0)
-    time = db.Column(db.DateTime, default=datetime.datetime.now,
-                     onupdate=datetime.datetime.now)
-    user = db.relationship("User", backref='course_comments')
-
-
-# 课程评分点赞
-class CourseRateLike(db.Model):
-    __tablename__ = 'course_rate_like'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    rate_id = db.Column(db.Integer, nullable=False)
-    like = db.Column(db.Boolean, default=True)
-    time = db.Column(db.DateTime, default=datetime.datetime.now,
-                     onupdate=datetime.datetime.now)

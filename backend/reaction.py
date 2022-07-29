@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-07-14 19:57:35
-LastEditTime: 2022-07-26 21:29:58
+LastEditTime: 2022-07-29 22:37:49
 Description: 用户交互部分 如点赞评论
 _(:з」∠)_
 '''
@@ -17,6 +17,8 @@ def get_obj(obj):
         return db.Paper.query.filter_by(id=obj[5:]).first()
     if obj[:7] == 'comment':
         return db.Comment.query.filter_by(id=obj[7:]).first()
+    if obj[:6]=='course':
+        return db.Course.query.filter_by(id=obj[6:]).first()
 
 
 # 获取当前用户点赞状态
@@ -79,14 +81,18 @@ def get_comments(obj, order, page):
 def post_comment(obj, text, anonymous, reply_user='0',rate='0'):
     anonymous=bool(anonymous)
     rate=int(rate)
+    if 'course' in obj:
+        q=db.Comment.query.filter(and_(db.Comment.show==True,db.Comment.obj==obj,db.Comment.user==user.now_uid)).first()
+        if q:
+            return False
     q = db.Comment(user=user.now_uid, obj=obj, text=text,
-                   anonymous=anonymous, reply_user=reply_user)
+                   anonymous=anonymous, reply_user=reply_user,rate=rate)
     db.add(q)
     o = get_obj(obj)
     o.comment_num += 1
     if rate:
-        o.rate_num+=1
         o.rate_sum+=rate
+    o.rate=o.rate_sum/o.comment_num
     db.commit()
     i = db.to_dict(q)
     package_comment(i)
@@ -99,6 +105,7 @@ def delete_comment(id):
     o=get_obj(q.obj)
     o.comment_num-=1
     if q.rate:
-        o.rate_num-=1
         o.rate_sum-=q.rate
+    if o.comment_num: o.rate=o.rate_sum/o.comment_num
+    else: o.rate=0
     db.commit()
