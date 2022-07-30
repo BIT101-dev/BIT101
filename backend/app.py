@@ -1,11 +1,11 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-29 21:21:01
+LastEditTime: 2022-07-30 23:02:18
 Description: 主程序
 _(:з」∠)_
 '''
-from datetime import datetime,date
+from datetime import datetime, date
 from flask import Flask, request, abort, make_response, Response
 from flask_cors import CORS
 from functools import wraps
@@ -33,6 +33,8 @@ db.db.init_app(app)
 db.db.create_all()
 
 # 代理请求
+
+
 def requests_proxy():
     def decorator(f):
         @wraps(f)
@@ -55,7 +57,7 @@ def res(data, status=200):
                 return obj.strftime('%Y-%m-%d')
             else:
                 return json.JSONEncoder.default(self, obj)
-    return Response(json.dumps(data,cls=ComplexEncoder), status=status, mimetype='application/json')
+    return Response(json.dumps(data, cls=ComplexEncoder), status=status, mimetype='application/json')
 
 
 # 路由
@@ -186,137 +188,170 @@ def get_score_brief():
 
 
 # 获取文章
-@app.route("/paper/",methods=['GET'])
+@app.route("/paper/", methods=['GET'])
 @user.check(False)
 def get_paper():
-    id=request.args.get('id')
+    id = request.args.get('id')
     if not id:
         return res({'msg': '请检查请求参数awa'}, 400)
     return res(paper.get(id), 200)
 
 
 # 上传文章
-@app.route("/paper/",methods=['POST'])
+@app.route("/paper/", methods=['POST'])
 @user.check()
 def post_paper():
     dic = request.get_json()
-    id=dic.get('id')
+    id = dic.get('id')
     title = dic.get('title')
-    intro = dic.get('intro','')
+    intro = dic.get('intro', '')
     data = dic.get('data')
-    last_time = dic.get('last_time','0')
-    now_time=dic.get('now_time')
-    anonymous=dic.get('anonymous',False)
-    share=dic.get('share',True)
+    last_time = dic.get('last_time', '0')
+    now_time = dic.get('now_time')
+    anonymous = dic.get('anonymous', False)
+    share = dic.get('share', True)
     if not (id and title and data and now_time and now_time):
         return res({'msg': '请检查请求参数awa'}, 400)
-    id=paper.post(id,title,intro,data,last_time,now_time,anonymous,share)
-    if id>0:
-        return res({'msg':'发表成功OvO','id':id}, 200)
-    elif id==0:
-        return res({'msg':'请基于文章最新版本编辑~'},500)
+    id = paper.post(id, title, intro, data, last_time,
+                    now_time, anonymous, share)
+    if id > 0:
+        return res({'msg': '发表成功OvO', 'id': id}, 200)
+    elif id == 0:
+        return res({'msg': '请基于文章最新版本编辑~'}, 500)
     else:
-        return res({'msg':'没有编辑权限'},500)
+        return res({'msg': '没有编辑权限'}, 500)
 
 
 # 获取文章列表
-@app.route("/papers/",methods=['GET'])
+@app.route("/papers/", methods=['GET'])
 def get_papers():
-    search=request.args.get('search','')
-    order=request.args.get('order','default')
-    page=request.args.get('page','0')
-    return res(paper.list(search,order,page), 200)
+    search = request.args.get('search', '')
+    order = request.args.get('order', 'default')
+    page = request.args.get('page', '0')
+    return res(paper.list(search, order, page), 200)
 
 
 # 点赞
-@app.route("/reaction/like/",methods=['POST'])
+@app.route("/reaction/like/", methods=['POST'])
 @user.check()
 def post_reaction_like():
     dic = request.get_json()
-    obj=dic.get('obj')
-    if not obj: return res({'msg': '请检查请求参数awa'}, 400)
+    obj = dic.get('obj')
+    if not obj:
+        return res({'msg': '请检查请求参数awa'}, 400)
     return reaction.post_like(obj)
 
 
 # 获取评论
-@app.route("/reaction/comments/",methods=['GET'])
+@app.route("/reaction/comments/", methods=['GET'])
 @user.check(False)
 def get_reaction_comments():
-    obj=request.args.get('obj')
-    order=request.args.get('order','default')
-    page=request.args.get('page','0')
-    if not (obj and page.isdigit()): return res({'msg': '请检查请求参数awa'}, 400)
-    dic= reaction.get_comments(obj,order,page)
+    obj = request.args.get('obj')
+    order = request.args.get('order', 'default')
+    page = request.args.get('page', '0')
+    if not (obj and page.isdigit()):
+        return res({'msg': '请检查请求参数awa'}, 400)
+    dic = reaction.get_comments(obj, order, page)
     return res(dic, 200)
 
 
 # 评论
-@app.route("/reaction/comment/",methods=['POST'])
+@app.route("/reaction/comment/", methods=['POST'])
 @user.check()
 def post_reaction_comment():
     dic = request.get_json()
-    obj=dic.get('obj')
-    anonymous=dic.get('anonymous',False)
-    text=dic.get('text')
-    reply_user=str(dic.get('reply_user',''))
-    if not reply_user: reply_user='0'
-    rate=str(dic.get('rate','0'))
-    if not (obj and text and reply_user and rate): return res({'msg': '请检查请求参数awa'}, 400)
-    dic=reaction.post_comment(obj,text,anonymous,reply_user,rate)
+    obj = dic.get('obj')
+    anonymous = dic.get('anonymous', False)
+    text = dic.get('text')
+    reply_user = str(dic.get('reply_user', ''))
+    if not reply_user:
+        reply_user = '0'
+    rate = str(dic.get('rate', '0'))
+    if not (obj and text and reply_user and rate):
+        return res({'msg': '请检查请求参数awa'}, 400)
+    dic = reaction.post_comment(obj, text, anonymous, reply_user, rate)
     if dic:
-        dic['msg']='评论成功OvO'
+        dic['msg'] = '评论成功OvO'
         return dic
     else:
-        return res({'msg':'不能重复评价'},500)
+        return res({'msg': '不能重复评价'}, 500)
 
 
 # 删除评论
-@app.route("/reaction/comment/",methods=['DELETE'])
+@app.route("/reaction/comment/", methods=['DELETE'])
 @user.check()
 def delete_reaction_comment():
-    id=request.args.get('id','')
-    if not id: return res({'msg': '请检查请求参数awa'}, 400)
+    id = request.args.get('id', '')
+    if not id:
+        return res({'msg': '请检查请求参数awa'}, 400)
     reaction.delete_comment(id)
     return res({'msg': '删除成功OvO'}, 200)
 
 
 # 设置变量
-@app.route("/variable/",methods=['POST'])
+@app.route("/variable/", methods=['POST'])
 @user.check_admin()
 def post_variable():
     dic = request.get_json()
-    obj=dic.get('obj')
-    data=dic.get('data')
-    variable.post(obj,data)
-    return res({'msg':"设置成功OvO"},200)
+    obj = dic.get('obj')
+    data = dic.get('data')
+    variable.post(obj, data)
+    return res({'msg': "设置成功OvO"}, 200)
 
 
 # 获取变量
-@app.route("/variable/",methods=['GET'])
+@app.route("/variable/", methods=['GET'])
 def get_variable():
-    obj=request.args.get('obj','')
-    out=variable.get(obj)
+    obj = request.args.get('obj', '')
+    out = variable.get(obj)
     return out
 
 
 # 获取单个课程
-@app.route("/course/",methods=['GET'])
+@app.route("/course/", methods=['GET'])
 @user.check(False)
-def course_detail():
+def get_course_detail():
     id = request.args.get('id', '')
-    return res(course.detail(id),200)
+    return res(course.detail(id), 200)
 
 
 # 搜索课程
-@app.route("/courses/",methods=['GET'])
-def course_search():
+@app.route("/courses/", methods=['GET'])
+def get_course_search():
     search = request.args.get('search', '')
-    order=request.args.get('order','default')
+    order = request.args.get('order', 'default')
     page = request.args.get('page', '0')
-    out = course.list(search,order,page)
+    out = course.list(search, order, page)
     return res(out,200)
+
+
+# 获取课程资料上传链接
+@app.route("/course/upload/url/", methods=['GET'])
+@user.check()
+def get_course_upload_url():
+    number = request.args.get('number', '')
+    tp = request.args.get('type', '')
+    name = request.args.get('name', '')
+    if not (number and tp and name):
+        return res({''})
+    out = course.upload_url(number, tp, name)
+    if out: return res(out, 200)
+    else: return res({'msg':'获取上传链接失败Orz可能是文件重复'},500)
+
+
+# 课程资料上传记录
+@app.route("/course/upload/log/", methods=['POST'])
+@user.check()
+def post_course_upload_log():
+    dic = request.get_json()
+    id = dic.get('id')
+    msg = dic.get('msg','')
+    if course.upload_log(id,msg):
+        return res({'msg': "上传成功OvO"}, 200)
+    else: return res({'msg':'上传记录失败Orz'},500)
 
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
     variable.init()
+    saver.init()

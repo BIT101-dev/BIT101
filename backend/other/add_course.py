@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-29 20:28:22
+LastEditTime: 2022-07-31 00:04:47
 Description: 
 _(:з」∠)_
 '''
@@ -20,7 +20,7 @@ db.db.app = app
 db.db.init_app(app)
 db.db.create_all()
 
-f=open("2021-2022-2.csv","r")
+f=open("2020-2021-2.csv","r")
 dic=csv.DictReader(f)
 
 def get_teachers(name_l,number_l):
@@ -38,6 +38,8 @@ for i in dic:
     number_l=i['教师号'].split(',')
     courses = db.Course.query.filter_by(number=i['课程号']).all()
     for j in courses:
+        if not j.name==i['课程名']:
+            print(j.name,i['课程名'])
         number_ll=[x.number for x in j.teachers]
         if sorted(number_ll)==sorted(number_l):
             break

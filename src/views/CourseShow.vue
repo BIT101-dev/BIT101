@@ -5,6 +5,7 @@ import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
+import router from '@/router';
 
 const course = reactive({
   id: "",
@@ -34,6 +35,9 @@ function ClipUrl() {
   Clip(window.location.href, "课程链接已复制OvO");
 }
 
+function Open(url:string){
+  window.open(url,'_blank');
+}
 
 function LoadCourse() {
   http.get('/course/?id=' + course.id).then(res => {
@@ -77,7 +81,7 @@ onMounted(() => {
           style="text-decoration:none;color:#FF8533">
           {{ i['name'] }}</router-link>
       </n-space>
-      <router-link :to="'/course/?search=' + course.number" style="text-decoration:none;color:#FF8533">查看其他老师讲授的该课程
+      <router-link :to="'/course/?search=' + course.number" style="text-decoration:none;color:#FF8533">查找其他老师讲授的该课程
       </router-link>
 
       <n-space style="margin-top:4px">
@@ -99,9 +103,16 @@ onMounted(() => {
           </template>
           分享
         </n-button>
+        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" icon-placement="right" ghost>
+          查看课程资料
+        </n-button>
+        <n-button @click="router.push('/course/upload/'+course.id)" icon-placement="right" ghost>
+          上传课程资料
+        </n-button>
       </n-space>
     </n-space>
     <n-divider style="color:#809BA8;font-size:14px;">我的评价是</n-divider>
     <Comment :obj='"course" + course.id' :rate="true"></Comment>
+    <br/>
   </div>
 </template>

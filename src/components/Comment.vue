@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-07-29 22:12:52
+ * @LastEditTime: 2022-07-30 13:44:17
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -20,7 +20,7 @@ const now_comment = reactive({
   text: '',
   anonymous: false,
   loading: false,
-  rate: 0.5,
+  rate: 5,
 })
 
 const sub_comment = reactive({
@@ -60,7 +60,7 @@ function Comment(obj: string, parent_list: any, reply_user = '0') {
     now_comment.text = "";
     now_comment.anonymous = false;
     now_comment.loading = false;
-    now_comment.rate = 0.5;
+    now_comment.rate = 5;
     sub_comment.modal = false;
     sub_comments.modal = false;
   }).catch(() => {

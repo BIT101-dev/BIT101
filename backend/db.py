@@ -1,10 +1,11 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 13:37:03
-LastEditTime: 2022-07-29 22:34:31
+LastEditTime: 2022-07-30 23:14:13
 Description: 数据库
 _(:з」∠)_
 '''
+from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import class_mapper
 import datetime
@@ -163,3 +164,25 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     number = db.Column(db.String(24), unique=True)
     name = db.Column(db.String(42), nullable=False)
+
+
+# 课程资料上传记录
+class CourseUploadLog(db.Model):
+    __tablename__='course_upload_log'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user = db.Column(db.Integer, nullable=False)
+    number = db.Column(db.String(24), nullable=False)
+    course_name = db.Column(db.String(224), nullable=False)
+    type = db.Column(db.String(24), nullable=False)
+    name = db.Column(db.String(424), nullable=False)
+    msg=db.Column(db.Text,default="")
+    finish=db.Column(db.Boolean, default=False)
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+# 课程资料上传记录
+class CourseUploadReadme(db.Model):
+    __tablename__='course_upload_readme'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    number = db.Column(db.String(24), nullable=False,unique=True)
+    text=db.Column(db.Text,default="")

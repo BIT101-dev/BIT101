@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-28 16:16:39
+ * @LastEditTime: 2022-07-31 00:09:20
  * @Description: 
  * _(:з」∠)_
 -->
@@ -322,6 +322,76 @@
 **参数说明**：
 需要携带`fake_cookie`
 * `id`：要删除的评论id
+
+**返回说明**：
+无返回值。
+
+
+## 课程模块
+
+同一科目但不同老师的课视为不同课程，其`id`不同但`number`相同，`number`即教务系统中的课程编号。
+
+### 获取课程详情
+可以不携带`fake-cookie`
+**接口地址**：`GET /course/`
+
+**参数说明**：
+* `id`：课程`id`
+
+**返回说明**：
+```json
+{
+    "id":1497,
+    "name":"大学物理AⅠ",
+    "number":"100180111",
+    "teachers_name":"石宏霆", //多个老师用,隔开
+    "teachers_number":"6120104712", // 教师编号，多个用,隔开
+    "rate":10, //平均分
+    "like_num":1,
+    "comment_num":1,
+    "like":true, // 当前用户的点赞状态
+}
+```
+
+
+### 获取课程列表
+**接口地址**：`GET /courses/`
+
+**参数说明**：
+* `search`：搜索关键字
+* `order`：排序方式，`like`|`comment`|`rate`|`time`，默认`time`
+* `page`：页数，从`0`开始
+
+**返回说明**：
+一个列表，其中每一个元素同`/course/`（没有`like`）。
+
+
+### 获取课程资料上传链接
+为了防止过于消耗服务器资源，就直接让前端朝着`OneDrive`传了，详情可以看[官方文档](https://docs.microsoft.com/zh-cn/onedrive/developer/rest-api/api/driveitem_createuploadsession)。
+**接口地址**：`GET /course/upload/url/`
+
+**参数说明**：
+需要携带`fake_cookie`。
+* `number`：课程编号
+* `type`：资料类别，`book`|`ppt`|`exam`|`other`，默认`other`
+* `name`：文件名
+
+**返回说明**：
+```json
+{
+    "url":"",
+    "id":"" // 上传记录的编号
+}
+```
+
+
+### 课程资料上传记录
+**接口地址**：`POST /course/upload/log/`
+
+**参数说明**：
+需要携带`fake_cookie`
+* `id`：获取上传链接时返回的上传记录编号
+* `msg`：上传备注
 
 **返回说明**：
 无返回值。

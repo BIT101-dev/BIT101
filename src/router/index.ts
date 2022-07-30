@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2022-07-29 21:22:01
+ * @LastEditTime: 2022-07-30 23:26:57
  * @Description: 
  * _(:з」∠)_
  */
@@ -18,7 +18,8 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/Login.vue')
+      component: () => import('@/views/Login.vue'),
+      meta:{keepAlive:false}
     },
     {
       path: '/user/:id',
@@ -51,12 +52,18 @@ const router = createRouter({
       name: 'course_show',
       component: () => import('@/views/CourseShow.vue')
     },
-
     {
       path: '/course',
       name: 'course',
       component: () => import('@/views/Course.vue')
     },
+    {
+      path: '/course/upload/:id',
+      name: 'course_upload',
+      component: () => import('@/views/CourseUpload.vue'),
+      meta:{keepAlive:false}
+    },
+
     {
       path: '/admin/carousel/',
       name: 'admin_carousel',

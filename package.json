@@ -30,7 +30,7 @@
     "@editorjs/raw": "^2.3.1",
     "@vicons/material": "^0.12.0",
     "@vitejs/plugin-vue": "^2.3.3",
-    "naive-ui": "^2.29.0",
+    "naive-ui": "^2.32.1",
     "typescript": "^4.5.4",
     "unplugin-vue-components": "^0.19.6",
     "vite": "^2.9.9",
