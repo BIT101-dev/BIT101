@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-28 13:12:52
- * @LastEditTime: 2022-07-28 16:53:05
+ * @LastEditTime: 2022-08-01 00:12:39
  * @Description: 
  * _(:з」∠)_
 -->
@@ -44,6 +44,12 @@ function Submit() {
   })
 }
 
+function Open(url: string) {
+  if (url) {
+    window.open(url, url[0] == '/' ? '_self' : '_blank');
+  }
+}
+
 onMounted(() => { Load() })
 
 </script>
@@ -52,10 +58,10 @@ onMounted(() => { Load() })
   <div class="container">
     <n-space vertical>
       <h2>轮播图设置</h2>
-      <n-carousel autoplay show-arrow style="border-radius:11px;width:100%;height:auto;aspect-ratio:16/9;">
-        <a v-for="i in carousel.preview" :href="i['url']" :target="(i['url'] && i['url'][0] == '/') ? '' : '_blank'">
-          <img :src="i['img']" style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;">
-        </a>
+      <n-carousel autoplay show-arrow style="border-radius:11px;">
+        <img v-for="i in carousel.preview" @click="Open(i['url'])" :src="i['img']"
+          style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;"
+          :style="{ 'cursor': i['url'] ? 'pointer' : 'auto' }">
       </n-carousel>
       <n-input v-model:value="carousel.input" type="textarea" placeholder="JSON" rows="11" />
       <n-button @click="Add" block>添加</n-button>

@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-30 23:02:18
+LastEditTime: 2022-07-31 14:31:44
 Description: 主程序
 _(:з」∠)_
 '''
@@ -352,6 +352,7 @@ def post_course_upload_log():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
     variable.init()
     saver.init()
+    app.run(host="0.0.0.0", port=5000)
+    

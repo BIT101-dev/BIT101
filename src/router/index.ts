@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2022-07-30 23:26:57
+ * @LastEditTime: 2022-07-31 22:43:13
  * @Description: 
  * _(:з」∠)_
  */
@@ -24,7 +24,8 @@ const router = createRouter({
     {
       path: '/user/:id',
       name: 'user',
-      component: () => import('@/views/User.vue')
+      component: () => import('@/views/User.vue'),
+      meta:{keepAlive:false}
     },
     {
       path: '/score',
@@ -65,9 +66,21 @@ const router = createRouter({
     },
 
     {
+      path: '/about/',
+      name: 'about',
+      component: () => import('@/views/About.vue'),
+      meta:{keepAlive:false}
+    },
+
+    {
       path: '/admin/carousel/',
       name: 'admin_carousel',
       component: () => import('@/views/admin/Carousel.vue')
+    },
+    {
+      path: '/admin/billboard/',
+      name: 'admin_billboard',
+      component: () => import('@/views/admin/Billboard.vue')
     },
   ]
 });

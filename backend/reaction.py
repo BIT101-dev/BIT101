@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-07-14 19:57:35
-LastEditTime: 2022-07-29 22:37:49
+LastEditTime: 2022-07-31 01:42:46
 Description: 用户交互部分 如点赞评论
 _(:з」∠)_
 '''
@@ -92,7 +92,7 @@ def post_comment(obj, text, anonymous, reply_user='0',rate='0'):
     o.comment_num += 1
     if rate:
         o.rate_sum+=rate
-    o.rate=o.rate_sum/o.comment_num
+        o.rate=o.rate_sum/o.comment_num
     db.commit()
     i = db.to_dict(q)
     package_comment(i)

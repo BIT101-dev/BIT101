@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 17:09:21
- * @LastEditTime: 2022-07-29 21:56:20
+ * @LastEditTime: 2022-08-01 00:27:50
  * @Description: 
  * _(:з」∠)_
 -->
@@ -53,7 +53,7 @@ function Search() {
 
 <template>
   <div class="container">
-    <n-card title="文章 - Paper">
+    <n-card title="文章 | Paper">
       <n-button @click="router.push('/paper/edit/0')" type="success" ghost style="margin-bottom:4px;margin-top: -11px;"
         block>新建 Paper</n-button>
       <n-collapse>
@@ -78,7 +78,7 @@ function Search() {
     <n-divider></n-divider>
 
     <n-card v-for="i in papers.list" @click="router.push('/paper/show/' + i['id'])" hoverable
-      style="margin-bottom:11px;" embedded>
+      style="margin-bottom:11px;cursor:pointer;background-color: #F0FCFF;">
       <h3 style="margin:0;color:#0087A8;">{{ i['title'] }}</h3>
       <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
         {{ i['intro'] }}

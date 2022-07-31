@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-29 22:48:31
- * @LastEditTime: 2022-07-17 13:24:54
+ * @LastEditTime: 2022-08-01 00:40:23
  * @Description: 
  * _(:з」∠)_
 -->
@@ -19,17 +19,17 @@ a {
   color: #00A9BF;
 }
 
-b{
+b {
   font-weight: 900;
-  color:#00293D;
+  color: #00293D;
 }
 
-.inline-code{
+.inline-code {
   background-color: #FFF6F0;
-  color:#FF8533;
-  padding:3px 4px;
+  color: #FF8533;
+  padding: 3px 4px;
   border-radius: 5px;
-  margin:0 1px;
+  margin: 0 1px;
   font-family: inherit;
 }
 </style>
@@ -42,12 +42,13 @@ b{
     </template>
 
     <template v-else-if="i.type == 'header'">
-      <component :is="'h' + i.data.level" style="color:#FF8533;" v-html="i.data.text"></component>
+      <component :is="'h' + i.data.level" style="color:#FF8533;margin-bottom: 0px;" v-html="i.data.text"></component>
     </template>
 
     <template v-else-if="i.type == 'image'">
       <div style="text-align:center;margin-top: 11px;margin-bottom: 11px;">
-        <n-image  :preview-src="i.data.file.url" :src="i.data.file.url+store.img_suffix" width="424" :img-props="{'style':'max-width:100%;'}" :alt="i.data.caption" />
+        <n-image :preview-src="i.data.file.url" :src="i.data.file.url + store.img_suffix" width="424"
+          :img-props="{ 'style': 'max-width:100%;' }" :alt="i.data.caption" />
         <div style="color:#6291A8" v-html="i.data.caption"></div>
       </div>
     </template>
@@ -62,7 +63,7 @@ b{
     </template>
 
     <template v-else-if="i.type == 'quote'">
-      <n-alert :show-icon="false">
+      <n-alert :show-icon="false" style="margin-top:11px;margin-bottom:11px;">
         <div style="color:#809BA8;font-size:42px;margin:-11px 0 0 -24px;">“</div>
         <div v-html="i.data.text" style="color:#3E5C6B;margin:-42px 24px 0 24px;"
           :style="'text-align:' + i.data.alignment"></div>
@@ -84,14 +85,16 @@ b{
       </a>
     </template>
 
-    <template v-else-if="i.type=='delimiter'">
+    <template v-else-if="i.type == 'delimiter'">
       <n-divider></n-divider>
     </template>
 
-    <template v-else-if="i.type=='table'">
-      <n-table :single-line="false" striped size="small">
+    <template v-else-if="i.type == 'table'">
+      <n-table :single-line="false" striped size="small" style="margin-top:11px;margin-bottom:11px;">
         <tbody>
-          <tr v-for="row in i.data.content"><td v-for="j in row" v-html="j"></td></tr>
+          <tr v-for="row in i.data.content">
+            <td v-for="j in row" v-html="j"></td>
+          </tr>
         </tbody>
       </n-table>
     </template>

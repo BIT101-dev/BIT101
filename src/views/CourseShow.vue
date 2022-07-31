@@ -103,10 +103,10 @@ onMounted(() => {
           </template>
           分享
         </n-button>
-        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" icon-placement="right" ghost>
+        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
           查看课程资料
         </n-button>
-        <n-button @click="router.push('/course/upload/'+course.id)" icon-placement="right" ghost>
+        <n-button @click="router.push('/course/upload/'+course.id)" ghost>
           上传课程资料
         </n-button>
       </n-space>

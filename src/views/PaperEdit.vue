@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2022-07-27 16:23:08
+ * @LastEditTime: 2022-07-31 15:16:23
  * @Description: 
  * _(:з」∠)_
 -->
@@ -32,7 +32,7 @@ const paper = reactive({
   last_time: 0,
   anonymous: false,
   share: true,
-  own:true,
+  own: true,
 })
 
 //通过文件上传图片
@@ -146,8 +146,8 @@ function LoadPaper() {
       paper.data = JSON.parse(res.data.data);
       paper.last_time = Math.round(paper.data.time / 1000);
       paper.anonymous = res.data.anonymous;
-      paper.share=res.data.share;
-      paper.own=res.data.own;
+      paper.share = res.data.share;
+      paper.own = res.data.own;
       InitEditor(true);
     })
 }
@@ -213,7 +213,8 @@ function PostPaper() {
             汝真发表耶？
           </n-popconfirm>
           <n-button @click="paper.anonymous = !paper.anonymous" ghost>匿名:{{ paper.anonymous ? '是' : '否' }}</n-button>
-          <n-button v-if="paper.own" @click="paper.share = !paper.share" ghost>其他人可编辑:{{ paper.share ? '是' : '否' }}</n-button>
+          <n-button v-if="paper.own" @click="paper.share = !paper.share" ghost>其他人可编辑:{{ paper.share ? '是' : '否' }}
+          </n-button>
         </n-space>
       </n-space>
     </n-card>
@@ -222,7 +223,9 @@ function PostPaper() {
     <br />
     <br />
     <n-modal v-model:show="modal" preset="card" style="width:666px">
-      <PaperRender :paper="paper" />
+      <n-scrollbar style="max-height:88vh;">
+        <PaperRender :paper="paper" />
+      </n-scrollbar>
     </n-modal>
 
   </div>

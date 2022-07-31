@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-07-17 13:34:40
+ * @LastEditTime: 2022-07-31 14:40:12
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -74,7 +74,7 @@ function EditInfo(){
         </n-upload>
 
         <p style="margin-bottom: 0;">昵称</p>
-        <n-input v-model:value="user.nickname"></n-input>
+        <n-input v-model:value="user.nickname" maxlength="24"></n-input>
 
         <p style="margin-bottom: 0;">格言/简介</p>
         <n-input v-model:value="user.motto" type="textarea"></n-input>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-07-30 13:44:17
+ * @LastEditTime: 2022-07-31 15:25:35
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -12,6 +12,7 @@ import { MessageOutlined } from '@vicons/material';
 import store from '@/utils/store';
 import { FormatTime } from '@/utils/tools';
 import { ThumbUpOutlined, ThumbUpFilled, DeleteOutlined, ReplyOutlined } from '@vicons/material';
+import { onBeforeRouteLeave } from 'vue-router';
 
 
 const props = defineProps(['obj', 'rate'])
@@ -124,6 +125,10 @@ function Delete(i: any, cmts: any) {
 onMounted(() => {
   LoadComments(props.obj, comments);
 })
+
+onBeforeRouteLeave((to,from)=>{
+  // sub_comments.modal=false;
+})
 </script>
 
 <template>
@@ -151,9 +156,9 @@ onMounted(() => {
     <n-divider></n-divider>
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
-        <router-link :to="'/user/' + i['user']['id']">
+        <a :href="'/#/user/' + i['user']['id']" target="_blank">
           <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
-        </router-link>
+        </a>
       </div>
       <span style="margin-left: 4px;margin-top:-6px">
         <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
@@ -195,7 +200,7 @@ onMounted(() => {
           </n-popconfirm>
         </n-space>
 
-        <div v-if="i['comment_num'] != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
+        <div v-if="i.sub.length != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
           <div v-for="j in i.sub.slice(0, 3)" style="margin:4px;">
             {{ j['user']['nickname'] }}：
             <span v-if="j['reply_user']">@{{ j['reply_user']['nickname'] + ' ' }}</span>
@@ -233,12 +238,12 @@ onMounted(() => {
   </n-modal>
 
   <n-modal v-model:show="sub_comments.modal" preset="card" style="width:624px">
-    <n-scrollbar style="max-height:624px">
+    <n-scrollbar style="max-height:88vh">
       <div style="display: flex;align-items: top;color:#3E5C6B;">
         <div>
-          <router-link :to="'/user/' + sub_comments.parent['user']['id']">
+          <a :href="'/#/user/' + sub_comments.parent['user']['id']" target="_blank">
             <n-avatar :src="sub_comments.parent['user']['avatar'] + store.img_suffix" />
-          </router-link>
+          </a>
         </div>
         <span style="margin-left: 4px;margin-top:-6px">
           <div style="font-size: 16px;">{{ sub_comments.parent['user']['nickname'] }}</div>
@@ -251,17 +256,18 @@ onMounted(() => {
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>
-            <router-link :to="'/user/' + i['user']['id']">
+            <a :href="'/#/user/' + i['user']['id']" target="_blank">
               <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
-            </router-link>
+            </a>
           </div>
           <span style="margin-left: 4px;margin-top:-6px">
             <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;">
-              <router-link v-if="i['reply_user']" :to="'/user/' + i['reply_user']['id']"
+              <a v-if="i['reply_user']" :href="'/#/user/' + i['reply_user']['id']" target="_blank"
                 style="text-decoration:none;color:#FF8533">
-                @{{ i['reply_user']['nickname'] }}</router-link>
+                @{{ i['reply_user']['nickname'] }}
+              </a>
               {{ i['text'] }}
             </div>
             <n-space>

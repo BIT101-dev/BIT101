@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-30 14:05:26
- * @LastEditTime: 2022-07-30 23:01:05
+ * @LastEditTime: 2022-07-31 00:16:54
  * @Description: 
  * _(:з」∠)_
 -->
@@ -85,6 +85,10 @@ function Submit() {
   uploadRef.value?.submit()
 }
 
+function Open(url:string){
+  window.open(url,'_blank');
+}
+
 function LoadCourse() {
   http.get('/course/?id=' + course.id).then(res => {
     let data = res.data;
@@ -116,6 +120,10 @@ onMounted(() => {
           其他：兜底条款，比如作业资料....？<br />
         </div>
       </n-alert>
+
+      <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" block ghost>
+          查看课程资料
+        </n-button>
 
       <n-radio-group v-model:value="course.type">
         <n-space>

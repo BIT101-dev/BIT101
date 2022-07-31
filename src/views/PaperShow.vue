@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2022-07-27 16:32:49
+ * @LastEditTime: 2022-07-31 17:55:22
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -84,9 +84,9 @@ onMounted(() => {
     </div>
     <n-divider></n-divider>
     <div style="display: flex;align-items: center;color:#3E5C6B;">
-      <router-link :to="'/user/' + paper.user.id">
+      <a :href="'/#/user/' + paper.user.id" target="_blank">
         <n-avatar :src="paper.user.avatar + store.img_suffix" />
-      </router-link>
+      </a>
       <span style="margin-left: 4px;margin-top:-6px;">
         <div style="font-size: 16px;">{{ paper.user.nickname }}</div>
         <div style="margin-top: -4px;font-size:14px;">最后编辑于{{ paper.update_time }}</div>

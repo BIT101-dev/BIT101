@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-30 23:58:53
+LastEditTime: 2022-07-31 17:35:27
 Description: 
 _(:з」∠)_
 '''
@@ -9,6 +9,7 @@ import numbers
 import db
 import config
 from sqlalchemy import and_, or_
+from sqlalchemy.dialects.mysql import insert
 import reaction
 import saver
 import user
@@ -106,12 +107,17 @@ def upload_log(id,msg):
         'type':q.type,
         'course_name':q.course_name
     }
-    r=db.CourseUploadReadme.query.filter_by(number=q.number).first()
+    r=db.CourseUploadReadme.query.filter_by(number=q.number).with_for_update().first()
     if not r:
-        r=db.CourseUploadReadme(text=readme_template.format_map(map_dict),number=q.number)
+        # stmt=insert(db.CourseUploadReadme).values(number=q.number,text=readme_template.format_map(map_dict))
+        # stmt_=stmt.on_duplicate_key_update(text=stmt.inserted.text+log_template.format_map(map_dict))
+        # db.execute(stmt_)
+        # r=db.CourseUploadReadme.query.filter_by(number=q.number).first()
+        r=db.CourseUploadReadme(number=q.number)
         db.add(r)
+    if r.text=='': r.text=readme_template.format_map(map_dict)
     r.text+=log_template.format_map(map_dict)
+    db.commit()
     
     saver.onedrive_upload_file('course/{}/README.md'.format(q.course_name+'-'+q.number),str(r.text).encode('utf-8'))
-    db.commit()
     return True

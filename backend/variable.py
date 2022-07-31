@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-07-28 13:08:11
-LastEditTime: 2022-07-28 14:43:47
+LastEditTime: 2022-07-31 23:04:10
 Description: 储存变量的模块
 _(:з」∠)_
 '''
@@ -25,7 +25,8 @@ def post(obj, data):
 
 def init():
     l = [
-        ('carousel', '[]')
+        ('carousel', '[]'),
+        ('billboard','[]'),
     ]
     for i in l:
         q = db.Variable.query.filter_by(obj=i[0]).first()

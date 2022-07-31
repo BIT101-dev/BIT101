@@ -1,11 +1,12 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2022-07-12 01:30:47
+ * @LastEditTime: 2022-07-31 15:20:49
  * @Description: 
  * _(:з」∠)_
 -->
 <script setup lang="ts">
+import router from '@/router';
 import http from '@/utils/request';
 import { WebvpnVerify, webvpn } from '@/utils/tools';
 import { reactive, ref, onMounted, watch } from 'vue';
@@ -227,8 +228,7 @@ watch(() => webvpn.cookie, () => {
     <n-card title="成寄查询">
       <n-space vertical v-if="!webvpn.cookie">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
-        <n-input v-model:value="user.password" type="password" show-password-on="click"
-          placeholder="学校统一身份认证密码" />
+        <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
         <n-button @click="WebvpnVerify(user.sid, user.password)"
           :disabled="!user.sid || !user.password || webvpn.loading" block :loading="webvpn.loading">
           查询
@@ -238,10 +238,8 @@ watch(() => webvpn.cookie, () => {
         <n-button v-show="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
           查询详细信息（较慢）
         </n-button>
-        <n-select v-model:value="course_type.filter" multiple :options="course_type.list"
-          max-tag-count="responsive" />
-        <n-select v-model:value="course_time.filter" multiple :options="course_time.list"
-          max-tag-count="responsive" />
+        <n-select v-model:value="course_type.filter" multiple :options="course_type.list" max-tag-count="responsive" />
+        <n-select v-model:value="course_time.filter" multiple :options="course_time.list" max-tag-count="responsive" />
         <n-button block @click="Filter" :disabled="loading">筛选</n-button>
       </n-space>
 
@@ -260,7 +258,10 @@ watch(() => webvpn.cookie, () => {
     <br />
 
     <n-modal v-model:show="modal" preset="card" style="width: 424px;" :title="modal_data['课程名称'] + ' 详情'">
-      <div v-for="(value, key, index) in modal_data">{{ key + ': ' + value }}</div>
+      <n-scrollbar style="max-height:88vh;">
+      <n-button @click="modal=false,router.push('/course/?search='+modal_data['课程编号'])">查找课程评价和资料</n-button>
+        <div v-for="(value, key, index) in modal_data">{{ key + ': ' + value }}</div>
+      </n-scrollbar>
     </n-modal>
   </div>
 </template>

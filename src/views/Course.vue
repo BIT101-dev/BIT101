@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2022-07-29 23:11:46
+ * @LastEditTime: 2022-08-01 00:28:13
  * @Description: 
  * _(:з」∠)_
 -->
@@ -56,7 +56,7 @@ function Search() {
 
 <template>
   <div class="container">
-    <n-card title="课程">
+    <n-card title="课程 | Course">
       <n-collapse>
         <n-collapse-item title="课程检索">
           <n-space vertical>
@@ -79,7 +79,7 @@ function Search() {
     <n-divider></n-divider>
 
     <n-card v-for="i in course.list" @click="router.push('/course/show/' + i['id'])" hoverable
-      style="margin-bottom:11px;" embedded>
+      style="margin-bottom:11px;cursor:pointer;background-color: #F0FCFF;">
       <h3 style="margin:0;color:#0087A8;">{{ i['name'] }}</h3>
       <n-rate :value="i['rate'] / 2" allow-half readonly />
       <div>授课教师：{{ i['teachers_name'] }}</div>

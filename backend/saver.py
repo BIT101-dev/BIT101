@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-30 22:21:14
+LastEditTime: 2022-07-31 15:27:55
 Description: 图床模块
 _(:з」∠)_
 '''
@@ -50,7 +50,7 @@ def upload_img(data, name):
     if not q:
         img = db.Image(id=id, size=len(data), name=name, user=user.now_uid)
         db.add(img)
-        save('img/'+id, data, cos=True, onedrive=True)
+        save('img/'+id, data, cos=True)
     db.commit()
     return img_url(id)
 

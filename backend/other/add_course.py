@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-31 00:04:47
+LastEditTime: 2022-07-31 17:39:42
 Description: 
 _(:з」∠)_
 '''
@@ -20,7 +20,7 @@ db.db.app = app
 db.db.init_app(app)
 db.db.create_all()
 
-f=open("2020-2021-2.csv","r")
+f=open("2021-2022-2.csv","r")
 dic=csv.DictReader(f)
 
 def get_teachers(name_l,number_l):
@@ -51,4 +51,6 @@ for i in dic:
         course.teachers=get_teachers(name_l,number_l)
         course.teachers_number=','.join([i.number for i in course.teachers])
         db.add(course)
+        q=db.CourseUploadReadme.query.filter_by(number=course.number).first()
+        if not q: db.add(db.CourseUploadReadme(number=course.number))
         db.commit()

@@ -1,17 +1,17 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-07-29 22:42:09
+ * @LastEditTime: 2022-07-31 19:37:08
  * @Description: 
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import { GlobalThemeOverrides, NIcon } from 'naive-ui'
-import { MenuRound } from '@vicons/material'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref } from 'vue';
-import { HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined,BookOutlined } from '@vicons/material';
+import { MenuRound,HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined,BookOutlined,ArrowBackOutlined } from '@vicons/material';
+import {QuestionCircleOutlined} from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
 
@@ -68,6 +68,10 @@ function ToTop() {
 function Refresh() {
   window.location.reload();
 }
+
+function Go(url:string){
+  window.open(url,'_blank')
+}
 </script>
 
 <template>
@@ -86,10 +90,24 @@ function Refresh() {
             <n-button @click="router.push('/')" text style="font-size: 24px;color:#FFF">BIT101</n-button>
           </div>
           <div style="display:flex;align-items:center;height:100%;">
+          <n-button @click="router.go(-1)" quaternary circle size="large" color="white">
+              <template #icon>
+                <n-icon>
+                  <ArrowBackOutlined />
+                </n-icon>
+              </template>
+            </n-button>
             <n-button @click="Refresh" quaternary circle size="large" color="white">
               <template #icon>
                 <n-icon>
                   <RefreshOutlined />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button @click="router.push('/about/')" quaternary circle size="large" color="white">
+              <template #icon>
+                <n-icon>
+                  <QuestionCircleOutlined />
                 </n-icon>
               </template>
             </n-button>
