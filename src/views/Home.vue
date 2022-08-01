@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-08-01 00:13:07
+ * @LastEditTime: 2022-08-01 12:09:36
  * @Description: 主页
  * _(:з」∠)_
 -->
@@ -61,8 +61,8 @@ h2 {
       </n-alert>
 
       <Billboard :data="billboard_data"></Billboard>
-
     </n-space>
+    <br/>
   </div>
 
 </template>
