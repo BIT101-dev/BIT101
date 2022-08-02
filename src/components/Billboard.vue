@@ -57,13 +57,10 @@ function Open(url: string) {
 </script>
 
 <style scoped>
-a {
-    text-decoration: none;
-}
-
 h2 {
     margin: 4px 0 4px 0;
-    text-decoration: underline #FF8533;
+    text-decoration-line: underline;
+    text-decoration-color: #FF8533;
 }
 </style>
 
@@ -72,8 +69,9 @@ h2 {
         <n-gi>
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[0]">
-                    <n-card @click="Open(i['url'])" :style="{ 'background-color': RandColor(), 'cursor': i['url']?'pointer':'auto' }"
-                        hoverable content-style="padding:0 11px 11px 11px;">
+                    <n-card @click="Open(i['url'])"
+                        :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
+                        content-style="padding:0 11px 11px 11px;">
                         <template #cover>
                             <img :src="i['img']">
                         </template>
@@ -86,8 +84,9 @@ h2 {
         <n-gi>
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[1]">
-                    <n-card @click="Open(i['url'])" :style="{ 'background-color': RandColor(), 'cursor': i['url']?'pointer':'auto' }"
-                        hoverable content-style="padding:0 11px 11px 11px;">
+                    <n-card @click="Open(i['url'])"
+                        :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
+                        content-style="padding:0 11px 11px 11px;">
                         <template #cover>
                             <img :src="i['img']">
                         </template>

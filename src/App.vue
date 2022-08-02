@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-07-31 19:37:08
+ * @LastEditTime: 2022-08-02 21:29:14
  * @Description: 
  * _(:з」∠)_
 -->
@@ -62,16 +62,13 @@ function MenuHandler(key: string) {
 }
 
 function ToTop() {
-  document.documentElement.scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
 function Refresh() {
   window.location.reload();
 }
 
-function Go(url:string){
-  window.open(url,'_blank')
-}
 </script>
 
 <template>
@@ -121,7 +118,7 @@ function Go(url:string){
         </n-drawer-content>
       </n-drawer>
 
-      <n-layout-content justify="center" style="margin: 11px;">
+      <n-layout-content justify="center" style="margin: 11px;min-height: 76vh;">
         <router-view v-slot="{ Component }">
           <keep-alive>
             <component :is="Component" v-if="route.meta.keepAlive != false" :key="route.fullPath" />
@@ -131,7 +128,7 @@ function Go(url:string){
       </n-layout-content>
 
 
-      <n-layout-footer style="text-align:center;">
+      <n-layout-footer style="text-align:center;min-height: 24vh;">
         <h4 style="color: #607d8b;margin: auto;font-size: 14px;">{{ hitokoto }}</h4>
         <n-button @click="ToTop" text>👆回到顶部👆</n-button>
         <div style="font-size: 14px;">Powered⚡ by fdd with 💖.</div>
