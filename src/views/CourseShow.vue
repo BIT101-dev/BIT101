@@ -35,8 +35,8 @@ function ClipUrl() {
   Clip(window.location.href, "课程链接已复制OvO");
 }
 
-function Open(url:string){
-  window.open(url,'_blank');
+function Open(url: string) {
+  window.open(url, '_blank');
 }
 
 function LoadCourse() {
@@ -48,6 +48,7 @@ function LoadCourse() {
     course.number = data.number;
     course.rate_sum = data.rate_sum;
     course.rate = data.rate / 2;
+    course.like = data.like;
     let names = data.teachers_name.split(',');
     let numbers = data.teachers_number.split(',');
     for (let i in names) course.teachers.push({ 'name': names[i], 'number': numbers[i] })
@@ -106,13 +107,16 @@ onMounted(() => {
         <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
           查看课程资料
         </n-button>
-        <n-button @click="router.push('/course/upload/'+course.id)" ghost>
+        <n-button @click="router.push('/course/upload/' + course.id)" ghost>
           上传课程资料
         </n-button>
       </n-space>
     </n-space>
     <n-divider style="color:#809BA8;font-size:14px;">我的评价是</n-divider>
+    <n-alert closable :show-icon="false" style="margin-bottom:11px;">
+      <div style="font-size:14px;">评分请尽量客观，以授课质量为主要视角<br />可以谈谈上课风格、给分方式、作业情况、学习感想等</div>
+    </n-alert>
     <Comment :obj='"course" + course.id' :rate="true"></Comment>
-    <br/>
+    <br />
   </div>
 </template>

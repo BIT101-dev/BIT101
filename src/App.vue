@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-08-02 21:29:14
+ * @LastEditTime: 2022-08-04 17:54:56
  * @Description: 
  * _(:з」∠)_
 -->
@@ -54,6 +54,11 @@ const menu_options = [
     label: "成绩",
     key: '/score/',
     icon: renderIcon(SchoolOutlined)
+  },
+  {
+    label: "关于",
+    key: '/about/',
+    icon: renderIcon(QuestionCircleOutlined)
   }
 ]
 function MenuHandler(key: string) {
