@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-08-04 17:54:56
+ * @LastEditTime: 2022-08-05 10:48:08
  * @Description: 
  * _(:з」∠)_
 -->
@@ -123,7 +123,7 @@ function Refresh() {
         </n-drawer-content>
       </n-drawer>
 
-      <n-layout-content justify="center" style="margin: 11px;min-height: 76vh;">
+      <n-layout-content justify="center" style="margin: 11px;min-height: 89vh;">
         <router-view v-slot="{ Component }">
           <keep-alive>
             <component :is="Component" v-if="route.meta.keepAlive != false" :key="route.fullPath" />
@@ -133,7 +133,7 @@ function Refresh() {
       </n-layout-content>
 
 
-      <n-layout-footer style="text-align:center;min-height: 24vh;">
+      <n-layout-footer style="text-align:center;min-height: 11vh;">
         <h4 style="color: #607d8b;margin: auto;font-size: 14px;">{{ hitokoto }}</h4>
         <n-button @click="ToTop" text>👆回到顶部👆</n-button>
         <div style="font-size: 14px;">Powered⚡ by fdd with 💖.</div>

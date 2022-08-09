@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 17:09:21
- * @LastEditTime: 2022-08-01 00:27:50
+ * @LastEditTime: 2022-08-09 20:20:14
  * @Description: 
  * _(:з」∠)_
 -->
@@ -13,7 +13,7 @@ import { onMounted, reactive } from 'vue';
 
 const papers = reactive({
   search: "",
-  order: "rand",
+  order: "new",
   page: 0,
   end: false,
   loading: false,
@@ -56,16 +56,16 @@ function Search() {
     <n-card title="文章 | Paper">
       <n-button @click="router.push('/paper/edit/0')" type="success" ghost style="margin-bottom:4px;margin-top: -11px;"
         block>新建 Paper</n-button>
-      <n-collapse>
-        <n-collapse-item title="Paper检索">
+      <n-collapse default-expanded-names="search">
+        <n-collapse-item title="Paper检索" name="search">
           <n-space vertical>
             <div>搜索</div>
             <n-input v-model:value="papers.search" placeholder="请输入关键词" maxlength="42"></n-input>
             <n-radio-group v-model:value="papers.order" name="排序方式">
               <n-space>
                 排序方式
-                <n-radio value="rand"> 随机</n-radio>
                 <n-radio value="new"> 最新</n-radio>
+                <n-radio value="rand"> 随机</n-radio>
                 <n-radio value="like"> 赞数</n-radio>
               </n-space>
             </n-radio-group>

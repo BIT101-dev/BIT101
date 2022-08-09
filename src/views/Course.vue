@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2022-08-01 00:28:13
+ * @LastEditTime: 2022-08-09 20:22:15
  * @Description: 
  * _(:з」∠)_
 -->
@@ -57,8 +57,8 @@ function Search() {
 <template>
   <div class="container">
     <n-card title="课程 | Course">
-      <n-collapse>
-        <n-collapse-item title="课程检索">
+      <n-collapse default-expanded-names="search">
+        <n-collapse-item title="课程检索" name="search">
           <n-space vertical>
             <div>搜索</div>
             <n-input v-model:value="course.search" placeholder="请输入关键词" maxlength="42"></n-input>
