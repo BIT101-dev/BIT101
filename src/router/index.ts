@@ -5,7 +5,8 @@
  * @Description: 
  * _(:з」∠)_
  */
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { setTitle } from '@/utils/tools'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -84,5 +85,23 @@ const router = createRouter({
     },
   ]
 });
+
+router.beforeEach(({ path }) => {
+  // 此处只是尽快响应，设置大类标题。
+  // 之后各组件可以再覆盖。
+
+  const titleMap: Record<string, string> = {
+    '': '欢迎',
+    login: '登录',
+    user: '我',
+    paper: '文章',
+    course: '课程',
+    score: '成绩',
+    about: '关于'
+  }
+  const top = path.split('/').filter(piece => piece.length > 0)[0] ?? ''
+  const title = titleMap[top] ?? top
+  setTitle(title)
+})
 
 export default router;

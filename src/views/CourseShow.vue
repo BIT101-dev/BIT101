@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from '@/utils/request';
-import { Clip } from '@/utils/tools';
+import { Clip, setTitle } from '@/utils/tools';
 import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
@@ -40,7 +40,7 @@ function Open(url: string) {
 }
 
 function LoadCourse() {
-  http.get('/course/?id=' + course.id).then(res => {
+  return http.get('/course/?id=' + course.id).then(res => {
     let data = res.data;
     course.comment_num = data.comment_num;
     course.like_num = data.like_num;
@@ -57,8 +57,10 @@ function LoadCourse() {
 
 const route = useRoute();
 course.id = route.params.id as string;
-onMounted(() => {
-  LoadCourse();
+onMounted(async () => {
+  await LoadCourse()
+  const teachers_names = course.teachers.map(t => t.name)
+  setTitle(`${course.name}（${teachers_names.join('、')}）`, '课程')
 })
 
 </script>

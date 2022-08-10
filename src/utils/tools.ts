@@ -114,6 +114,11 @@ async function Clip(s:string,msg="已复制到剪贴板OvO"){
   }
 }
 
+/** 设置页面标题 */
+export function setTitle(...titles: string[]): void {
+  document.title = `${titles.join(' - ')} | BIT101`
+}
+
 export {
   hitokoto,
   FormatTime,

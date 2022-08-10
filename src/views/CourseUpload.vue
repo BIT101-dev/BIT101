@@ -6,11 +6,12 @@
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import http from '@/utils/request';
-import { reactive, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { reactive, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { UploadCustomRequestOptions, UploadInst } from 'naive-ui'
 import { UploadRound } from '@vicons/material'
+import http from '@/utils/request'
+import { setTitle } from '@/utils/tools'
 
 const course = reactive({
   id: "",
@@ -90,7 +91,7 @@ function Open(url:string){
 }
 
 function LoadCourse() {
-  http.get('/course/?id=' + course.id).then(res => {
+  return http.get('/course/?id=' + course.id).then(res => {
     let data = res.data;
     course.name = data.name;
     course.number = data.number;
@@ -99,8 +100,9 @@ function LoadCourse() {
 
 const route = useRoute();
 course.id = route.params.id as string;
-onMounted(() => {
-  LoadCourse();
+onMounted(async () => {
+  await LoadCourse()
+  setTitle('上传资料', course.name, '课程')
 })
 </script>
 

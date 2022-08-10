@@ -22,6 +22,7 @@ import store from '@/utils/store';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
+import { setTitle } from '@/utils/tools';
 
 //文章数据
 const paper = reactive({
@@ -139,7 +140,7 @@ function PreviewPaper() {
 function LoadPaper() {
   paper.id = route.params.id as string;
   if (paper.id == '0') InitEditor(false);
-  else http.get("/paper/?id=" + paper.id)
+  else return http.get("/paper/?id=" + paper.id)
     .then(res => {
       paper.title = res.data.title;
       paper.intro = res.data.intro;
@@ -154,8 +155,9 @@ function LoadPaper() {
 
 const route = useRoute();
 const router = useRouter();
-onMounted(() => {
-  LoadPaper();
+onMounted(async () => {
+  await LoadPaper()
+  setTitle('编辑', paper.title, '文章')
 })
 
 //发表文章

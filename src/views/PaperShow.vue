@@ -11,7 +11,7 @@ import store from '@/utils/store';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime, Clip } from '@/utils/tools';
+import { FormatTime, Clip, setTitle } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 
@@ -38,7 +38,7 @@ const paper = reactive({
 
 //加载文章
 function LoadPaper() {
-  http.get("/paper/?id=" + paper.id)
+  return http.get("/paper/?id=" + paper.id)
     .then(res => {
       paper.title = res.data.title;
       paper.intro = res.data.intro;
@@ -72,8 +72,9 @@ function ClipUrl() {
 const router = useRouter();
 const route = useRoute();
 paper.id = route.params.id as string;
-onMounted(() => {
-  LoadPaper();
+onMounted(async () => {
+  await LoadPaper()
+  setTitle(paper.title, '文章')
 })
 </script>
 
