@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2022-08-09 20:22:15
+ * @LastEditTime: 2022-08-13 21:31:52
  * @Description: 
  * _(:з」∠)_
 -->
@@ -66,7 +66,7 @@ function Search() {
               <n-space>
                 排序方式
                 <n-radio value="new"> 最新</n-radio>
-                <n-radio value="like"> 赞数</n-radio>
+                <n-radio value="comment"> 评价数</n-radio>
                 <n-radio value="rate"> 评分</n-radio>
               </n-space>
             </n-radio-group>

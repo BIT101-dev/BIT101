@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-31 17:39:42
+LastEditTime: 2022-08-13 21:57:54
 Description: 
 _(:з」∠)_
 '''
@@ -37,6 +37,7 @@ for i in dic:
     name_l=i['上课教师'].split(',')
     number_l=i['教师号'].split(',')
     courses = db.Course.query.filter_by(number=i['课程号']).all()
+    i['课程名']=i['课程名'].replace('/','_')
     for j in courses:
         if not j.name==i['课程名']:
             print(j.name,i['课程名'])

@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:31:25
-LastEditTime: 2022-07-28 13:56:07
+LastEditTime: 2022-08-13 19:04:44
 Description: 用户管理
 _(:з」∠)_
 '''
@@ -75,7 +75,12 @@ def check_admin():
 
 # 操作权限检查
 def ifown(id):
-    return str(id)==str(now_uid)
+    if str(id)==str(now_uid):
+        return True
+    q=db.User.query.filter_by(id=now_uid).first()
+    if q and q.level==0:
+        return True
+    return False
 
 # 发送邮箱验证码
 def mail_verify(sid):

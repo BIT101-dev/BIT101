@@ -106,6 +106,9 @@ onMounted(async () => {
           </template>
           分享
         </n-button>
+        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/教学大纲/${course.name}-${course.number}.doc`)" ghost>
+          查看教学大纲
+        </n-button>
         <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
           查看课程资料
         </n-button>

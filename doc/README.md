@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-29 14:05:31
- * @LastEditTime: 2022-07-31 00:09:20
+ * @LastEditTime: 2022-08-14 01:32:08
  * @Description: 
  * _(:з」∠)_
 -->
@@ -442,6 +442,21 @@
 }
 ```
 
+
+### 获取可信成绩单
+**接口地址**：`GET /score/report/`
+
+**参数说明**：
+* `cookie`：`webvpn`的`cookie`，获取见[统一身份认证验证](#统一身份认证验证)
+
+**返回说明**：
+```json
+{
+    "data":[] //每个元素为一个成绩单图片链接
+}
+```
+
+
 # webvpn
 
 `webvpn`是从外网访问学校内网的转发系统，通过分析调用`webvpn`即可实现对学校接口的操作。有一位学长做过一个非常好用的[转换工具](https://webvpn.vercel.app/)。
@@ -459,6 +474,10 @@
 [学生信息页面](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421e3e354d225397c1e7b0c9ce29b5b/xsfw/sys/jbxxapp/*default/index.do)
 
 [基本信息API](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421e3e354d225397c1e7b0c9ce29b5b/xsfw/sys/jbxxapp/modules/infoStudent/getStuBatchInfo.do)
+
+[可信成绩单系统登录](https://jwc.bit.edu.cn/cjd/Account/ExternalLogin)
+
+[可信成绩单](https://jwc.bit.edu.cn/cjd/ScoreReport2/Index?GPA=1)
 
 ## 学校统一身份认证登录流程
 

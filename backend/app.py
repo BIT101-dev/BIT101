@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-07-31 14:31:44
+LastEditTime: 2022-08-14 01:31:14
 Description: 主程序
 _(:з」∠)_
 '''
@@ -187,6 +187,17 @@ def get_score_brief():
         return res({'msg': '未通过统一身份认证Orz'}, 500)
 
 
+# 获取成绩单
+@app.route("/score/report/", methods=['GET'])
+def get_score_report():
+    cookie = request.args.get('cookie', '')
+    out = webvpn.get_report(cookie)
+    if out:
+        return res({'data': out, 'msg': '查询成功OvO'}, 200)
+    else:
+        return res({'msg': '未通过统一身份认证Orz'}, 500)
+
+
 # 获取文章
 @app.route("/paper/", methods=['GET'])
 @user.check(False)
@@ -282,9 +293,8 @@ def post_reaction_comment():
 @user.check()
 def delete_reaction_comment():
     id = request.args.get('id', '')
-    if not id:
+    if not reaction.delete_comment(id):
         return res({'msg': '请检查请求参数awa'}, 400)
-    reaction.delete_comment(id)
     return res({'msg': '删除成功OvO'}, 200)
 
 

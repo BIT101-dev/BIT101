@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-07-14 19:57:35
-LastEditTime: 2022-07-31 01:42:46
+LastEditTime: 2022-08-13 18:38:29
 Description: 用户交互部分 如点赞评论
 _(:з」∠)_
 '''
@@ -101,6 +101,7 @@ def post_comment(obj, text, anonymous, reply_user='0',rate='0'):
 # 删除评论
 def delete_comment(id):
     q=db.Comment.query.filter_by(id=id).first()
+    if not (q and user.ifown(q.user)): return
     q.show=False
     o=get_obj(q.obj)
     o.comment_num-=1

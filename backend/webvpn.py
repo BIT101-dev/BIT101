@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 14:52:20
-LastEditTime: 2022-05-31 20:46:39
+LastEditTime: 2022-08-13 23:04:31
 Description: webvpn相关服务 尽量解耦方便移植
 _(:з」∠)_
 '''
@@ -15,9 +15,9 @@ import time
 base_url = "https://webvpn.bit.edu.cn"
 login_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/login?service=https%3A%2F%2Fwebvpn.bit.edu.cn%2Flogin%3Fcas_login%3Dtrue"
-need_captcha_url=base_url + \
+need_captcha_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/checkNeedCaptcha.htl"
-get_captcha_url=base_url + \
+get_captcha_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/getCaptcha.htl"
 account_info_url = base_url + \
     "/https/77726476706e69737468656265737421fcf84695297e6a596a468ca88d1b203b/authserver/login"
@@ -28,6 +28,10 @@ student_info_url = base_url + \
 score_base_url = base_url + \
     "/https/77726476706e69737468656265737421fae04c8f69326144300d8db9d6562d"
 score_url = score_base_url+"/jsxsd/kscj/cjcx_list"
+report_login_url = base_url + \
+    "/https/77726476706e69737468656265737421fae042d225397c1e7b0c9ce29b5b/cjd/Account/ExternalLogin"
+report_url = base_url + \
+    "/https/77726476706e69737468656265737421fae042d225397c1e7b0c9ce29b5b/cjd/ScoreReport2/Index?GPA=1"
 
 
 # 处理重定向问题
@@ -55,17 +59,18 @@ def init_login():
 
 # 查询是否需要验证码
 def need_captcha(sid):
-    r=redirection(need_captcha_url+"?username="+sid)
+    r = redirection(need_captcha_url+"?username="+sid)
     return json.loads(r.text)['isNeed']
 
 
 # 获取验证码
 def get_captcha(cookie):
-    r=redirection(get_captcha_url,head={'Cookie':cookie})
+    r = redirection(get_captcha_url, head={'Cookie': cookie})
     return r.content
 
+
 # 登录
-def login(username, password, execution, cookie,captcha=""):
+def login(username, password, execution, cookie, captcha=""):
     head = {"Cookie": cookie}
     data = {
         'username': username,
@@ -117,7 +122,7 @@ def get_student_info(username, head):
             'class_name': dic['BJDM_DISPLAY'],
             'sex': dic['XBDM_DISPLAY'],
             'college': dic['DWDM_DISPLAY'],
-            'major':dic['ZYDM_DISPLAY']
+            'major': dic['ZYDM_DISPLAY']
         }
         return info
     except:
@@ -172,3 +177,17 @@ def get_score(cookie, detail=False):
             table[-1] += ['']*(ind-len(table[-1])+1)
             table[-1][ind] = row[i]
     return table
+
+
+# 获取可信成绩单图片
+def get_report(cookie):
+    head = {'Cookie': cookie}
+    redirection(report_login_url, head=head)
+    r=redirection(report_url,head=head)
+    soup = bs(r.text, 'html.parser')
+    img_l = soup.find_all('img',attrs={'alt':'Responsive image'})
+    l=[]
+    for i in img_l:
+        s=i.get('src')
+        l.append("https://jwc.bit.edu.cn"+s[s.find('/cjd/'):])
+    return l
