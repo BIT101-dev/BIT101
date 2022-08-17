@@ -1,12 +1,12 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-07-31 14:40:12
+ * @LastEditTime: 2022-08-17 23:09:31
  * @Description: 用户中心
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { FormatTime, hitokoto } from '@/utils/tools';
+import { FormatTime, hitokoto, setTitle } from '@/utils/tools';
 import http from '@/utils/request';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -31,6 +31,7 @@ function GetInfo(uid: any) {
       user.avatar = res.data.avatar;
       user.motto = res.data.motto;
       user.register_time = FormatTime(res.data.register_time);
+      if(user.id)setTitle(user.nickname,"用户");
     })
 }
 

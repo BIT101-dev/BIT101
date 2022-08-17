@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-08-14 01:31:14
+LastEditTime: 2022-08-16 11:25:06
 Description: 主程序
 _(:з」∠)_
 '''
@@ -32,9 +32,8 @@ db.db.app = app
 db.db.init_app(app)
 db.db.create_all()
 
+
 # 代理请求
-
-
 def requests_proxy():
     def decorator(f):
         @wraps(f)
@@ -52,9 +51,9 @@ def res(data, status=200):
     class ComplexEncoder(json.JSONEncoder):
         def default(self, obj):
             if isinstance(obj, datetime):
-                return obj.strftime('%Y-%m-%d %H:%M:%S')
+                return obj.strftime('%Y/%m/%d %H:%M:%S')
             elif isinstance(obj, date):
-                return obj.strftime('%Y-%m-%d')
+                return obj.strftime('%Y/%m/%d')
             else:
                 return json.JSONEncoder.default(self, obj)
     return Response(json.dumps(data, cls=ComplexEncoder), status=status, mimetype='application/json')

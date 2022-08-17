@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-08-05 10:48:08
+ * @LastEditTime: 2022-08-17 23:05:25
  * @Description: 
  * _(:з」∠)_
 -->
@@ -10,8 +10,8 @@ import { GlobalThemeOverrides, NIcon } from 'naive-ui'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref } from 'vue';
-import { MenuRound,HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined,BookOutlined,ArrowBackOutlined } from '@vicons/material';
-import {QuestionCircleOutlined} from "@vicons/antd"
+import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined } from '@vicons/material';
+import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
 
@@ -67,7 +67,7 @@ function MenuHandler(key: string) {
 }
 
 function ToTop() {
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
 function Refresh() {
@@ -92,7 +92,7 @@ function Refresh() {
             <n-button @click="router.push('/')" text style="font-size: 24px;color:#FFF">BIT101</n-button>
           </div>
           <div style="display:flex;align-items:center;height:100%;">
-          <n-button @click="router.go(-1)" quaternary circle size="large" color="white">
+            <n-button @click="router.go(-1)" quaternary circle size="large" color="white">
               <template #icon>
                 <n-icon>
                   <ArrowBackOutlined />
@@ -154,5 +154,10 @@ body {
 .container {
   max-width: 666px;
   margin: auto;
+}
+
+::selection {
+  color: #fff;
+  background: #00bcd4;
 }
 </style>
