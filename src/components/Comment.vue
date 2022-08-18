@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-07-31 15:25:35
+ * @LastEditTime: 2022-08-18 10:47:47
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -126,7 +126,7 @@ onMounted(() => {
   LoadComments(props.obj, comments);
 })
 
-onBeforeRouteLeave((to,from)=>{
+onBeforeRouteLeave((to, from) => {
   // sub_comments.modal=false;
 })
 </script>
@@ -164,7 +164,7 @@ onBeforeRouteLeave((to,from)=>{
         <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
         <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
         <n-rate v-if="props.rate" :value="i['rate'] / 2" allow-half size="large" readonly />
-        <div style="white-space: pre-wrap;margin-top:4px;">{{ i['text'] }}</div>
+        <div style="white-space:pre-wrap;margin-top:4px;word-break:break-all;">{{ i['text'] }}</div>
         <n-space>
           <n-button @click="Like(i)" color="#fb7299" text :loading="i['like_loading']" :disabled="i['like_loading']">
             <template #icon>
@@ -204,7 +204,7 @@ onBeforeRouteLeave((to,from)=>{
           <div v-for="j in i.sub.slice(0, 3)" style="margin:4px;">
             {{ j['user']['nickname'] }}：
             <span v-if="j['reply_user']">@{{ j['reply_user']['nickname'] + ' ' }}</span>
-            <span style="white-space: pre-wrap;margin-top:4px;">{{ j['text'] }}</span>
+            <span style="white-space: pre-wrap;margin-top:4px;word-break:break-all;">{{ j['text'] }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i['comment_num'] }}条回复>></n-button>
         </div>
