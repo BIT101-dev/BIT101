@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2022-08-14 01:38:16
+ * @LastEditTime: 2022-08-21 17:19:12
  * @Description: 
  * _(:з」∠)_
 -->
@@ -316,7 +316,7 @@ watch(() => webvpn.cookie, () => {
       </span><br />
       总学分：{{ stat.credit }}（{{ stat.num }}门）<br />
       个人学分绩 | GPA：{{ stat.score }} | {{ stat.gpa }}<br />
-      估计平均绩 | GPA：{{ stat.avg_score }} | {{ stat.avg_gpa }}<br />
+      <template v-if="detail">估计平均绩 | GPA：{{ stat.avg_score }} | {{ stat.avg_gpa }}<br /></template>
     </n-alert>
 
     <n-data-table :columns="columns" :data="data" size="small" striped :scroll-x="777" :loading="loading"
