@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 22:30:51
-LastEditTime: 2022-07-31 00:08:20
+LastEditTime: 2022-11-11 11:17:37
 Description:
 _(:з」∠)_
 '''
@@ -25,8 +25,11 @@ cos_secret_key=''
 cos_region='ap-beijing'
 cos_bucket='bit101-test-1255944436'
 cos_path='/'
+onedrive_auth_api="https://login.microsoftonline.com/common/oauth2/v2.0/token"
+onedrive_api="https://graph.microsoft.com/v1.0/me/drive"
+onedrive_client_id=""
+onedrive_client_secret=""
 onedrive_refresh_token=""
-onedrive_api="https://microsoftgraph.chinacloudapi.cn/v1.0/me/drive"
 
 mail_host='smtp.qq.com'
 mail_user='bit101@qq.com'

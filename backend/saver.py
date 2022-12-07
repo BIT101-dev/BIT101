@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-07-31 15:27:55
+LastEditTime: 2022-11-11 11:18:40
 Description: 图床模块
 _(:з」∠)_
 '''
@@ -82,14 +82,13 @@ def onedrive_get_head():
     global onedrive_refresh_time, onedrive_token
     if time.time() > onedrive_refresh_time:
         data = {
-            'client_id': 'addf023b-9ffe-43be-8b0c-8ea65b29e074',
-            'client_secret': 'J_YPf11VN1k~Vd381h8Fq92o.FQ.-9G_tw',
+            'client_id': config.onedrive_client_id,
+            'client_secret': config.onedrive_client_secret,
             'redirect_uri': 'http://localhost',
             'refresh_token': config.onedrive_refresh_token,
             'grant_type': 'refresh_token'
         }
-        dic = requests.post(
-            "https://login.partner.microsoftonline.cn/common/oauth2/v2.0/token", data=data).json()
+        dic = requests.post(config.onedrive_auth_api, data=data).json()
         onedrive_refresh_time = time.time()+dic['expires_in']-11
         onedrive_token = 'bearer '+dic['access_token']
     return {

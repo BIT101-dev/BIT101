@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 14:52:20
-LastEditTime: 2022-08-13 23:04:31
+LastEditTime: 2022-12-07 13:12:34
 Description: webvpn相关服务 尽量解耦方便移植
 _(:з」∠)_
 '''
@@ -189,5 +189,7 @@ def get_report(cookie):
     l=[]
     for i in img_l:
         s=i.get('src')
-        l.append("https://jwc.bit.edu.cn"+s[s.find('/cjd/'):])
+        # l.append("http://jwb.bit.edu.cn"+s[s.find('/cjd/'):])
+        r=redirection("http://jwb.bit.edu.cn"+s[s.find('/cjd/'):])
+        l.append("data:image/png;base64,"+base64.b64encode(r.content).decode())
     return l
