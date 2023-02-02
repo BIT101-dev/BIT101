@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-30 14:05:26
- * @LastEditTime: 2022-07-31 00:16:54
+ * @LastEditTime: 2023-02-03 00:55:47
  * @Description: 
  * _(:з」∠)_
 -->
@@ -12,6 +12,7 @@ import { UploadCustomRequestOptions, UploadInst } from 'naive-ui'
 import { UploadRound } from '@vicons/material'
 import http from '@/utils/request'
 import { setTitle } from '@/utils/tools'
+import axios from 'axios'
 
 const course = reactive({
   id: "",
@@ -36,6 +37,7 @@ function customRequest({
     }
   }).then(async res => {
     let url = res.data.url;
+    let status = true;
     if (file.file) {
       let size = file.file.size;
       let chunk_size = 3276800;
@@ -44,6 +46,7 @@ function customRequest({
       for (let i = 0; i < size; i += chunk_size) {
         if (is_removed[file.id]) {
           onError();
+          status=false;
           break;
         }
         let chunk_data = file.file.slice(i, i + chunk_size);
@@ -52,9 +55,8 @@ function customRequest({
           'Content-Range': `bytes ${i}-${i + chunk_data.size - 1}/${size}`,
           'Content-Type': 'text/plain'
         }
-        let status = true;
-
-        await http.put(url, chunk_data, {
+        
+        await axios.put(url, chunk_data, {
           headers: head,
           onUploadProgress: (progress) => {
             onProgress({ 'percent': (progress.loaded + uploaded_size) / size * 100 })
@@ -68,7 +70,7 @@ function customRequest({
       }
 
       //上传记录
-      http.post('/course/upload/log/', { 'id': log_id, 'msg': course.msg })
+      if(status)http.post('/course/upload/log/', { 'id': log_id, 'msg': course.msg })
         .then(() => { onFinish() }).catch(() => { onError() })
     }
     else onError();
