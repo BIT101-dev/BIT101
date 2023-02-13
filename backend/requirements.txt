@@ -2,6 +2,7 @@ beautifulsoup4==4.11.1
 Flask==2.1.2
 flask_cors==3.0.10
 flask_sqlalchemy==2.5.1
+icalendar==5.0.4
 Pillow==9.1.1
 cos-python-sdk-v5==1.9.15
 redis==4.3.1

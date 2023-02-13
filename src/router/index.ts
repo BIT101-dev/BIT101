@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2022-07-31 22:43:13
+ * @LastEditTime: 2023-02-13 22:51:12
  * @Description: 
  * _(:з」∠)_
  */
@@ -48,7 +48,6 @@ const router = createRouter({
       name: 'paper_show',
       component: () => import('@/views/PaperShow.vue')
     },
-
     {
       path: '/course/show/:id',
       name: 'course_show',
@@ -65,14 +64,18 @@ const router = createRouter({
       component: () => import('@/views/CourseUpload.vue'),
       meta:{keepAlive:false}
     },
-
     {
       path: '/about/',
       name: 'about',
       component: () => import('@/views/About.vue'),
       meta:{keepAlive:false}
     },
-
+    {
+      path: '/schedule/',
+      name: 'schedule',
+      component: () => import('@/views/Schedule.vue'),
+      meta:{keepAlive:false}
+    },
     {
       path: '/admin/carousel/',
       name: 'admin_carousel',
@@ -93,11 +96,12 @@ router.beforeEach(({ path }) => {
   const titleMap: Record<string, string> = {
     '': '欢迎',
     login: '登录',
-    user: '我',
+    user: '我的',
     paper: '文章',
     course: '课程',
     score: '成绩',
-    about: '关于'
+    schedule:'课表',
+    about: '关于',
   }
   const top = path.split('/').filter(piece => piece.length > 0)[0] ?? ''
   const title = titleMap[top] ?? top

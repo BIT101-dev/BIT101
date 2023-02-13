@@ -485,6 +485,30 @@
 
 另外，`webvpn`的过期机制至今仍未探明，现在只能是用到相关服务的时候都重新走流程登录一遍。
 
+## 课程表
+
+[我的课表主页](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/*default/index.do)
+
+查看源码可以找到一个`APPID: "5959167891382285"`，还不清楚这个到底是写死的还是会变动。
+
+[获取访问权限](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/funauthapp/api/getAppConfig/wdkbby-5959167891382285.do)
+
+这个链接中就包含了上面提到的`APPID`，在获取数据之前访问一次即可。
+
+[更改语言为中文](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/i18n.do?appName=wdkbby&EMAP_LANG=zh)
+
+[获取当前学期](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/jshkcb/dqxnxq.do)
+
+[获取所有学期](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/jshkcb/xnxqcx.do)
+
+[获取学期课表](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/xskcb/cxxszhxqkb.do)
+
+要使用`POST`，`Content-Type: application/x-www-form-urlencoded; charset=UTF-8`，数据形如`XNXQDM:2022-2023-2`。
+
+[获取星期日期](https://webvpn.bit.edu.cn/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/wdkbByController/cxzkbrq.do)
+
+类似地使用`POST`，数据形如`requestParamStr:{"XNXQDM":"2022-2023-2","ZC":"1"}`。
+
 
 # 前端
 

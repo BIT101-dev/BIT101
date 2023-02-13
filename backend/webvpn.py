@@ -1,16 +1,15 @@
 '''
 Author: flwfdd
 Date: 2022-03-09 14:52:20
-LastEditTime: 2022-12-07 13:12:34
+LastEditTime: 2023-02-14 00:05:41
 Description: webvpn相关服务 尽量解耦方便移植
 _(:з」∠)_
 '''
 import requests
 import json
 from bs4 import BeautifulSoup as bs
-import db
 import re
-import time
+import base64
 
 base_url = "https://webvpn.bit.edu.cn"
 login_url = base_url + \
@@ -33,6 +32,19 @@ report_login_url = base_url + \
 report_url = base_url + \
     "/https/77726476706e69737468656265737421fae042d225397c1e7b0c9ce29b5b/cjd/ScoreReport2/Index?GPA=1"
 
+# 课程表模块
+schedule_init_url = base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/funauthapp/api/getAppConfig/wdkbby-5959167891382285.do"
+schedule_lang_url = base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/i18n.do?appName=wdkbby&EMAP_LANG=zh"
+schedule_now_term_url = base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/jshkcb/dqxnxq.do"
+schedule_all_terms_url = base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/jshkcb/xnxqcx.do"
+schedule_url = base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/modules/xskcb/cxxszhxqkb.do"
+schedule_date_url=base_url + \
+    "/http/77726476706e69737468656265737421faef5b842238695c720999bcd6572a216b231105adc27d/jwapp/sys/wdkbby/wdkbByController/cxzkbrq.do"
 
 # 处理重定向问题
 def redirection(url, head={}, data={}):
@@ -183,13 +195,43 @@ def get_score(cookie, detail=False):
 def get_report(cookie):
     head = {'Cookie': cookie}
     redirection(report_login_url, head=head)
-    r=redirection(report_url,head=head)
+    r = redirection(report_url, head=head)
     soup = bs(r.text, 'html.parser')
-    img_l = soup.find_all('img',attrs={'alt':'Responsive image'})
-    l=[]
+    img_l = soup.find_all('img', attrs={'alt': 'Responsive image'})
+    l = []
     for i in img_l:
-        s=i.get('src')
+        s = i.get('src')
         # l.append("http://jwb.bit.edu.cn"+s[s.find('/cjd/'):])
-        r=redirection("http://jwb.bit.edu.cn"+s[s.find('/cjd/'):])
+        r = redirection("http://jwb.bit.edu.cn"+s[s.find('/cjd/'):])
         l.append("data:image/png;base64,"+base64.b64encode(r.content).decode())
     return l
+
+# 获取课程表
+def get_schedule(cookie,term=''):
+    #初始化
+    redirection(schedule_init_url, head={'Cookie': cookie})
+    redirection(schedule_lang_url, head={'Cookie': cookie})
+
+    # 获取学期
+    r=redirection(schedule_all_terms_url, head={'Cookie': cookie})
+    # terms=[i['DM'] for i in r.json()['datas']['xnxqcx']['rows']]
+    if not term:
+        r=redirection(schedule_now_term_url, head={'Cookie': cookie})
+        term=r.json()['datas']['dqxnxq']['rows'][0]['DM']
+    r=redirection(schedule_date_url, head={'Cookie': cookie},data={'requestParamStr':'{"XNXQDM":"'+term+'","ZC":"1"}'})
+
+    # 获取初始日期
+    for i in r.json()['data']:
+        if i['XQ']==1:
+            first_day=i['RQ']
+
+    # 获取学期课表
+    r=redirection(schedule_url, head={'Cookie': cookie},data={'XNXQDM':term})
+    schedule_list=r.json()['datas']['cxxszhxqkb']['rows']
+
+    return {
+        # 'terms':terms,
+        'term':term,
+        'first_day':first_day,
+        'data':schedule_list,
+    }

@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-05-29 14:53:56
-LastEditTime: 2022-11-11 11:18:40
+LastEditTime: 2023-02-13 22:59:14
 Description: 图床模块
 _(:з」∠)_
 '''
@@ -26,6 +26,8 @@ cos_client = CosS3Client(cos_config)
 def init():
     if not os.path.exists(os.path.join(config.save_path, 'img')):
         os.makedirs(os.path.join(config.save_path, 'img'))
+    if not os.path.exists(os.path.join(config.save_path, 'tmp')):
+        os.makedirs(os.path.join(config.save_path, 'tmp'))
 
 
 # 保存文件 path如img/233.jpg
@@ -61,6 +63,10 @@ def img_url(id):
         id = "e2e4437695e019484769bc807948dad8.jpeg"
     return os.path.join(config.save_url, "img", id)
 
+# 上传临时文件 返回链接
+def upload_tmp(data, name):
+    save('tmp/'+name, data, cos=True)
+    return os.path.join(config.save_url, "tmp", name)
 
 # 图片url转id
 def img_id(url):

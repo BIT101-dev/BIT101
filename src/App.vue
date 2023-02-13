@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-08-17 23:05:25
+ * @LastEditTime: 2023-02-13 21:54:19
  * @Description: 
  * _(:з」∠)_
 -->
@@ -10,7 +10,7 @@ import { GlobalThemeOverrides, NIcon } from 'naive-ui'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref } from 'vue';
-import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined } from '@vicons/material';
+import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
@@ -54,6 +54,11 @@ const menu_options = [
     label: "成绩",
     key: '/score/',
     icon: renderIcon(SchoolOutlined)
+  },
+  {
+    label: "课表",
+    key: '/schedule/',
+    icon: renderIcon(CalendarMonthOutlined)
   },
   {
     label: "关于",

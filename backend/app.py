@@ -1,7 +1,7 @@
 '''
 Author: flwfdd
 Date: 2022-03-08 21:26:58
-LastEditTime: 2022-08-16 11:25:06
+LastEditTime: 2023-02-13 22:59:28
 Description: 主程序
 _(:з」∠)_
 '''
@@ -20,6 +20,7 @@ import course
 import paper
 import reaction
 import variable
+import schedule
 
 app = Flask(__name__)
 CORS(app, resources=r"/*")
@@ -359,6 +360,19 @@ def post_course_upload_log():
         return res({'msg': "上传成功OvO"}, 200)
     else: return res({'msg':'上传记录失败Orz'},500)
 
+
+# 获取课程表
+@app.route("/schedule/", methods=['GET'])
+# @requests_proxy()
+def get_schedule():
+    cookie = request.args.get('cookie', '')
+    term = request.args.get('term', '')
+    try: out = schedule.get_ics_url(cookie,term)
+    except: out=None
+    if out:
+        return res({'data': out, 'msg': '获取成功OvO'}, 200)
+    else:
+        return res({'msg': '出错了Orz'}, 500)
 
 if __name__ == '__main__':
     variable.init()

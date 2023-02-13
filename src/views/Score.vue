@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2022-12-07 13:08:11
+ * @LastEditTime: 2023-02-14 00:14:13
  * @Description: 
  * _(:з」∠)_
 -->
@@ -310,10 +310,12 @@ watch(() => webvpn.cookie, () => {
 
     </n-card>
     <n-alert :show-icon="false" type="info">
-      <span style="color:#aaa;">Tips:
-        学分绩根据筛选出的课程加权计算，估计平均学分绩使用各科平均分计算得出，4分制GPA采用<a style="color:#888" target="_blank"
-          href="https://jwb.bit.edu.cn//tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>计算。可手动选择计入成绩的课程，点击课程名称可查看详情。
-      </span><br />
+      <p style="color:#aaa;font-size: 0.9em;line-height: 1.2em;margin-top: 0;">Tips:
+        学分绩根据筛选出的课程加权计算，估计平均绩使用各科平均分计算得出，4分制GPA采用
+        <a style="color:#888" target="_blank" href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>
+        计算。可手动勾选纳入计算的课程，点击课程名称可查看详情。更多说明请见：
+          <a style="color:#888" target="_blank" href="/#/paper/show/20">BIT101常见问题解惑</a>
+      </p>
       总学分：{{ stat.credit }}（{{ stat.num }}门）<br />
       个人学分绩 | GPA：{{ stat.score }} | {{ stat.gpa }}<br />
       <template v-if="detail">估计平均绩 | GPA：{{ stat.avg_score }} | {{ stat.avg_gpa }}<br /></template>
