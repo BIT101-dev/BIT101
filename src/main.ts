@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-05-28 01:24:39
+ * @LastEditTime: 2023-02-16 23:39:02
  * @Description: 
  * _(:з」∠)_
  */
@@ -18,6 +18,6 @@ router.afterEach((to, from) => {
     try {
         const window_=window as any;
         window_._hmt = window_._hmt || [];
-        window_._hmt.push(['_trackPageview', to.fullPath]);
+        window_._hmt.push(['_trackPageview', '/#'+to.fullPath]);
     } catch (e) { console.log(e); }
 });
