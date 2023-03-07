@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2022-07-31 15:16:23
+ * @LastEditTime: 2023-03-07 17:02:55
  * @Description: 
  * _(:з」∠)_
 -->
@@ -119,10 +119,11 @@ function InitEditor(init_paper = false) {
     },
     onReady: () => {
       let undo = new Undo({ editor });
-      if (init_paper) {
-        editor.render(paper.data)
+      if (init_paper && paper.data.blocks.length) {
+        editor.render(paper.data);
         undo.initialize(paper.data);
       }
+      editor.focus();
     }
   });
 }
@@ -220,10 +221,11 @@ function PostPaper() {
         </n-space>
       </n-space>
     </n-card>
-    <br />
-    <div id="editorjs"></div>
-    <br />
-    <br />
+
+    <n-card style="margin: 11px 0 24px 0;">
+      <div id="editorjs"></div>
+    </n-card>
+    
     <n-modal v-model:show="modal" preset="card" style="width:666px">
       <n-scrollbar style="max-height:88vh;">
         <PaperRender :paper="paper" />
