@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2022-07-31 17:55:22
+ * @LastEditTime: 2023-03-21 23:58:27
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -32,32 +32,32 @@ const paper = reactive({
   like: false,
   like_loading: false,
   comment_num:0,
-  share:true,
+  public_edit:true,
   own:false,
 })
 
 //加载文章
 function LoadPaper() {
-  return http.get("/paper/?id=" + paper.id)
+  return http.get("/papers/" + paper.id)
     .then(res => {
       paper.title = res.data.title;
       paper.intro = res.data.intro;
-      paper.data = JSON.parse(res.data.data);
+      paper.data = JSON.parse(res.data.content);
       paper.create_time = FormatTime(res.data.create_time);
       paper.update_time = FormatTime(res.data.update_time);
-      paper.user.id = res.data.anonymous ? '-1' : res.data.user;
+      paper.user.id = res.data.anonymous ? '-1' : res.data.update_user.id;
       paper.like_num = res.data.like_num;
       paper.comment_num=res.data.comment_num;
       paper.like = res.data.like;
-      paper.user = res.data.user;
-      paper.share=res.data.share;
+      paper.user = res.data.update_user;
+      paper.public_edit=res.data.public_edit;
       paper.own=res.data.own;
     })
 }
 
 function Like() {
   paper.like_loading = true;
-  http.post("/reaction/like/", { 'obj': 'paper' + paper.id })
+  http.post("/reaction/like", { 'obj': 'paper' + paper.id })
     .then(res => {
       paper.like = res.data.like;
       paper.like_num = res.data.like_num;
@@ -119,7 +119,7 @@ onMounted(async () => {
     <n-divider style="color:#809BA8;font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
     <PaperRender :paper="paper" />
     <n-divider style="color:#809BA8;font-size:14px;">
-      <n-button v-if="(paper.share || paper.own)" @click="router.push('/paper/edit/' + paper.id)" icon-placement="right" text>
+      <n-button v-if="(paper.public_edit || paper.own)" @click="router.push('/paper/edit/' + paper.id)" icon-placement="right" text>
         <template #icon>
           <n-icon>
             <EditOutlined />

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2023-03-07 17:02:55
+ * @LastEditTime: 2023-03-23 22:29:41
  * @Description: 
  * _(:з」∠)_
 -->
@@ -32,7 +32,7 @@ const paper = reactive({
   data: {},
   last_time: 0,
   anonymous: false,
-  share: true,
+  public_edit: true,
   own: true,
 })
 
@@ -46,7 +46,7 @@ function UploadFile(file: File) {
       'fake-cookie': store.fake_cookie,
     }
   }
-  return http.post('/upload/image/', param, config)
+  return http.post('/upload/image', param, config)
     .then((res) => {
       return {
         success: true,
@@ -65,7 +65,7 @@ function UploadUrl(url: string) {
       'fake-cookie': store.fake_cookie,
     }
   }
-  return http.post('/upload/image/', param, config)
+  return http.post('/upload/image/url', param, config)
     .then((res) => {
       return {
         success: true,
@@ -141,14 +141,14 @@ function PreviewPaper() {
 function LoadPaper() {
   paper.id = route.params.id as string;
   if (paper.id == '0') InitEditor(false);
-  else return http.get("/paper/?id=" + paper.id)
+  else return http.get("/papers/" + paper.id)
     .then(res => {
       paper.title = res.data.title;
       paper.intro = res.data.intro;
-      paper.data = JSON.parse(res.data.data);
-      paper.last_time = Math.round(paper.data.time / 1000);
+      paper.data = JSON.parse(res.data.content);
+      paper.last_time = new Date(res.data.update_time).getTime()/1000;
       paper.anonymous = res.data.anonymous;
-      paper.share = res.data.share;
+      paper.public_edit = res.data.public_edit;
       paper.own = res.data.own;
       InitEditor(true);
     })
@@ -181,22 +181,40 @@ function PostPaper() {
       }
     }
 
-    http.post("/paper/", {
-      id: paper.id,
+    let paper_data = {
       title: paper.title,
       intro: paper.intro,
-      data: JSON.stringify(data),
+      content: JSON.stringify(data),
       last_time: paper.last_time,
-      now_time: Math.round(data.time / 1000),
-      anonymous: paper.anonymous ? '1' : '',
-      share: paper.share ? '1' : '',
-    }).then((res) => {
-      router.push('/paper/show/' + res.data.id);
-    }).catch(() => {
-      posting.value = false;
-    })
+      anonymous: paper.anonymous,
+      public_edit: paper.public_edit,
+    }
+
+    if (paper.id == '0') {
+      http.post("/papers",paper_data).then((res) => {
+        posting.value = false;
+        router.push('/paper/show/' + res.data.id);
+      }).catch(() => {
+        posting.value = false;
+      })
+    } else {
+      http.put("/papers/" + paper.id, paper_data).then(() => {
+        posting.value = false;
+        router.push('/paper/show/' + paper.id);
+      }).catch(() => {
+        posting.value = false;
+      })
+    }
   })
 }
+
+// 删除文章
+function DeletePaper() {
+  http.delete("/papers/" + paper.id).then(() => {
+    router.push('/paper/');
+  })
+}
+
 </script>
 
 <template>
@@ -216,8 +234,14 @@ function PostPaper() {
             汝真发表耶？
           </n-popconfirm>
           <n-button @click="paper.anonymous = !paper.anonymous" ghost>匿名:{{ paper.anonymous ? '是' : '否' }}</n-button>
-          <n-button v-if="paper.own" @click="paper.share = !paper.share" ghost>其他人可编辑:{{ paper.share ? '是' : '否' }}
+          <n-button v-if="paper.own" @click="paper.public_edit = !paper.public_edit" ghost>其他人可编辑:{{ paper.public_edit ? '是' : '否' }}
           </n-button>
+          <n-popconfirm v-if="paper.own" @positive-click="DeletePaper" :show-icon="false" positive-text="确定" negative-text="取消">
+            <template #trigger>
+              <n-button :disabled="posting" type="error" ghost>删除</n-button>
+            </template>
+            汝真断舍离耶？
+          </n-popconfirm>
         </n-space>
       </n-space>
     </n-card>
@@ -225,7 +249,7 @@ function PostPaper() {
     <n-card style="margin: 11px 0 24px 0;">
       <div id="editorjs"></div>
     </n-card>
-    
+
     <n-modal v-model:show="modal" preset="card" style="width:666px">
       <n-scrollbar style="max-height:88vh;">
         <PaperRender :paper="paper" />

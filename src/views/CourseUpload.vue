@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-30 14:05:26
- * @LastEditTime: 2023-02-03 00:55:47
+ * @LastEditTime: 2023-03-23 20:48:59
  * @Description: 
  * _(:з」∠)_
 -->
@@ -29,7 +29,7 @@ function customRequest({
   onError,
   onProgress
 }: UploadCustomRequestOptions) {
-  http.get('/course/upload/url/', {
+  http.get('/courses/upload/url', {
     params: {
       number: course.number,
       type: course.type,
@@ -70,7 +70,7 @@ function customRequest({
       }
 
       //上传记录
-      if(status)http.post('/course/upload/log/', { 'id': log_id, 'msg': course.msg })
+      if(status)http.post('/courses/upload/log', { 'id': log_id, 'msg': course.msg })
         .then(() => { onFinish() }).catch(() => { onError() })
     }
     else onError();
@@ -93,7 +93,7 @@ function Open(url:string){
 }
 
 function LoadCourse() {
-  return http.get('/course/?id=' + course.id).then(res => {
+  return http.get('/courses/' + course.id).then(res => {
     let data = res.data;
     course.name = data.name;
     course.number = data.number;

@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-07-13 00:13:52
+ * @LastEditTime: 2023-03-20 12:18:02
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -52,7 +52,8 @@ const webvpn = reactive({
   loading: false,
   sid: "",
   password: "",
-  verify_code: "",
+  verify_token: "",//用于注册
+  verify_code: "",//用于注册
   cookie: "",
   data: {
     execution: "",
@@ -69,12 +70,14 @@ function WebvpnVerify(sid: string, password: string) {
   webvpn.loading = true;
   webvpn.sid = sid;
   webvpn.password = password;
-  http.get("/user/webvpn_verify_init/?sid=" + webvpn.sid)
+  http.post("/user/webvpn_verify_init", {
+    sid: webvpn.sid
+  })
     .then((res) => {
       webvpn.data = res.data;
       webvpn.data.password = encryptPassword(webvpn.password, webvpn.data.salt);
       if (webvpn.data.captcha) {
-        webvpn.data.captcha = "data:image/png;base64," + webvpn.data.captcha;
+        webvpn.data.captcha = webvpn.data.captcha;
         webvpn.data.captcha_text = "";
         webvpn.model = true;
       }
@@ -85,16 +88,17 @@ function WebvpnVerify(sid: string, password: string) {
 //webvpn验证后续步骤
 function WebvpnVerify2() {
   webvpn.model = false;
-  http.post("/user/webvpn_verify/", {
-    username: webvpn.sid,
+  http.post("/user/webvpn_verify", {
+    sid: webvpn.sid,
     password: webvpn.data.password,
     execution: webvpn.data.execution,
     cookie: webvpn.data.cookie,
     captcha: webvpn.data.captcha_text
   })
     .then((res) => {
-      webvpn.verify_code = res.data.verify_code;
-      webvpn.cookie = res.data.cookie;
+      webvpn.verify_code = res.data.code;
+      webvpn.verify_token = res.data.token;
+      webvpn.cookie = webvpn.data.cookie;
       webvpn.loading = false;
     })
     .catch(() => {
@@ -103,8 +107,8 @@ function WebvpnVerify2() {
 }
 
 //复制
-const {toClipboard}=useClipboard();
-async function Clip(s:string,msg="已复制到剪贴板OvO"){
+const { toClipboard } = useClipboard();
+async function Clip(s: string, msg = "已复制到剪贴板OvO") {
   try {
     await toClipboard(s)
     window.$message.success(msg);

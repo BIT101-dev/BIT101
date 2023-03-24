@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 17:09:21
- * @LastEditTime: 2022-08-09 20:20:14
+ * @LastEditTime: 2023-03-23 22:46:10
  * @Description: 
  * _(:з」∠)_
 -->
@@ -22,7 +22,7 @@ const papers = reactive({
 
 function LoadPapers() {
   papers.loading = true;
-  http.get("/papers/", {
+  http.get("/papers", {
     params: {
       search: papers.search,
       order: papers.order,
@@ -60,7 +60,7 @@ function Search() {
         <n-collapse-item title="Paper检索" name="search">
           <n-space vertical>
             <div>搜索</div>
-            <n-input v-model:value="papers.search" placeholder="请输入关键词" maxlength="42"></n-input>
+            <n-input v-model:value="papers.search" @keyup.enter="Search" placeholder="请输入关键词" maxlength="42"></n-input>
             <n-radio-group v-model:value="papers.order" name="排序方式">
               <n-space>
                 排序方式

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2022-08-13 21:31:52
+ * @LastEditTime: 2023-03-25 01:42:01
  * @Description: 
  * _(:з」∠)_
 -->
@@ -22,7 +22,7 @@ const course = reactive({
 
 function LoadCourses() {
   course.loading = true;
-  http.get("/courses/", {
+  http.get("/courses", {
     params: {
       search: course.search,
       order: course.order,
@@ -32,7 +32,7 @@ function LoadCourses() {
     if (res.data.length == 0) course.end = true;
     else {
       course.list = course.list.concat(res.data);
-      if (course.order != 'rand') course.page++;
+      course.page++;
     }
     course.loading = false;
   }).catch(() => { course.loading = false; })
@@ -61,13 +61,14 @@ function Search() {
         <n-collapse-item title="课程检索" name="search">
           <n-space vertical>
             <div>搜索</div>
-            <n-input v-model:value="course.search" placeholder="请输入关键词" maxlength="42"></n-input>
+            <n-input v-model:value="course.search" @keyup.enter="Search" placeholder="请输入关键词" maxlength="42"></n-input>
+            <div>排序方式</div>
             <n-radio-group v-model:value="course.order" name="排序方式">
               <n-space>
-                排序方式
-                <n-radio value="new"> 最新</n-radio>
-                <n-radio value="comment"> 评价数</n-radio>
-                <n-radio value="rate"> 评分</n-radio>
+                <n-radio value="new">最新</n-radio>
+                <n-radio value="comment">评价数</n-radio>
+                <n-radio value="rate">评分</n-radio>
+                <n-radio value="search">相关</n-radio>
               </n-space>
             </n-radio-group>
             <n-button @click="Search" ghost block>检索</n-button>

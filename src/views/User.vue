@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2022-08-17 23:09:31
+ * @LastEditTime: 2023-03-21 17:02:38
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -18,19 +18,20 @@ const user = reactive({
   id: "",
   sid: "",
   nickname: "",
-  avatar: "",
+  avatar_mid: "",
+  avatar_url:"",
   motto: "",
   register_time: ""
 });
 function GetInfo(uid: any) {
-  http.get("/user/info/?id=" + uid)
+  http.get("/user/info?id=" + uid)
     .then(res => {
       user.id = res.data.id;
       user.sid = res.data.sid;
       user.nickname = res.data.nickname;
-      user.avatar = res.data.avatar;
+      user.avatar_url = res.data.avatar;
       user.motto = res.data.motto;
-      user.register_time = FormatTime(res.data.register_time);
+      user.register_time = FormatTime(res.data.create_time);
       if(user.id)setTitle(user.nickname,"用户");
     })
 }
@@ -41,7 +42,7 @@ onMounted(() => {
 })
 
 const edit_model = ref(false);
-const upload_url = store.api_url + "/upload/image/";
+const upload_url = store.api_url + "/upload/image";
 const upload_head = {
   'fake-cookie': store.fake_cookie
 }
@@ -49,13 +50,14 @@ const upload_head = {
 function UploadHandler({file,event}:{file:UploadFileInfo,event:ProgressEvent}){
   let res=(event.target as XMLHttpRequest);
   let data=JSON.parse(res.response);
-  user.avatar=data.url;
+  user.avatar_mid=data.mid;
+  user.avatar_url=data.url;
   window.$message.success("上传成功OvO");
 }
 
 function EditInfo(){
-  http.post("/user/info/",{
-    avatar:user.avatar,
+  http.put("/user/info",{
+    avatar:user.avatar_mid,
     nickname:user.nickname,
     motto:user.motto
   }).then(()=>{
@@ -69,7 +71,7 @@ function EditInfo(){
   <div class="container">
     <n-modal :show="edit_model">
       <n-card style="width: 600px" title="编辑信息">
-        <n-avatar size="large" round :src="user.avatar+store.img_suffix" />
+        <n-avatar size="large" round :src="user.avatar_url+store.img_suffix" />
         <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
@@ -91,7 +93,7 @@ function EditInfo(){
 
     <n-card title="你好鸭ヾ(´▽｀))">
       <div style="display: flex;align-items: center;">
-        <n-avatar size="large" round :src="user.avatar+store.img_suffix" />
+        <n-avatar size="large" round :src="user.avatar_url+store.img_suffix" />
         <span style="margin-left: 4px;">
           <div style="font-size: 17px;">{{ user.nickname }}</div>
           <div style="margin-top: -4px;">uid:{{ user.id }}</div>

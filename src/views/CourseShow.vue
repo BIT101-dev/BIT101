@@ -23,7 +23,7 @@ const course = reactive({
 
 function Like() {
   course.like_loading = true;
-  http.post("/reaction/like/", { 'obj': 'course' + course.id })
+  http.post("/reaction/like", { 'obj': 'course' + course.id })
     .then(res => {
       course.like = res.data.like;
       course.like_num = res.data.like_num;
@@ -40,7 +40,7 @@ function Open(url: string) {
 }
 
 function LoadCourse() {
-  return http.get('/course/?id=' + course.id).then(res => {
+  return http.get('/courses/' + course.id).then(res => {
     let data = res.data;
     course.comment_num = data.comment_num;
     course.like_num = data.like_num;

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-02-14 00:14:13
+ * @LastEditTime: 2023-03-18 11:55:57
  * @Description: 
  * _(:з」∠)_
 -->
@@ -210,10 +210,12 @@ function GetList() {
   if (!webvpn.cookie) return;
   loading.value = true;
   http
-    .get("/score/", {
+    .get("/score", {
       params: {
-        cookie: webvpn.cookie,
         detail: detail.value ? true : '',
+      },
+      headers: {
+        "webvpn-cookie": webvpn.cookie,
       },
     })
     .then((res) => {
@@ -264,7 +266,11 @@ const report = reactive({
 })
 function GetReport() {
   report.loading = true;
-  http.get('/score/report/?cookie=' + webvpn.cookie)
+  http.get('/score/report', {
+    headers: {
+      "webvpn-cookie": webvpn.cookie,
+    },
+  })
     .then((res) => {
       report.list = res.data.data;
       report.loading = false;
@@ -290,8 +296,8 @@ watch(() => webvpn.cookie, () => {
       <n-space vertical v-if="!webvpn.cookie">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
-        <n-button @click="WebvpnVerify(user.sid, user.password)"
-          :disabled="!user.sid || !user.password || webvpn.loading" block :loading="webvpn.loading">
+        <n-button @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
+          block :loading="webvpn.loading">
           查询
         </n-button>
       </n-space>
@@ -299,8 +305,7 @@ watch(() => webvpn.cookie, () => {
         <n-button v-show="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
           查询详细信息（较慢）
         </n-button>
-        <n-button @click="GetReport()" :disabled="loading || report.loading" :loading="report.loading"
-          block>
+        <n-button @click="GetReport()" :disabled="loading || report.loading" :loading="report.loading" block>
           获取可信成绩单
         </n-button>
         <n-select v-model:value="course_type.filter" multiple :options="course_type.list" max-tag-count="responsive" />
@@ -312,9 +317,10 @@ watch(() => webvpn.cookie, () => {
     <n-alert :show-icon="false" type="info">
       <p style="color:#aaa;font-size: 0.9em;line-height: 1.2em;margin-top: 0;">Tips:
         学分绩根据筛选出的课程加权计算，估计平均绩使用各科平均分计算得出，4分制GPA采用
-        <a style="color:#888" target="_blank" href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>
+        <a style="color:#888" target="_blank"
+          href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>
         计算。可手动勾选纳入计算的课程，点击课程名称可查看详情。更多说明请见：
-          <a style="color:#888" target="_blank" href="/#/paper/show/20">BIT101常见问题解惑</a>
+        <a style="color:#888" target="_blank" href="/#/paper/show/20">BIT101常见问题解惑</a>
       </p>
       总学分：{{ stat.credit }}（{{ stat.num }}门）<br />
       个人学分绩 | GPA：{{ stat.score }} | {{ stat.gpa }}<br />

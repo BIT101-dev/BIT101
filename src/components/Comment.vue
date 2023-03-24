@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2022-08-18 10:47:47
+ * @LastEditTime: 2023-03-23 13:36:56
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -48,13 +48,13 @@ const sub_comments = reactive({
   loading: false,
 })
 
-function Comment(obj: string, parent_list: any, reply_user = '0') {
+function Comment(obj: string, parent_list: any, reply_user = 0) {
   now_comment.loading = true;
-  http.post("/reaction/comment/", {
+  http.post("/reaction/comments", {
     obj: obj,
     text: now_comment.text,
-    anonymous: now_comment.anonymous ? '1' : '',
-    reply_user: reply_user,
+    anonymous: now_comment.anonymous,
+    reply_uid: reply_user,
     rate: props.rate ? Math.round(now_comment.rate * 2) : 0,
   }).then(res => {
     parent_list.unshift(res.data);
@@ -69,7 +69,7 @@ function Comment(obj: string, parent_list: any, reply_user = '0') {
   })
 }
 
-function OpenReplyModal(parent: any, reply_user = '0') {
+function OpenReplyModal(parent: any, reply_user = {'id':0}) {
   sub_comment.modal = true;
   sub_comment.parent = parent;
   sub_comment.reply_user = reply_user;
@@ -78,7 +78,7 @@ function OpenReplyModal(parent: any, reply_user = '0') {
 
 function LoadComments(obj: string, cmts: any) {
   cmts.loading = true;
-  http.get('/reaction/comments/', {
+  http.get('/reaction/comments', {
     params: {
       obj: obj,
       order: cmts.order,
@@ -107,7 +107,7 @@ function OpenSubComments(parent: any) {
 
 function Like(i: any) {
   i.like_loading = true;
-  http.post("/reaction/like/", { 'obj': 'comment' + i.id })
+  http.post("/reaction/like", { 'obj': 'comment' + i.id })
     .then(res => {
       i.like = res.data.like;
       i.like_num = res.data.like_num;
@@ -116,7 +116,7 @@ function Like(i: any) {
 }
 
 function Delete(i: any, cmts: any) {
-  http.delete("/reaction/comment/?id=" + i.id)
+  http.delete("/reaction/comments/" + i.id)
     .then(() => {
       cmts.list = cmts.list.filter((x: any) => (x.id != i.id))
     })
@@ -203,7 +203,7 @@ onBeforeRouteLeave((to, from) => {
         <div v-if="i.sub.length != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
           <div v-for="j in i.sub.slice(0, 3)" style="margin:4px;">
             {{ j['user']['nickname'] }}：
-            <span v-if="j['reply_user']">@{{ j['reply_user']['nickname'] + ' ' }}</span>
+            <span v-if="j['reply_user']['id']!=0">@{{ j['reply_user']['nickname'] + ' ' }}</span>
             <span style="white-space: pre-wrap;margin-top:4px;word-break:break-all;">{{ j['text'] }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i['comment_num'] }}条回复>></n-button>
@@ -216,7 +216,7 @@ onBeforeRouteLeave((to, from) => {
     {{ comments.end ? '木有更多了' : '加载更多' }}</n-button>
 
   <n-modal v-model:show="sub_comment.modal" preset="card" style="width:624px"
-    :title="'回复' + (sub_comment.reply_user == '0' ? '' : '@' + sub_comment.reply_user['nickname'])">
+    :title="'回复' + (sub_comment.reply_user['id']=='0' ? '' : '@' + sub_comment.reply_user['nickname'])">
     <n-space vertical>
       <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" />
       <n-space justify="space-between">
@@ -264,7 +264,7 @@ onBeforeRouteLeave((to, from) => {
             <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;">
-              <a v-if="i['reply_user']" :href="'/#/user/' + i['reply_user']['id']" target="_blank"
+              <a v-if="i['reply_user']['id']!=0" :href="'/#/user/' + i['reply_user']['id']" target="_blank"
                 style="text-decoration:none;color:#FF8533">
                 @{{ i['reply_user']['nickname'] }}
               </a>

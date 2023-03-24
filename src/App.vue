@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-02-13 21:54:19
+ * @LastEditTime: 2023-03-15 15:58:01
  * @Description: 
  * _(:з」∠)_
 -->
@@ -32,7 +32,7 @@ const menu_options = [
   },
   {
     label: "登录",
-    key: '/login',
+    key: '/login/',
     icon: renderIcon(FingerprintOutlined)
   },
   {

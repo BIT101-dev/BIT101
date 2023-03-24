@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-07-17 13:34:09
+ * @LastEditTime: 2023-03-20 14:36:07
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5/dist/md5"
 import store from '@/utils/store';
-import {webvpn,WebvpnVerify} from '@/utils/tools'
+import { webvpn, WebvpnVerify } from '@/utils/tools'
 
 const user = reactive({
   sid: "",
@@ -19,6 +19,7 @@ const user = reactive({
   repassword: "",
   verify_type: "webvpn",
   verify_code: "",
+  verify_token: "",
   webvpn_password: "",
 })
 
@@ -79,7 +80,7 @@ const rules: FormRules = {
 // 登陆状态
 const status = ref(false);
 function CheckStatus() {
-  http.get('/')
+  http.get('/user/check')
     .then(() => {
       status.value = true;
     })
@@ -90,8 +91,11 @@ function CheckStatus() {
 
 const count_down = ref(0); //倒计时
 function MailVerify() {
-  http.get('/user/mail_verify/?sid=' + user.sid)
-    .then(() => {
+  http.post('/user/mail_verify', {
+    sid: user.sid
+  })
+    .then(res => {
+      user.verify_token = res.data.token;
       count_down.value = 60;
       let itv = setInterval(() => {
         count_down.value--;
@@ -100,19 +104,18 @@ function MailVerify() {
     })
 }
 
-watch(()=>webvpn.verify_code,()=>{
-  user.verify_code=webvpn.verify_code;
+watch(() => webvpn.verify_code, () => {
+  user.verify_code = webvpn.verify_code;
+  user.verify_token = webvpn.verify_token;
   window.$message.info("验证成功后请点击「注册」");
 })
 
 function Login() {
   form_ref.value?.validate((err) => {
     if (!err) {
-      http.get('/user/login/', {
-        params: {
-          sid: user.sid,
-          password: Md5.hashStr(user.password)
-        }
+      http.post('/user/login', {
+        sid: user.sid,
+        password: Md5.hashStr(user.password)
       }).then(res => {
         store.fake_cookie = res.data.fake_cookie;
         CheckStatus();
@@ -127,12 +130,10 @@ function Login() {
 function Register() {
   form_ref.value?.validate((err) => {
     if (!err) {
-      http.get('/user/register/', {
-        params: {
-          sid: user.sid,
-          password: Md5.hashStr(user.password),
-          verify_code: user.verify_code
-        }
+      http.post('/user/register', {
+        password: Md5.hashStr(user.password),
+        token: user.verify_token,
+        code: user.verify_code
       }).then((res) => {
         store.fake_cookie = res.data.fake_cookie;
         CheckStatus();
@@ -174,8 +175,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
             </n-form-item>
 
             <n-form-item path="password" label="密码">
-              <n-input v-model:value="user.password" type="password" show-password-on="click"
-                placeholder="告诉我你的秘密" />
+              <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="告诉我你的秘密" />
             </n-form-item>
 
             <n-button @click="Login" block>登录</n-button>
@@ -196,13 +196,12 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
             </n-form-item>
 
             <n-form-item path="password" label="设置密码">
-              <n-input v-model:value="user.password" type="password" show-password-on="click"
-                placeholder="告诉我你的秘密" />
+              <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="告诉我你的秘密" />
             </n-form-item>
 
             <n-form-item path="repassword" label="再次输入密码">
-              <n-input v-model:value="user.repassword" :disabled="!user.password" type="password"
-                show-password-on="click" placeholder="再次告诉我你的秘密" />
+              <n-input v-model:value="user.repassword" :disabled="!user.password" type="password" show-password-on="click"
+                placeholder="再次告诉我你的秘密" />
             </n-form-item>
 
             <n-form-item label="验证方式">
@@ -221,12 +220,12 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
             <template v-if="user.verify_type == 'webvpn'">
               <n-grid cols="12">
                 <n-form-item-gi span="8" :show-label="false">
-                  <n-input v-model:value="user.webvpn_password" type="password"
-                    show-password-on="click" placeholder="学校统一身份认证密码" />
+                  <n-input v-model:value="user.webvpn_password" type="password" show-password-on="click"
+                    placeholder="学校统一身份认证密码" />
                 </n-form-item-gi>
                 <n-gi span="4">
-                  <n-button @click="WebvpnVerify(user.sid,user.webvpn_password)" :disabled="!user.webvpn_password || !user.sid"
-                    :loading="webvpn.loading" block>验证</n-button>
+                  <n-button @click="WebvpnVerify(user.sid, user.webvpn_password)"
+                    :disabled="!user.webvpn_password || !user.sid" :loading="webvpn.loading" block>验证</n-button>
                 </n-gi>
               </n-grid>
             </template>
@@ -236,8 +235,8 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
                   <n-input v-model:value="user.verify_code" type="number" placeholder="收到的验证码" />
                 </n-form-item-gi>
                 <n-gi span="4">
-                  <n-button @click="MailVerify" :disabled="(!user.sid) || (count_down ? true : false)"
-                    block>{{ count_down ? count_down : '发送验证码' }}</n-button>
+                  <n-button @click="MailVerify" :disabled="(!user.sid) || (count_down ? true : false)" block>{{ count_down
+                    ? count_down : '发送验证码' }}</n-button>
                 </n-gi>
               </n-grid>
             </template>
@@ -251,7 +250,6 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
     </n-card>
     <br />
   </div>
-
 </template>
 
 
