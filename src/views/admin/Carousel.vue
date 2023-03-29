@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-28 13:12:52
- * @LastEditTime: 2022-08-01 00:12:39
+ * @LastEditTime: 2023-03-25 15:44:27
  * @Description: 
  * _(:з」∠)_
 -->
@@ -31,14 +31,14 @@ function Preview() {
 }
 
 function Load() {
-  http.get("/variable/?obj=carousel").then((res) => {
-    carousel.preview = res.data;
-    carousel.input = JSON.stringify(res.data, null, 2);
+  http.get("/variables?obj=carousel").then((res) => {
+    carousel.preview = JSON.parse(res.data.data);
+    carousel.input = JSON.stringify(carousel.preview, null, 2);
   })
 }
 
 function Submit() {
-  http.post("/variable/", {
+  http.post("/variables", {
     obj: 'carousel',
     data: JSON.stringify(carousel.preview),
   })

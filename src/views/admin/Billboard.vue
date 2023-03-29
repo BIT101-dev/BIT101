@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-31 22:43:32
- * @LastEditTime: 2022-07-31 23:45:37
+ * @LastEditTime: 2023-03-25 15:44:39
  * @Description: 
  * _(:з」∠)_
 -->
@@ -34,14 +34,14 @@ function Preview() {
 }
 
 function Load() {
-  http.get("/variable/?obj=billboard").then((res) => {
-    billboard.preview = res.data;
-    billboard.input = JSON.stringify(res.data, null, 2);
+  http.get("/variables?obj=billboard").then((res) => {
+    billboard.preview = JSON.parse(res.data.data);
+    billboard.input = JSON.stringify(billboard.preview, null, 2);
   })
 }
 
 function Submit() {
-  http.post("/variable/", {
+  http.post("/variables", {
     obj: 'billboard',
     data: JSON.stringify(billboard.preview),
   })

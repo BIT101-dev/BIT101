@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-02-13 21:52:38
- * @LastEditTime: 2023-02-14 00:10:18
+ * @LastEditTime: 2023-03-29 20:31:18
  * @Description: 课程表页面
  * _(:з」∠)_
 -->
@@ -25,11 +25,14 @@ const schedule = reactive({
 function GetSchedule() {
     if (!webvpn.cookie) return;
     schedule.loading = true;
-    http.get('/schedule/?cookie=' + webvpn.cookie)
+    http.get('/courses/schedule', {
+        headers: {
+            'webvpn-cookie': webvpn.cookie
+        }
+    })
         .then((res) => {
-            console.log(res);
-            schedule.url = res.data.data.url;
-            schedule.msg = res.data.data.msg;
+            schedule.url = res.data.url;
+            schedule.msg = res.data.note;
             schedule.loading = false;
         }).catch(() => {
             schedule.loading = false;
@@ -55,8 +58,7 @@ watch(() => webvpn.cookie, () => {
         <n-card title="课程表">
             <n-space vertical v-if="!webvpn.cookie">
                 <n-input v-model:value="user.sid" type="number" placeholder="学号" />
-                <n-input v-model:value="user.password" type="password" show-password-on="click"
-                    placeholder="学校统一身份认证密码" />
+                <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
                 <n-button @click="WebvpnVerify(user.sid, user.password)"
                     :disabled="!user.sid || !user.password || webvpn.loading" block :loading="webvpn.loading">
                     查询

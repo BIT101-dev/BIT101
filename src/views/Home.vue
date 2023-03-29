@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2022-08-01 12:09:36
+ * @LastEditTime: 2023-03-25 15:42:45
  * @Description: 主页
  * _(:з」∠)_
 -->
@@ -12,15 +12,15 @@ import Billboard from '@/components/Billboard.vue';
 
 const carousel_data = ref([])
 function LoadCarousel() {
-  http.get("/variable/?obj=carousel").then((res) => {
-    carousel_data.value = res.data;
+  http.get("/variables?obj=carousel").then((res) => {
+    carousel_data.value = JSON.parse(res.data.data);
   })
 }
 
 const billboard_data = ref([])
 function LoadBillboard() {
-  http.get("/variable/?obj=billboard").then((res) => {
-    billboard_data.value = res.data;
+  http.get("/variables?obj=billboard").then((res) => {
+    billboard_data.value = JSON.parse(res.data.data);
   })
 }
 
