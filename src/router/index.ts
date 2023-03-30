@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-02-13 22:51:12
+ * @LastEditTime: 2023-03-30 14:28:55
  * @Description: 
  * _(:з」∠)_
  */
@@ -77,6 +77,11 @@ const router = createRouter({
       meta:{keepAlive:false}
     },
     {
+      path: '/message/',
+      name: 'message',
+      component: () => import('@/views/Message.vue')
+    },
+    {
       path: '/admin/carousel/',
       name: 'admin_carousel',
       component: () => import('@/views/admin/Carousel.vue')
@@ -102,6 +107,7 @@ router.beforeEach(({ path }) => {
     score: '成绩',
     schedule:'课表',
     about: '关于',
+    message: '消息',
   }
   const top = path.split('/').filter(piece => piece.length > 0)[0] ?? ''
   const title = titleMap[top] ?? top

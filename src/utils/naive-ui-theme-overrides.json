@@ -5,5 +5,8 @@
     "primaryColorSuppl": "#FF9A57FF",
     "primaryColorPressed": "#CC5200FF",
     "fontSize": "16px"
+  },
+  "Badge": {
+    "fontFamily": "inherit"
   }
 }

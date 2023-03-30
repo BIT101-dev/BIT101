@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-03-23 13:36:56
+ * @LastEditTime: 2023-03-30 14:23:13
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -28,6 +28,7 @@ const sub_comment = reactive({
   modal: false,
   parent: {},
   reply_user: {},
+  reply_obj: '',
 })
 
 const comments = reactive({
@@ -48,13 +49,14 @@ const sub_comments = reactive({
   loading: false,
 })
 
-function Comment(obj: string, parent_list: any, reply_user = 0) {
+function Comment(obj: string, parent_list: any, reply_user = 0, reply_obj = '') {
   now_comment.loading = true;
   http.post("/reaction/comments", {
     obj: obj,
     text: now_comment.text,
     anonymous: now_comment.anonymous,
     reply_uid: reply_user,
+    reply_obj: reply_obj,
     rate: props.rate ? Math.round(now_comment.rate * 2) : 0,
   }).then(res => {
     parent_list.unshift(res.data);
@@ -69,10 +71,11 @@ function Comment(obj: string, parent_list: any, reply_user = 0) {
   })
 }
 
-function OpenReplyModal(parent: any, reply_user = {'id':0}) {
+function OpenReplyModal(parent: any, reply_user = {'id':0}, reply_obj = '') {
   sub_comment.modal = true;
   sub_comment.parent = parent;
   sub_comment.reply_user = reply_user;
+  sub_comment.reply_obj = reply_obj;
   now_comment.rate = 0;
 }
 
@@ -224,7 +227,7 @@ onBeforeRouteLeave((to, from) => {
             '否'
         }}</n-button>
         <n-button
-          @click="Comment('comment' + sub_comment.parent['id'], sub_comment.parent['sub'], sub_comment.reply_user['id'])"
+          @click="Comment('comment' + sub_comment.parent['id'], sub_comment.parent['sub'], sub_comment.reply_user['id'], sub_comment.reply_obj)"
           type="info" ghost :disabled="now_comment.loading" :loading="now_comment.loading" icon-placement="right">
           <template #icon>
             <n-icon>
@@ -282,7 +285,7 @@ onBeforeRouteLeave((to, from) => {
                 {{ i['like_num'] }}人赞同
               </n-button>
 
-              <n-button @click="OpenReplyModal(sub_comments.parent, i['user'])" text>
+              <n-button @click="OpenReplyModal(sub_comments.parent, i['user'],'comment'+i['id'])" text>
                 <template #icon>
                   <n-icon>
                     <ReplyOutlined />

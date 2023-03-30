@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-03-15 15:58:01
+ * @LastEditTime: 2023-03-30 16:31:34
  * @Description: 
  * _(:з」∠)_
 -->
@@ -9,11 +9,12 @@
 import { GlobalThemeOverrides, NIcon } from 'naive-ui'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
-import { h, ref } from 'vue';
-import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined } from '@vicons/material';
+import { h, ref, onMounted } from 'vue';
+import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
+import http from './utils/request';
 
 const themeOverrides: GlobalThemeOverrides = Theme;
 const router = useRouter();
@@ -79,6 +80,17 @@ function Refresh() {
   window.location.reload();
 }
 
+const unread_num = ref(0);
+function LoadUnreadNum() {
+  http.get("/messages/unread_num").then(res => {
+    unread_num.value = res.data.unread_num;
+  })
+}
+
+onMounted(() => {
+  LoadUnreadNum();
+})
+
 </script>
 
 <template>
@@ -111,11 +123,13 @@ function Refresh() {
                 </n-icon>
               </template>
             </n-button>
-            <n-button @click="router.push('/about/')" quaternary circle size="large" color="white">
+            <n-button @click="unread_num=0,router.push('/message/')" quaternary circle size="large" color="white">
               <template #icon>
-                <n-icon>
-                  <QuestionCircleOutlined />
-                </n-icon>
+                <n-badge :value="unread_num" :max="99">
+                  <n-icon color="white">
+                    <MailOutlined />
+                  </n-icon>
+                </n-badge>
               </template>
             </n-button>
           </div>
