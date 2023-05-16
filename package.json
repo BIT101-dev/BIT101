@@ -31,6 +31,8 @@
     "@vicons/antd": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "@vitejs/plugin-vue": "^2.3.3",
+    "@vue-leaflet/vue-leaflet": "^0.9.0",
+    "leaflet": "^1.9.3",
     "naive-ui": "^2.32.1",
     "typescript": "^4.5.4",
     "unplugin-vue-components": "^0.19.6",

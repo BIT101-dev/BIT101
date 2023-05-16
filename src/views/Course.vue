@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2023-03-25 01:42:01
+ * @LastEditTime: 2023-04-13 08:24:54
  * @Description: 
  * _(:з」∠)_
 -->
@@ -72,6 +72,7 @@ function Search() {
               </n-space>
             </n-radio-group>
             <n-button @click="Search" ghost block>检索</n-button>
+            <div v-if="course.search && course.order!='search'" style="font-size:14px;color:#aaa;">结果不准确？试试相关搜索</div>
           </n-space>
         </n-collapse-item>
       </n-collapse>

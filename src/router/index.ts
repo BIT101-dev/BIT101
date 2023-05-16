@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-03-30 14:28:55
+ * @LastEditTime: 2023-05-14 13:03:41
  * @Description: 
  * _(:з」∠)_
  */
@@ -80,6 +80,11 @@ const router = createRouter({
       path: '/message/',
       name: 'message',
       component: () => import('@/views/Message.vue')
+    },
+    {
+      path: '/map/',
+      name: 'map',
+      component: () => import('@/views/Map.vue')
     },
     {
       path: '/admin/carousel/',
