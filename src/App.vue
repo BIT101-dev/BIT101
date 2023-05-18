@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-05-15 10:40:42
+ * @LastEditTime: 2023-05-18 11:34:22
  * @Description: 
  * _(:з」∠)_
 -->
@@ -159,8 +159,10 @@ onMounted(() => {
 
       <n-layout-footer style="text-align:center;min-height: 11vh;">
         <h4 style="color: #607d8b;margin: auto;font-size: 14px;">{{ hitokoto }}</h4>
-        <n-button @click="ToTop" text>👆回到顶部👆</n-button>
+        <div><n-button @click="ToTop" text size="large">👆回到顶部👆</n-button></div>
+        <div><n-a href="https://github.com/flwfdd/BIT101" target="_blank">GitHub</n-a></div>
         <div style="font-size: 14px;">Powered⚡ by fdd with 💖.</div>
+        
       </n-layout-footer>
     </n-layout>
   </n-config-provider>

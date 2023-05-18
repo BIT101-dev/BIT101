@@ -1,26 +1,30 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 16:44:47
- * @LastEditTime: 2023-05-16 15:12:28
+ * @LastEditTime: 2023-05-18 11:43:59
  * @Description: 
  * _(:з」∠)_
 -->
 
 ![p92oJjH.png](https://s1.ax1x.com/2023/05/16/p92oJjH.png)
 
-<div style="text-align:center;">
+<div align="center">
 
 <h1 style="color:#FF9A57;text-decoration:underline;text-decoration-color:#00ABD6;">BIT101</h1>
 
-[网站( bit101.cn )](https://bit101.cn) | [API文档](https://www.apifox.cn/apidoc/shared-cb9f2548-ee02-49ad-97ed-099ef5f9337e) | [GO后端](https://github.com/flwfdd/BIT101-GO) | [Android客户端](https://github.com/flwfdd/BIT101-Android)
+[网站( bit101.cn )](https://bit101.cn) | [API文档](https://j1dds2ogfu.apifox.cn)
+
+[GO后端](https://github.com/flwfdd/BIT101-GO) | [Android客户端](https://github.com/flwfdd/BIT101-Android)
 
 </div>
 
 ---
 
-`BIT101`项目群旨在打造一个富于互联网精神的、开放共享的社区，打破校内信息壁垒，使同学们学习生活得更加优雅。现在包括由`Vue3`+`Naïve UI`构建的前端（本仓库）、基于`GIN`框架的[GO后端](https://github.com/flwfdd/BIT101-GO)和基于`Jetpack Compose`构建的[Android客户端](https://github.com/flwfdd/BIT101-Android)。
+`BIT101`企划旨在打造一个富于互联网精神的、开放共享的社区，打破校内信息壁垒，使同学们学习生活得更加优雅。现在包括由`Vue3`+`Naïve UI`构建的网站前端（本仓库）、基于`GIN`框架的[GO后端](https://github.com/flwfdd/BIT101-GO)和基于`Jetpack Compose`构建的[Android客户端](https://github.com/flwfdd/BIT101-Android)。
 
 如果有`Bug`提交、功能建议或其他任何问题，欢迎提交`issus`、加入交流QQ群[726965926](https://jq.qq.com/?_wv=1027&k=OTttwrzb)或邮件[bit101@qq.com](mailto:bit101@qq.com)提出。
+
+也希望你能把`BIT101`告诉更多的同学_(:з」∠)_
 
 🥳`BIT101`期待你的贡献！！
 
