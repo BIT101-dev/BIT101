@@ -4,6 +4,11 @@
  * @LastEditTime: 2023-05-15 10:38:36
  * @Description: 
  * _(:з」∠)_
+
+ * Modified by: CharlesHsu
+ * @Date: 2023-06-28
+ * @Description:
+ * 添加了一个没啥用的记忆功能
 -->
 <script setup lang="ts">
 import router from '@/router';
@@ -249,8 +254,9 @@ function GetList() {
         }
 
       }
-      course_type.filter = course_type_tmp.concat();
-      course_time.filter = course_time_tmp.concat();
+      const storedValues = JSON.parse(localStorage.getItem(user.sid + 'courseFilters') || '{}');
+      course_type.filter = storedValues.courseTypeFilter || course_type_tmp.concat();
+      course_time.filter = storedValues.courseTimeFilter || course_time_tmp.concat();
       Filter();
     })
 }
@@ -288,16 +294,25 @@ watch(() => webvpn.cookie, () => {
   GetList();
 })
 
+watch([() => course_type.filter, () => course_time.filter], () => {
+  const filters = {
+    id: user.sid,
+    courseTypeFilter: course_type.filter,
+    courseTimeFilter: course_time.filter,
+  };
+  localStorage.setItem(user.sid + 'courseFilters', JSON.stringify(filters));
+});
 </script>
 
 <template>
   <div class="container">
     <n-card title="成寄查询">
       <n-space vertical v-if="!webvpn.cookie">
-        <n-input :input-props="{id:'sid'}" v-model:value="user.sid" type="number" placeholder="学号" />
-        <n-input :input-props="{id:'password'}" v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
-        <n-button id="submit" @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
-          block :loading="webvpn.loading">
+        <n-input :input-props="{ id: 'sid' }" v-model:value="user.sid" type="number" placeholder="学号" />
+        <n-input :input-props="{ id: 'password' }" v-model:value="user.password" type="password" show-password-on="click"
+          placeholder="学校统一身份认证密码" />
+        <n-button id="submit" @click="WebvpnVerify(user.sid, user.password)"
+          :disabled="!user.sid || !user.password || webvpn.loading" block :loading="webvpn.loading">
           查询
         </n-button>
       </n-space>
