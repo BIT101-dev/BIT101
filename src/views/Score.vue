@@ -254,7 +254,7 @@ function GetList() {
         }
 
       }
-      const storedValues = JSON.parse(localStorage.getItem('filters') || '{}');
+      const storedValues = JSON.parse(localStorage.getItem(user.sid + 'courseFilters') || '{}');
       course_type.filter = storedValues.courseTypeFilter || course_type_tmp.concat();
       course_time.filter = storedValues.courseTimeFilter || course_time_tmp.concat();
       Filter();
@@ -296,12 +296,12 @@ watch(() => webvpn.cookie, () => {
 
 watch([() => course_type.filter, () => course_time.filter], () => {
   const filters = {
+    id: user.sid,
     courseTypeFilter: course_type.filter,
     courseTimeFilter: course_time.filter,
   };
-  localStorage.setItem('filters', JSON.stringify(filters));
+  localStorage.setItem(user.sid + 'courseFilters', JSON.stringify(filters));
 });
-
 </script>
 
 <template>
