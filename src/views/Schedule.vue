@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-02-13 21:52:38
- * @LastEditTime: 2023-03-29 20:31:18
+ * @LastEditTime: 2023-08-19 12:03:11
  * @Description: 课程表页面
  * _(:з」∠)_
 -->
@@ -81,8 +81,7 @@ watch(() => webvpn.cookie, () => {
 
         </n-card>
         <n-alert :show-icon="false" type="info">
-            导出的是当前学期的课表（.ics格式），IOS用户直接打开链接即可添加到日历，安卓用户暂时可自行查找能导入.ics格式的日历软件（BIT101
-            APP已经在企划了，敬请期待哦~）,桌面端也有软件可以适配.ics格式。具体请见：
+            导出的是当前学期的课表（.ics格式），iOS用户直接打开链接即可添加到日历，安卓用户可使用BIT101-Android APP（或支持.ics格式的日历软件）,桌面端也有软件可以适配.ics格式。具体请见：
             <a style="color:#888" target="_blank" href="/#/paper/show/21">
                 使用攻略
             </a>
