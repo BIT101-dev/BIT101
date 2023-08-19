@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-05-15 10:38:36
+ * @LastEditTime: 2023-08-19 12:11:35
  * @Description: 
  * _(:з」∠)_
 -->
@@ -231,8 +231,8 @@ function GetList() {
         ori_data.value.push(row);
       }
       let s;
-      let course_type_tmp = [];
-      let course_time_tmp = [];
+      let course_type_tmp: string[] = [];
+      let course_time_tmp: string[] = [];
       course_type.list = [];
       course_time.list = [];
       for (let i of ori_data.value) {
@@ -249,8 +249,18 @@ function GetList() {
         }
 
       }
-      course_type.filter = course_type_tmp.concat();
-      course_time.filter = course_time_tmp.concat();
+
+      // 保留之前的筛选
+      if(course_type.filter.length == 0)
+        course_type.filter = course_type_tmp.concat();
+      else
+        course_type.filter = course_type.filter.filter((i: string) => course_type_tmp.indexOf(i) != -1);
+
+      if(course_time.filter.length == 0)
+        course_time.filter = course_time_tmp.concat();
+      else
+        course_time.filter = course_time.filter.filter((i: string) => course_time_tmp.indexOf(i) != -1);
+      
       Filter();
     })
 }
@@ -303,7 +313,7 @@ watch(() => webvpn.cookie, () => {
       </n-space>
       <n-space vertical v-else>
         <n-button v-show="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
-          查询详细信息（较慢）
+          查询详细信息
         </n-button>
         <n-button @click="GetReport()" :disabled="loading || report.loading" :loading="report.loading" block>
           获取可信成绩单
