@@ -9,12 +9,13 @@
 import router from '@/router';
 import http from '@/utils/request';
 import { WebvpnVerify, webvpn } from '@/utils/tools';
+import store from '@/utils/store';
 import { DataTableRowKey } from 'naive-ui';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
 import { reactive, ref, onMounted, watch } from 'vue';
 
 const user = reactive({
-  sid: "",
+  sid: store.grade_query_sid,
   password: ""
 })
 
@@ -219,6 +220,7 @@ function GetList() {
       },
     })
     .then((res) => {
+      store.grade_query_sid = user.sid;
       loading.value = false;
       let ori_table = res.data.data;
       let ori_head = ori_table[0];
