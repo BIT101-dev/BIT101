@@ -104,11 +104,11 @@ const detail = ref(false);
 const search = ref("");
 const course_type = reactive({
   "list": [] as any,
-  "filter": [] as any,
+  "filter": store.grade_query_course_type_filter,
 });
 const course_time = reactive({
   "list": [] as any,
-  "filter": [] as any,
+  "filter": store.grade_query_course_time_filter,
 });
 const stat = reactive({
   credit: 0,
@@ -203,6 +203,10 @@ function Filter() {
       }
     }
   }
+
+  store.grade_query_course_type_filter = course_type.filter;
+  store.grade_query_course_time_filter = course_time.filter;
+  
   Compute();
 }
 
@@ -256,12 +260,12 @@ function GetList() {
       if(course_type.filter.length == 0)
         course_type.filter = course_type_tmp.concat();
       else
-        course_type.filter = course_type.filter.filter((i: string) => course_type_tmp.indexOf(i) != -1);
+        course_type.filter = course_type.filter.filter((s: string) => course_type_tmp.indexOf(s) != -1);
 
       if(course_time.filter.length == 0)
         course_time.filter = course_time_tmp.concat();
       else
-        course_time.filter = course_time.filter.filter((i: string) => course_time_tmp.indexOf(i) != -1);
+        course_time.filter = course_time.filter.filter((s: string) => course_time_tmp.indexOf(s) != -1);
       
       Filter();
     })
