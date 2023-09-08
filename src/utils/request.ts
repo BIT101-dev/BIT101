@@ -38,10 +38,9 @@ http.interceptors.response.use(
     else if (err.request.status == 401) {
       // 如果当前已经处于登录页面，什么也不做
       const route = router.currentRoute.value;
+      console.log("currentRoute", route);
       if (route.name != "login") {
         window.$message.error(err.response.data.msg || '请先登录awa');
-        // 允许在主页看一看，否则的话跳转到登录页面
-        if (route.path != "/") router.push("/login")
       }
     }
     else if (err.request.status == 400) {
