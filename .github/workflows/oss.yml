@@ -1,0 +1,44 @@
+name: Publish to OSS
+
+on:
+  push:
+    branches:
+      - main # 这里可以根据您的需要更改分支名称
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # 安装Node.js
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.8.1
+      # 安装pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
+      # 执行应用打包步骤
+      - name: Install dependencies and build
+        run: |
+          echo ${{ secrets.OSS_ACCESSKEY_ID }}
+          echo ${{ secrets.OSS_ACCESSKEY_SECRET }}
+          pnpm install
+          pnpm build
+      # 上传到OSS
+      - name: OSS Deployment Action
+        # You may pin to the exact commit or the version.
+        # uses: YangHanlin/oss-deployment-action@b3038e19df0e1cd769a242dbf779335e9cd4737f
+        uses: YangHanlin/oss-deployment-action@v1.3.0
+        with:
+          # OSS endpoint (required if ossutil is not pre-configured)
+          oss-endpoint: oss-cn-hongkong.aliyuncs.com # optional, default is 
+          # AccessKey ID of user with write access to OSS (required if ossutil is not pre-configured)
+          oss-accesskey-id: ${{ secrets.OSS_ACCESSKEY_ID }} # optional, default is 
+          # AccessKey secret of the user identified by the previous AccessKey ID (required if ossutil is not pre-configured)
+          oss-accesskey-secret: ${{ secrets.OSS_ACCESSKEY_SECRET }} # optional, default is 
+          # Path to the location you'd like to deploy files to, i.e. oss://<BUCKET NAME>/<PATH>
+          oss-path: oss://bit101-page/
+          # Path to the location you'd like to deploy files from
+          local-path: ./dist/
+          # Whether to delete files under `oss-path` before deployment
+          delete-first: true # optional, default is false
