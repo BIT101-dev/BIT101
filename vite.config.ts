@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2022-05-28 15:52:08
+ * @LastEditTime: 2023-09-17 15:52:25
  * @Description: 
  * _(:з」∠)_
  */
@@ -9,7 +9,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-const path = require('path');
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,7 +20,10 @@ export default defineConfig({
   })],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, "src")
+      '@': resolve(__dirname, "src")
     }
+  },
+  server: {
+    port: 3000,
   }
 })
