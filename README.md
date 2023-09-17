@@ -14,7 +14,7 @@
 
 [网站( bit101.cn )](https://bit101.cn) ｜ [API文档](https://bit101-api.apifox.cn)
 
-[Go服务端端](https://github.com/BIT101-dev/BIT101-GO) ｜ [Android客户端](https://github.com/BIT101-dev/BIT101-Android)
+[Go服务端](https://github.com/BIT101-dev/BIT101-GO) ｜ [Android客户端](https://github.com/BIT101-dev/BIT101-Android)
 
 [了解BIT101](https://bit101-project.feishu.cn/wiki/W8TxwAs7rizGVEkONjAcvgvsnxe) ｜ [加入BIT101](https://bit101-project.feishu.cn/wiki/OY1Xw6y27iNZqgkSDCkc5Cfdnjc)
 
@@ -24,7 +24,7 @@
 
 `BIT101`企划旨在打造一个富于互联网精神的、开放共享的社区，打破校内信息壁垒，使同学们学习生活得更加优雅。现在包括由`Vue3`+`Naïve UI`构建的网站前端（本仓库）、基于`Gin`框架的[Go后端](https://github.com/flwfdd/BIT101-GO)和基于`Jetpack Compose`构建的[Android客户端](https://github.com/BIT101-dev/BIT101-Android)。
 
-如果有`Bug`提交、功能建议或其他任何问题，欢迎提交`issus`、加入交流QQ群[726965926](https://jq.qq.com/?_wv=1027&k=OTttwrzb)或邮件[admin@bit101.cn](mailto:admin@bit101.cn)提出。
+如果有`Bug`提交、功能建议或其他任何问题，欢迎提交`issues`、加入交流QQ群[726965926](https://jq.qq.com/?_wv=1027&k=OTttwrzb)或邮件[admin@bit101.cn](mailto:admin@bit101.cn)提出。
 
 也希望你能把`BIT101`告诉更多的同学_(:з」∠)_
 
@@ -53,4 +53,4 @@ pnpm build #编译
 * `2022-08-14`：`version:0.0.2`1.完善成绩查询，由于挂科重修等规则复杂，添加支持手动选择计入GPA的课程。2.添加可信成绩单查询。3.添加教学大纲查询。
 
 * `2023-05-16`：`version:0.1.0`1.迁移到`GO`后端。2.添加消息系统。3.添加地图。
-  
+
