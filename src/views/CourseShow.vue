@@ -1,11 +1,34 @@
 <script setup lang="ts">
 import http from '@/utils/request';
 import { Clip, setTitle } from '@/utils/tools';
-import { onMounted, reactive } from 'vue';
+import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import router from '@/router';
+
+// 引入 ECharts
+import VChart from 'vue-echarts';
+import { use } from 'echarts/core'
+import { LineChart } from 'echarts/charts'
+import {
+  TooltipComponent,
+  DataZoomComponent,
+  LegendComponent,
+  GridComponent
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+use([
+  TooltipComponent,
+  DataZoomComponent,
+  LegendComponent,
+  GridComponent,
+  LineChart,
+  CanvasRenderer
+])
+
+
 
 const course = reactive({
   id: "",
@@ -18,6 +41,105 @@ const course = reactive({
   teachers: [] as any[],
   like: false,
   like_loading: false,
+})
+
+// 课程历史
+const history = reactive({
+  show: false,
+  loading: true,
+  terms: [] as any[],
+  avg_scores: [] as any[],
+  max_scores: [] as any[],
+  student_nums: [] as any[],
+})
+
+function GetCourseHistory() {
+  history.loading = true;
+  if (!course.number) return;
+  history.show = true;
+  http.get('/courses/histories/' + course.number)
+    .then(res => {
+      let data = res.data;
+      // 根据学期排序
+      data.sort((a: any, b: any) => a.term.localeCompare(b.term));
+      // 填入数据
+      history.terms = [];
+      history.avg_scores = [];
+      history.max_scores = [];
+      history.student_nums = [];
+      for (let i of data) {
+        history.terms.push(i.term);
+        history.avg_scores.push(i.avg_score);
+        history.max_scores.push(i.max_score);
+        history.student_nums.push(i.student_num);
+      }
+      if (!history.terms.length) {
+        window.$message.error("没有历史数据Orz");
+        history.show = false;
+      } else {
+        history.loading = false;
+      }
+    }).catch(() => {
+      history.loading = false;
+      history.show = false;
+    })
+}
+
+const option = computed(() => {
+  return {
+    tooltip: {
+      trigger: 'axis'
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        start: 0,
+        end: 100
+      },
+      {
+        start: 0,
+        end: 100
+      }
+    ],
+    legend: {
+      data: ['平均分', '最高分', '学习人数']
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: history.terms
+    },
+    yAxis: [
+      {
+        name: '分数',
+        type: 'value'
+      },
+      {
+        name: '人数',
+        type: 'value'
+      }
+    ],
+    series: [
+      {
+        name: '平均分',
+        type: 'line',
+        yAxisIndex: 0,
+        data: history.avg_scores
+      },
+      {
+        name: '最高分',
+        type: 'line',
+        yAxisIndex: 0,
+        data: history.max_scores
+      },
+      {
+        name: '学习人数',
+        type: 'line',
+        yAxisIndex: 1,
+        data: history.student_nums
+      },
+    ]
+  }
 })
 
 
@@ -107,13 +229,16 @@ onMounted(async () => {
           分享
         </n-button>
         <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/教学大纲/${course.name}-${course.number}/`)" ghost>
-          查看教学大纲
+          教学大纲
         </n-button>
         <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
-          查看课程资料
+          共享资料
         </n-button>
         <n-button @click="router.push('/course/upload/' + course.id)" ghost>
-          上传课程资料
+          上传资料
+        </n-button>
+        <n-button @click="GetCourseHistory" ghost>
+          历史记录
         </n-button>
       </n-space>
     </n-space>
@@ -123,5 +248,17 @@ onMounted(async () => {
     </n-alert>
     <Comment :obj='"course" + course.id' :rate="true"></Comment>
     <br />
+
+    <n-modal v-model:show="history.show" preset="card" style="width:624px" title="课程历史">
+      <n-spin v-if="history.loading" size="large" style="width:100%;text-align: center;" />
+      <div v-else>
+        <v-chart :option="option" style="height: 42vh;" autoresize />
+        <p style="font-size: small;">
+          注：数据仅供参考，不区分教学班。<br/>
+          「如果一个人把政策评分作为自己的至高追求，那么他就是这个政策的牺牲品。」
+          <div style="text-align: right;">——《上海交通大学生存手册》</div>
+        </p>
+      </div>
+    </n-modal>
   </div>
 </template>
