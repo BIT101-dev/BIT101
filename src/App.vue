@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-09-24 00:56:23
+ * @LastEditTime: 2023-10-17 08:29:41
  * @Description: 
  * _(:з」∠)_
 -->
@@ -10,7 +10,7 @@ import { GlobalThemeOverrides, NIcon } from 'naive-ui'
 import Theme from '@/utils/naive-ui-theme-overrides.json'
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref, onMounted } from 'vue';
-import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined } from '@vicons/material';
+import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined, PagesOutlined, ForumOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
@@ -40,6 +40,11 @@ const menu_options = [
     label: "我的",
     key: '/user/0/',
     icon: renderIcon(PersonOutlined)
+  },
+  {
+    label: "话廊",
+    key: '/gallery/',
+    icon: renderIcon(ForumOutlined)
   },
   {
     label: "文章",
