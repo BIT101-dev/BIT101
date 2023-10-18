@@ -1,18 +1,18 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-17 19:00:39
+ * @LastEditTime: 2023-10-18 14:08:43
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import router from '@/router';
 import http from '@/utils/request';
-import { onMounted, reactive, watch } from 'vue';
+import { Teleport, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { SearchOutlined } from '@vicons/material';
 import { Poster } from '@/utils/types';
-import store from '@/utils/store';
-import { FormatTime } from '@/utils/tools';
+import { FormatTime, OpenLink } from '@/utils/tools';
+import { ErrorOutlined, RefreshRound, AddRound } from '@vicons/material'
+import Avatar from '@/components/Avatar.vue';
 
 const gallery = reactive({
   search: "",
@@ -24,6 +24,7 @@ const gallery = reactive({
 })
 
 function LoadPosters() {
+  if(gallery.loading||gallery.end)return;
   gallery.loading = true;
   http.get("/posters", {
     params: {
@@ -42,12 +43,6 @@ function LoadPosters() {
   }).catch(() => { gallery.loading = false; })
 }
 
-const route = useRoute();
-gallery.search = route.query.search as string;
-onMounted(() => {
-  LoadPosters();
-})
-
 function Search() {
   gallery.list = [];
   gallery.page = 0;
@@ -57,16 +52,30 @@ function Search() {
 
 function Refresh() {
   window.scrollTo(0, 0);
-  gallery.list = [];
-  gallery.page = 0;
-  gallery.end = false;
-  LoadPosters();
+  Search();
 }
 
 watch(() => gallery.order, () => {
   Search();
 })
 
+const route = useRoute();
+gallery.search = route.query.search as string;
+const load_more_observer = ref(null as any);
+onMounted(() => {
+  LoadPosters();
+
+  // 构建滚动观察器
+  let observer = new IntersectionObserver(([entry]) => {
+    if(gallery.loading||gallery.end)return;
+    if (entry.isIntersecting) {
+      LoadPosters();
+    }
+  });
+
+  // 监听底部元素
+  observer.observe(load_more_observer.value as Element);
+})
 </script>
 
 <template>
@@ -76,7 +85,7 @@ watch(() => gallery.order, () => {
         <n-space vertical>
           <n-input-group>
             <n-input v-model:value="gallery.search" @keyup.enter="Search" placeholder="请输入关键词" maxlength="42"></n-input>
-            <n-button type="default">搜索</n-button>
+            <n-button type="default" @click="Search">搜索</n-button>
           </n-input-group>
           <n-radio-group v-model:value="gallery.order">
             <n-space>
@@ -90,22 +99,17 @@ watch(() => gallery.order, () => {
 
     <n-divider></n-divider>
 
-
-
     <n-card v-for="i in gallery.list" @click="router.push('/gallery/' + i['id'])" hoverable
       style="margin-bottom:11px;cursor:pointer;">
 
-      <!-- <div style="display: flex;margin-top:10px;">
-        <a :href="'/#/user/' + i.user.id" target="_blank" @click.stop="">
-          <n-avatar round size-="x-small" :src="i.user.avatar + store.img_suffix" />
-        </a>
-        <span style="margin-left: 4px;margin-top:-6px">
-          <div style="font-size: 16px;">{{ i.user.nickname }}</div>
-          <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
-        </span>
-      </div> -->
-
       <h3 style="margin:0;color:#0087A8;">{{ i.title }}</h3>
+
+      <n-tag v-if="i.claim" round :bordered="false" type="error" size="small">
+        {{ i.claim }}
+        <template #icon>
+          <n-icon :component="ErrorOutlined" />
+        </template>
+      </n-tag>
 
       <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text }}</n-ellipsis>
       <n-image-group>
@@ -124,14 +128,12 @@ watch(() => gallery.order, () => {
         </n-grid>
       </n-image-group>
 
-      <div
-        style="color:#809BA8;font-size:14px;margin-top: 4px;display:flex;align-items:center;">
-        <div style="display:flex;align-items: center;flex:1;">
-          <a :href="'/#/user/' + i.user.id" target="_blank" @click.stop="" style="font-size:0;">
-            <n-avatar round size="small" :src="i.user.avatar + store.img_suffix" />
-          </a>
+      <div style="color:#809BA8;font-size:14px;margin-top: 11px;display:flex;align-items:center;">
+        <div @click="OpenLink('/#/user/' + i.user.id,true)" @click.stop="" style="display:flex;align-items: center;flex:1;">
+          <Avatar :user="i.user" :size="24" round />
+
           <div style="width:2em;flex:1;">
-            <n-ellipsis  style="margin-left:2px;">{{ i.user.nickname }}</n-ellipsis>
+            <n-ellipsis style="margin-left:2px;">{{ i.user.nickname }}</n-ellipsis>
           </div>
         </div>
         <span>
@@ -140,15 +142,30 @@ watch(() => gallery.order, () => {
       </div>
     </n-card>
 
+    <div ref="load_more_observer"></div>
+
     <n-divider style="color:#809BA8;font-size:14px;">已加载{{ gallery.list.length }}条</n-divider>
 
-    <n-space vertical>
-      <n-button block @click="LoadPosters()" :disabled="gallery.end" :loading="gallery.loading">
-        {{ gallery.end ? '木有更多了' : '加载更多' }}
-      </n-button>
-      <n-button block @click="Refresh()" :loading="gallery.loading">
-        刷新
-      </n-button>
-    </n-space>
+    <n-button block @click="LoadPosters()" :disabled="gallery.end" :loading="gallery.loading">
+      {{ gallery.end ? '木有更多了' : '加载更多' }}
+    </n-button>
+
+    <Teleport to="body">
+      <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
+        <n-button @click="Refresh()" circle :bordered="false"
+          style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
+          <template #icon>
+            <n-icon :component="RefreshRound" size="24" />
+          </template>
+        </n-button>
+        <n-button @click="Refresh()" circle :bordered="false"
+          style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
+          <template #icon>
+            <n-icon :component="AddRound" size="24" />
+          </template>
+        </n-button>
+      </n-space>
+
+    </Teleport>
   </div>
 </template>

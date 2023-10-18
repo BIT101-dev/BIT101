@@ -1,9 +1,10 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-17 13:33:05
+ * @LastEditTime: 2023-10-18 01:07:33
  * @Description: _(:з」∠)_
  */
+
 
 // 帖子
 export interface Poster {
@@ -21,18 +22,19 @@ export interface Poster {
     title: string; // 标题
     update_time: string; // 更新时间
     user: User; // 发布用户
-    [property: string]: any;
 }
 
 // 用户
 export interface User {
-    avatar: string;
-    create_time: string;
+    avatar: string; // 头像链接
+    create_time: string; // 注册时间
     id: number;
-    level: number;
-    motto: string;
-    nickname: string;
-    sid?: string;
-    update_time?: string;
-    [property: string]: any;
+    level: number; // 等级
+    motto: string; // 格言 简介
+    nickname: string; // 昵称
+    type: {
+        color: string; // 勾勾颜色
+        text: string; // 用户类型描述
+    }
 }
+

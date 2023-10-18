@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-17 08:29:41
+ * @LastEditTime: 2023-10-18 01:41:22
  * @Description: 
  * _(:з」∠)_
 -->
@@ -133,7 +133,7 @@ onMounted(() => {
                 </n-icon>
               </template>
             </n-button>
-            <n-button @click="unread_num=0,router.push('/message/')" quaternary circle size="large" color="white">
+            <n-button @click="unread_num=0,router.push('/message/')" quaternary circle size="large" color="white" style="margin-right:4px">
               <template #icon>
                 <n-badge :value="unread_num" :max="99">
                   <n-icon color="white">

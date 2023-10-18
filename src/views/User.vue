@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-03-21 17:02:38
+ * @LastEditTime: 2023-10-18 14:16:29
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -12,27 +12,15 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
+import { User } from '@/utils/types';
+import Avatar from '@/components/Avatar.vue';
 
-
-const user = reactive({
-  id: "",
-  sid: "",
-  nickname: "",
-  avatar_mid: "",
-  avatar_url:"",
-  motto: "",
-  register_time: ""
-});
+const user = ref({} as User);
 function GetInfo(uid: any) {
   http.get("/user/info?id=" + uid)
     .then(res => {
-      user.id = res.data.id;
-      user.sid = res.data.sid;
-      user.nickname = res.data.nickname;
-      user.avatar_url = res.data.avatar;
-      user.motto = res.data.motto;
-      user.register_time = FormatTime(res.data.create_time);
-      if(user.id)setTitle(user.nickname,"用户");
+      user.value = res.data;
+      if (user.value.id) setTitle(user.value.nickname, "用户");
     })
 }
 
@@ -41,27 +29,41 @@ onMounted(() => {
   GetInfo(route.params.id);
 })
 
-const edit_model = ref(false);
+const edit_info = reactive({
+  model: false,
+  avatar_mid: "",
+  avatar_url: "",
+  nickname: "",
+  motto: ""
+})
+
 const upload_url = store.api_url + "/upload/image";
 const upload_head = {
   'fake-cookie': store.fake_cookie
 }
 
-function UploadHandler({file,event}:{file:UploadFileInfo,event:ProgressEvent}){
-  let res=(event.target as XMLHttpRequest);
-  let data=JSON.parse(res.response);
-  user.avatar_mid=data.mid;
-  user.avatar_url=data.url;
+function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
+  let res = (event.target as XMLHttpRequest);
+  let data = JSON.parse(res.response);
+  edit_info.avatar_mid = data.mid;
+  edit_info.avatar_url = data.url;
   window.$message.success("上传成功OvO");
 }
 
-function EditInfo(){
-  http.put("/user/info",{
-    avatar:user.avatar_mid,
-    nickname:user.nickname,
-    motto:user.motto
-  }).then(()=>{
-    edit_model.value=false;
+function OpenEditInfo() {
+  edit_info.avatar_url = user.value.avatar;
+  edit_info.nickname = user.value.nickname;
+  edit_info.motto = user.value.motto;
+  edit_info.model = true;
+}
+
+function EditInfo() {
+  http.put("/user/info", {
+    avatar: edit_info.avatar_mid,
+    nickname: edit_info.nickname,
+    motto: edit_info.motto
+  }).then(() => {
+    edit_info.model = false;
   })
 }
 
@@ -69,9 +71,9 @@ function EditInfo(){
 
 <template>
   <div class="container">
-    <n-modal :show="edit_model">
+    <n-modal :show="edit_info.model">
       <n-card style="width: 600px" title="编辑信息">
-        <n-avatar size="large" round :src="user.avatar_url+store.img_suffix" />
+        <n-avatar size="large" round :src="user.avatar + store.img_suffix" />
         <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
@@ -85,26 +87,28 @@ function EditInfo(){
         <template #footer>
           <n-space>
             <n-button @click="EditInfo" type="success" ghost>提交</n-button>
-            <n-button @click="edit_model = false" type="error" ghost >取消</n-button>
+            <n-button @click="edit_info.model = false" type="error" ghost>取消</n-button>
           </n-space>
         </template>
       </n-card>
     </n-modal>
 
-    <n-card title="你好鸭ヾ(´▽｀))">
+    <n-card title="你好鸭ヾ(´▽｀))" v-if="user.type">
       <div style="display: flex;align-items: center;">
-        <n-avatar size="large" round :src="user.avatar_url+store.img_suffix" />
+        <Avatar :user="user" round :size="42" />
         <span style="margin-left: 4px;">
           <div style="font-size: 17px;">{{ user.nickname }}</div>
           <div style="margin-top: -4px;">uid:{{ user.id }}</div>
         </span>
       </div>
-      <br />
-      <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space: pre-wrap;" >
-        {{ user.motto}}
+      <n-tag round :bordered="false" size="small" :color="{color:user.type.color?user.type.color:'#FF9A57',textColor:'#FFF'}">
+        用户类型：{{ user.type.text }}
+      </n-tag>
+      <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space:pre-wrap;margin-top: 14px;">
+        {{ user.motto }}
       </n-alert>
-      <p style="color: #abc;">于 {{ user.register_time }} 来到BIT101</p>
-      <n-button v-if="route.params.id == '0'" @click="edit_model = true" block>编辑信息</n-button>
+      <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user.create_time) }} 来到BIT101</p>
+      <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
     </n-card>
 
     <br />

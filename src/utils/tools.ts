@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-03-20 12:18:02
+ * @LastEditTime: 2023-10-18 02:20:01
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -121,6 +121,13 @@ async function Clip(s: string, msg = "已复制到剪贴板OvO") {
 /** 设置页面标题 */
 export function setTitle(...titles: string[]): void {
   document.title = `${titles.join(' - ')} | BIT101`
+}
+
+// 打开链接
+export function OpenLink(url: string, blank = false) {
+  if (url) {
+    window.open(url, blank ? '_blank' : '_self');
+  }
 }
 
 export {
