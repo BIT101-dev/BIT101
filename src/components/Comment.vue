@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-03-30 14:23:13
+ * @LastEditTime: 2023-10-20 21:03:36
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -176,7 +176,7 @@ onBeforeRouteLeave((to, from) => {
                 <ThumbUpOutlined v-else />
               </n-icon>
             </template>
-            {{ i['like_num'] }}人赞同
+            {{ i['like_num'] }}赞同
           </n-button>
 
           <n-button @click="OpenReplyModal(i)" text>
@@ -282,7 +282,7 @@ onBeforeRouteLeave((to, from) => {
                     <ThumbUpOutlined v-else />
                   </n-icon>
                 </template>
-                {{ i['like_num'] }}人赞同
+                {{ i['like_num'] }}赞同
               </n-button>
 
               <n-button @click="OpenReplyModal(sub_comments.parent, i['user'],'comment'+i['id'])" text>

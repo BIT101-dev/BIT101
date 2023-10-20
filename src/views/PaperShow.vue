@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-03-21 23:58:27
+ * @LastEditTime: 2023-10-20 21:03:43
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -104,7 +104,7 @@ onMounted(async () => {
             <ThumbUpOutlined v-else />
           </n-icon>
         </template>
-        {{ paper.like_num }}人赞同
+        {{ paper.like_num }}赞同
       </n-button>
       <n-button @click="ClipUrl" icon-placement="right" ghost>
         <template #icon>
@@ -146,7 +146,7 @@ onMounted(async () => {
             <ThumbUpOutlined v-else />
           </n-icon>
         </template>
-        {{ paper.like_num }}人赞同
+        {{ paper.like_num }}赞同
       </n-button>
     </n-space>
     <n-divider style="color:#809BA8;font-size:14px;">现有{{paper.comment_num}}条评论</n-divider>

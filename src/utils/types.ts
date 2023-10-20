@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-18 01:07:33
+ * @LastEditTime: 2023-10-20 18:01:50
  * @Description: _(:з」∠)_
  */
 
@@ -12,10 +12,12 @@ export interface Poster {
     claim: string; // 声明
     comment_num: number; // 评论数量
     create_time: string; // 发布时间
+    edit_time: string; // 编辑时间
     id: number;
     images: string[]; // 图片链接列表
     like: boolean; // 是否赞过
     like_num: number; // 点赞数量
+    own: boolean; // 是否可编辑
     public: boolean; // 是否公开
     tags: string[]; // 标签列表
     text: string; // 文本内容

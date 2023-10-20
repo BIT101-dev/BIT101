@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-18 14:16:29
+ * @LastEditTime: 2023-10-20 18:30:24
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -17,9 +17,9 @@ import Avatar from '@/components/Avatar.vue';
 
 const user = ref({} as User);
 function GetInfo(uid: any) {
-  http.get("/user/info?id=" + uid)
+  http.get("/user/info/" + uid)
     .then(res => {
-      user.value = res.data;
+      user.value = res.data.user;
       if (user.value.id) setTitle(user.value.nickname, "用户");
     })
 }
