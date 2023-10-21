@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-10-20 21:03:43
+ * @LastEditTime: 2023-10-21 22:29:16
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -14,6 +14,8 @@ import PaperRender from '@/components/PaperRender.vue';
 import { FormatTime, Clip, setTitle } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
+import Avatar from '@/components/Avatar.vue';
+import { User } from '@/utils/types';
 
 //文章数据
 const paper = reactive({
@@ -23,11 +25,7 @@ const paper = reactive({
   data: {},
   create_time: "",
   update_time: "",
-  user: {
-    id: 0,
-    nickname: "",
-    avatar: "",
-  },
+  user: {} as User,
   like_num: 0,
   like: false,
   like_loading: false,
@@ -45,7 +43,6 @@ function LoadPaper() {
       paper.data = JSON.parse(res.data.content);
       paper.create_time = FormatTime(res.data.create_time);
       paper.update_time = FormatTime(res.data.update_time);
-      paper.user.id = res.data.anonymous ? '-1' : res.data.update_user.id;
       paper.like_num = res.data.like_num;
       paper.comment_num=res.data.comment_num;
       paper.like = res.data.like;
@@ -79,16 +76,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" v-if="paper.user.id">
     <div style="text-align:center;">
       <h2 style="color:#00BCD4">{{ paper.title }}</h2>
     </div>
     <n-divider></n-divider>
     <div style="display: flex;align-items: center;color:#3E5C6B;">
       <a :href="'/#/user/' + paper.user.id" target="_blank">
-        <n-avatar :src="paper.user.avatar + store.img_suffix" />
+        <Avatar :user="paper.user" :size="36" />
       </a>
-      <span style="margin-left: 4px;margin-top:-6px;">
+      <span style="margin-left: 4px;">
         <div style="font-size: 16px;">{{ paper.user.nickname }}</div>
         <div style="margin-top: -4px;font-size:14px;">最后编辑于{{ paper.update_time }}</div>
       </span>

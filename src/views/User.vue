@@ -1,18 +1,18 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-21 13:03:30
+ * @LastEditTime: 2023-10-21 23:35:07
  * @Description: 用户中心
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { FormatTime, hitokoto, setTitle } from '@/utils/tools';
+import { FormatTime, OpenLink, hitokoto, setTitle } from '@/utils/tools';
 import http from '@/utils/request';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
-import { UserInfo } from '@/utils/types';
+import { User, UserInfo } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import { PostersStatus } from '@/components/Posters.vue';
 
@@ -25,14 +25,16 @@ function GetInfo(uid: any) {
     })
 }
 
+// 编辑信息
 const edit_info = reactive({
-  model: false,
+  modal: false,
   avatar_mid: "",
   avatar_url: "",
   nickname: "",
   motto: ""
 })
 
+// 上传头像用
 const upload_url = store.api_url + "/upload/image";
 const upload_head = {
   'fake-cookie': store.fake_cookie
@@ -42,15 +44,15 @@ function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressE
   let res = (event.target as XMLHttpRequest);
   let data = JSON.parse(res.response);
   edit_info.avatar_mid = data.mid;
-  edit_info.avatar_url = data.url;
+  edit_info.avatar_url = data.low_url;
   window.$message.success("上传成功OvO");
 }
 
 function OpenEditInfo() {
-  edit_info.avatar_url = user_info.value.user.avatar;
+  edit_info.avatar_url = user_info.value.user.avatar.low_url;
   edit_info.nickname = user_info.value.user.nickname;
   edit_info.motto = user_info.value.user.motto;
-  edit_info.model = true;
+  edit_info.modal = true;
 }
 
 function EditInfo() {
@@ -59,10 +61,11 @@ function EditInfo() {
     nickname: edit_info.nickname,
     motto: edit_info.motto
   }).then(() => {
-    edit_info.model = false;
+    edit_info.modal = false;
   })
 }
 
+// 关注和取关操作
 const follow_loading = ref(false);
 function Follow() {
   if (follow_loading.value) return;
@@ -77,6 +80,61 @@ function Follow() {
   }).catch(() => { follow_loading.value = false; })
 }
 
+const follows = reactive({
+  type: "",
+  title: "",
+  modal: false,
+  loading: false,
+  end: false,
+  page: 0,
+  list: [] as User[]
+});
+
+function GetFollowList() {
+  if (follows.loading) return;
+  follows.loading = true;
+  http.get("/user/" + follows.type, {
+    params: {
+      page: follows.page
+    }
+  }).then(res => {
+    if (res.data.length == 0) follows.end = true;
+    follows.list = follows.list.concat(res.data);
+    follows.page++;
+    follows.loading = false;
+  }).catch(() => { follows.loading = false; })
+}
+
+function ShowFollowingList() {
+  if (route.params.id != '0') {
+    window.$message.error("只能查看自己的关注列表Orz");
+    return;
+  }
+  follows.type = "followings";
+  follows.title = "关注列表";
+  follows.page = 0;
+  follows.list = [];
+  follows.end = false;
+  GetFollowList();
+  follows.modal = true;
+}
+
+const follower_list = ref([] as User[]);
+function ShowFollowerList() {
+  if (route.params.id != '0') {
+    window.$message.error("只能查看自己的粉丝列表Orz");
+    return;
+  }
+  follows.type = "followers";
+  follows.title = "粉丝列表";
+  follows.page = 0;
+  follows.list = [];
+  follows.end = false;
+  GetFollowList();
+  follows.modal = true;
+}
+
+// 帖子
 const posters = ref({
   mode: 'search',
   search: "",
@@ -125,10 +183,12 @@ onMounted(() => {
           :color="{ color: user_info.user.type.color ? user_info.user.type.color : '#FF9A57', textColor: '#FFF' }">
           {{ user_info.user.type.text }}
         </n-tag>
-        <n-tag round :bordered="false" size="small" :color="{ color: '#FF9A57', textColor: '#FFF' }">
+        <n-tag @click="ShowFollowingList" round :bordered="false" size="small"
+          :color="{ color: '#FF9A57', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.following_num }}关注
         </n-tag>
-        <n-tag round :bordered="false" size="small" :color="{ color: '#FF9A57', textColor: '#FFF' }">
+        <n-tag @click="ShowFollowerList" round :bordered="false" size="small"
+          :color="{ color: '#FF9A57', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.follower_num }}粉丝
         </n-tag>
       </n-space>
@@ -144,26 +204,46 @@ onMounted(() => {
 
     <Posters v-if="posters.uid != -1" :value="posters" />
 
-    <n-modal :show="edit_info.model">
+    <n-modal :show="edit_info.modal">
       <n-card style="width: 600px" title="编辑信息">
-        <n-avatar size="large" round :src="user_info.user.avatar + store.img_suffix" />
+        <n-avatar size="large" round :src="edit_info.avatar_url" />
         <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
 
         <p style="margin-bottom: 0;">昵称</p>
-        <n-input v-model:value="user_info.user.nickname" maxlength="24"></n-input>
+        <n-input v-model:value="edit_info.nickname" maxlength="24"></n-input>
 
         <p style="margin-bottom: 0;">格言/简介</p>
-        <n-input v-model:value="user_info.user.motto" type="textarea"></n-input>
+        <n-input v-model:value="edit_info.motto" type="textarea"></n-input>
 
         <template #footer>
           <n-space>
             <n-button @click="EditInfo" type="success" ghost>提交</n-button>
-            <n-button @click="edit_info.model = false" type="error" ghost>取消</n-button>
+            <n-button @click="edit_info.modal = false" type="error" ghost>取消</n-button>
           </n-space>
         </template>
       </n-card>
+    </n-modal>
+
+    <n-modal v-model:show="follows.modal" preset="card" :title="follows.title" style="width:600px;">
+      <n-scrollbar style="max-height:75vh">
+        <n-space vertical>
+          <template v-for="user in follows.list">
+            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/#/user/'+user.id,true)">
+              <Avatar :user="user" :size="36" />
+              <div style="margin-left: 4px;">
+                <div style="font-size: 16px;margin-top:-4px;">{{ user.nickname }}</div>
+                <div style="margin-top: -4px;font-size:14px;">uid:{{ user.id }}</div>
+              </div>
+            </div>
+            <n-divider style="margin:0px;"></n-divider>
+          </template>
+        </n-space>
+        <n-divider style="color:#809BA8;font-size:14px;">已加载{{ follows.list.length }}条</n-divider>
+        <n-button block @click="GetFollowList" :disabled="follows.end" :loading="follows.loading">
+          {{ follows.end ? '木有更多了' : '加载更多' }}</n-button>
+      </n-scrollbar>
     </n-modal>
   </div>
 </template>

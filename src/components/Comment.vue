@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-20 21:03:36
+ * @LastEditTime: 2023-10-21 22:37:18
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -160,10 +160,10 @@ onBeforeRouteLeave((to, from) => {
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
         <a :href="'/#/user/' + i['user']['id']" target="_blank">
-          <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
+          <Avatar :user="i['user']" :size="36" />
         </a>
       </div>
-      <span style="margin-left: 4px;margin-top:-6px">
+      <span style="margin-left: 4px;margin-top:-4px">
         <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
         <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
         <n-rate v-if="props.rate" :value="i['rate'] / 2" allow-half size="large" readonly />
@@ -245,10 +245,10 @@ onBeforeRouteLeave((to, from) => {
       <div style="display: flex;align-items: top;color:#3E5C6B;">
         <div>
           <a :href="'/#/user/' + sub_comments.parent['user']['id']" target="_blank">
-            <n-avatar :src="sub_comments.parent['user']['avatar'] + store.img_suffix" />
+            <Avatar :user="sub_comments.parent['user']" :size="36" />
           </a>
         </div>
-        <span style="margin-left: 4px;margin-top:-6px">
+        <span style="margin-left: 4px;margin-top:-4px">
           <div style="font-size: 16px;">{{ sub_comments.parent['user']['nickname'] }}</div>
           <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(sub_comments.parent['create_time']) }}</div>
           <div style="white-space: pre-wrap;margin-top:4px;">{{ sub_comments.parent['text'] }}</div>
@@ -260,10 +260,10 @@ onBeforeRouteLeave((to, from) => {
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>
             <a :href="'/#/user/' + i['user']['id']" target="_blank">
-              <n-avatar :src="i['user']['avatar'] + store.img_suffix" />
+              <Avatar :user="i['user']" :size="36" />
             </a>
           </div>
-          <span style="margin-left: 4px;margin-top:-6px">
+          <span style="margin-left: 4px;margin-top:-4px">
             <div style="font-size: 16px;">{{ i['user']['nickname'] }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i['create_time']) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;">

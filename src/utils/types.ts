@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-21 11:27:35
+ * @LastEditTime: 2023-10-21 22:16:27
  * @Description: _(:з」∠)_
  */
 
@@ -39,7 +39,7 @@ export interface Claim {
 
 // 用户
 export interface User {
-    avatar: string; // 头像链接
+    avatar: Image; // 头像链接
     create_time: string; // 注册时间
     id: number;
     level: number; // 等级

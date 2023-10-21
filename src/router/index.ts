@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-21 13:12:26
+ * @LastEditTime: 2023-10-21 23:48:09
  * @Description: 
  * _(:з」∠)_
  */
@@ -102,21 +102,6 @@ const router = createRouter({
       component: () => import('@/views/GalleryEdit.vue')
     },
     {
-      path: '/admin/user/',
-      name: 'admin_user',
-      component: () => import('@/views/admin/User.vue')
-    },
-    {
-      path: '/admin/paper/',
-      name: 'admin_paper',
-      component: () => import('@/views/admin/Paper.vue')
-    },
-    {
-      path: '/admin/course/',
-      name: 'admin_course',
-      component: () => import('@/views/admin/Course.vue')
-    },
-    {
       path: '/admin/carousel/',
       name: 'admin_carousel',
       component: () => import('@/views/admin/Carousel.vue')
@@ -138,7 +123,7 @@ router.beforeEach(({ path }) => {
   // 之后各组件可以再覆盖。
 
   const titleMap: Record<string, string> = {
-    '': '欢迎',
+    '': '主页',
     login: '登录',
     user: '我的',
     paper: '文章',
