@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-20 22:50:50
+ * @LastEditTime: 2023-10-21 15:35:54
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -100,7 +100,9 @@ watch(props, () => {
       </template>
     </n-tag>
 
+    <br/>
     <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text }}</n-ellipsis>
+    
     <n-image-group>
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
         <n-gi v-for="(image, idx) in i.images" v-show="idx <= 2">

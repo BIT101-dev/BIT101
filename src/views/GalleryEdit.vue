@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-21 13:35:54
+ * @LastEditTime: 2023-10-21 16:10:33
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -42,7 +42,7 @@ const upload_head = {
 function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
   let res = (event.target as XMLHttpRequest);
   let data = JSON.parse(res.response);
-  file.name = data.mid + '.png';
+  file.name = data.mid;
   window.$message.success("上传成功OvO");
 }
 
@@ -74,7 +74,7 @@ function LoadPoster() {
   return http.get("/posters/" + poster.value.id)
     .then(res => {
       poster.value = res.data;
-      fileList.value = poster.value.images.map(i => { return { id: i.mid, name: i.mid + '.png', status: 'finished', url: i.url } })
+      fileList.value = poster.value.images.map(i => { return { id: i.mid, name: i.mid, status: 'finished', url: i.url } })
     })
 }
 
@@ -92,16 +92,19 @@ function Check() {
     window.$message.error("标签不能少于3个Orz");
     return false;
   }
+  return true;
 }
 
 const posting = ref(false);
 function PostPoster() {
+  if(!Check())return;
+  console.log(fileList.value);
   posting.value = true;
 
   let poster_data = {
     title: poster.value.title,
     text: poster.value.text,
-    mids: fileList.value.map(i => i.name.slice(0, -4)),
+    image_mids: fileList.value.map(i => i.name),
     plugins: poster.value.plugins,
     anonymous: poster.value.anonymous,
     tags: poster.value.tags,
@@ -110,14 +113,14 @@ function PostPoster() {
   }
 
   if (poster.value.id == 0) {
-    http.post("/papers", poster_data).then((res) => {
+    http.post("/posters", poster_data).then((res) => {
       posting.value = false;
       router.push('/gallery/' + res.data.id);
     }).catch(() => {
       posting.value = false;
     })
   } else {
-    http.put("/papers/" + poster.value.id, poster_data).then(() => {
+    http.put("/posters/" + poster.value.id, poster_data).then(() => {
       posting.value = false;
       router.push('/gallery/' + poster.value.id);
     }).catch(() => {

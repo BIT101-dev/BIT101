@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-21 13:34:59
+ * @LastEditTime: 2023-10-21 16:07:13
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -83,7 +83,7 @@ onMounted(async () => {
     </n-tag>
 
     <n-image-group>
-      <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
+      <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;margin-bottom: 11px;">
         <n-gi v-for="image in poster.images">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
             <n-image object-fit="cover" :preview-src="image.url" :src="image.low_url"
@@ -94,7 +94,7 @@ onMounted(async () => {
       </n-grid>
     </n-image-group>
 
-    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;">
+    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;">
       {{ i }}
     </p>
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-20 21:26:51
+ * @LastEditTime: 2023-10-21 15:44:12
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -32,7 +32,7 @@ function Load(force = false) {
   if (gallery.tab == "follow") {
     posters.value.mode = "follow";
   } else if (gallery.tab == "recommend") {
-    posters.value.mode = gallery.search ? "search" : "recommend";
+    posters.value.mode = (gallery.search||gallery.order!='recommend') ? "search" : "recommend";
     posters.value.search = gallery.search;
     posters.value.order = gallery.order == "new" ? "new" : "like";
   } else if (gallery.tab == "hot") {
