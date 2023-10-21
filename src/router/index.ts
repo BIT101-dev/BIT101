@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-20 17:29:07
+ * @LastEditTime: 2023-10-21 13:12:26
  * @Description: 
  * _(:з」∠)_
  */
@@ -20,13 +20,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login.vue'),
-      meta:{keepAlive:false}
+      meta: { keepAlive: false }
     },
     {
       path: '/user/:id',
       name: 'user',
       component: () => import('@/views/User.vue'),
-      meta:{keepAlive:false}
+      meta: { keepAlive: false }
     },
     {
       path: '/score',
@@ -62,19 +62,19 @@ const router = createRouter({
       path: '/course/upload/:id',
       name: 'course_upload',
       component: () => import('@/views/CourseUpload.vue'),
-      meta:{keepAlive:false}
+      meta: { keepAlive: false }
     },
     {
       path: '/about/',
       name: 'about',
       component: () => import('@/views/About.vue'),
-      meta:{keepAlive:false}
+      meta: { keepAlive: false }
     },
     {
       path: '/schedule/',
       name: 'schedule',
       component: () => import('@/views/Schedule.vue'),
-      meta:{keepAlive:false}
+      meta: { keepAlive: false }
     },
     {
       path: '/message/',
@@ -97,6 +97,26 @@ const router = createRouter({
       component: () => import('@/views/GalleryShow.vue')
     },
     {
+      path: '/gallery/edit/:id',
+      name: 'gallery_edit',
+      component: () => import('@/views/GalleryEdit.vue')
+    },
+    {
+      path: '/admin/user/',
+      name: 'admin_user',
+      component: () => import('@/views/admin/User.vue')
+    },
+    {
+      path: '/admin/paper/',
+      name: 'admin_paper',
+      component: () => import('@/views/admin/Paper.vue')
+    },
+    {
+      path: '/admin/course/',
+      name: 'admin_course',
+      component: () => import('@/views/admin/Course.vue')
+    },
+    {
       path: '/admin/carousel/',
       name: 'admin_carousel',
       component: () => import('@/views/admin/Carousel.vue')
@@ -106,7 +126,11 @@ const router = createRouter({
       name: 'admin_billboard',
       component: () => import('@/views/admin/Billboard.vue')
     },
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
+    else return { top: 0 }
+  },
 });
 
 router.beforeEach(({ path }) => {
@@ -120,7 +144,7 @@ router.beforeEach(({ path }) => {
     paper: '文章',
     course: '课程',
     score: '成绩',
-    schedule:'课表',
+    schedule: '课表',
     about: '关于',
     message: '消息',
     map: '地图',

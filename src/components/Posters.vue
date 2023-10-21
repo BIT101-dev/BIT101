@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-20 20:09:54
+ * @LastEditTime: 2023-10-20 22:50:50
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -93,8 +93,8 @@ watch(props, () => {
 
     <h3 style="margin:0;color:#0087A8;">{{ i.title }}</h3>
 
-    <n-tag v-if="i.claim" round :bordered="false" type="error" size="small">
-      {{ i.claim }}
+    <n-tag v-if="i.claim.id!=0" round :bordered="false" type="error" size="small">
+      {{ i.claim.text }}
       <template #icon>
         <n-icon :component="ErrorOutlined" />
       </template>
@@ -105,7 +105,7 @@ watch(props, () => {
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
         <n-gi v-for="(image, idx) in i.images" v-show="idx <= 2">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover"  :preview-src="image" :src="image + store.img_suffix"
+            <n-image object-fit="cover"  :preview-src="image.url" :src="image.low_url"
               style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
               :img-props="{ 'style': 'width:100%;' }" />
             <div v-if="idx == 2 && i.images.length > 3"

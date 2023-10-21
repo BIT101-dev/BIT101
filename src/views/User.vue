@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-20 18:30:24
+ * @LastEditTime: 2023-10-21 13:03:30
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -12,22 +12,18 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
-import { User } from '@/utils/types';
+import { UserInfo } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
+import { PostersStatus } from '@/components/Posters.vue';
 
-const user = ref({} as User);
+const user_info = ref({} as UserInfo);
 function GetInfo(uid: any) {
   http.get("/user/info/" + uid)
     .then(res => {
-      user.value = res.data.user;
-      if (user.value.id) setTitle(user.value.nickname, "用户");
+      user_info.value = res.data;
+      if (user_info.value.user.id) setTitle(user_info.value.user.nickname, "用户");
     })
 }
-
-const route = useRoute();
-onMounted(() => {
-  GetInfo(route.params.id);
-})
 
 const edit_info = reactive({
   model: false,
@@ -51,9 +47,9 @@ function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressE
 }
 
 function OpenEditInfo() {
-  edit_info.avatar_url = user.value.avatar;
-  edit_info.nickname = user.value.nickname;
-  edit_info.motto = user.value.motto;
+  edit_info.avatar_url = user_info.value.user.avatar;
+  edit_info.nickname = user_info.value.user.nickname;
+  edit_info.motto = user_info.value.user.motto;
   edit_info.model = true;
 }
 
@@ -67,22 +63,99 @@ function EditInfo() {
   })
 }
 
+const follow_loading = ref(false);
+function Follow() {
+  if (follow_loading.value) return;
+  follow_loading.value = true;
+  http.post("/user/follow/" + user_info.value.user.id).then(res => {
+    user_info.value.following = res.data.following;
+    user_info.value.follower = res.data.follower;
+    user_info.value.following_num = res.data.following_num;
+    user_info.value.follower_num = res.data.follower_num;
+    window.$message.success(res.data.following ? "关注成功OvO" : "取关成功OvO");
+    follow_loading.value = false;
+  }).catch(() => { follow_loading.value = false; })
+}
+
+const posters = ref({
+  mode: 'search',
+  search: "",
+  order: "new",
+  uid: -1
+} as PostersStatus
+);
+
+const route = useRoute();
+onMounted(() => {
+  GetInfo(route.params.id);
+  posters.value.uid = Number(route.params.id);
+})
+
 </script>
 
 <template>
   <div class="container">
+    <n-card title="你好鸭ヾ(´▽｀))" v-if="user_info.user">
+      <div style="display: flex;justify-content: space-between;align-items: center;">
+        <div style="display: flex;align-items: center;">
+          <Avatar :user="user_info.user" round :size="42" />
+          <span style="margin-left: 4px;">
+            <div style="font-size: 17px;">{{ user_info.user.nickname }}</div>
+            <div style="margin-top: -4px;">uid:{{ user_info.user.id }}</div>
+          </span>
+        </div>
+
+        <n-popconfirm v-if="user_info.following" @positive-click="Follow" :show-icon="false" positive-text="确定"
+          negative-text="取消">
+          <template #trigger>
+            <n-button :loading="follow_loading" :disabled="follow_loading">
+              {{ user_info.following ? (user_info.follower ? '已互粉' : '已关注') : '关注' }}
+            </n-button>
+          </template>
+          汝真取关耶？
+        </n-popconfirm>
+        <n-button v-else @click="Follow" :loading="follow_loading" :disabled="follow_loading">
+          {{ user_info.following ? (user_info.follower ? '已互粉' : '已关注') : '关注' }}
+        </n-button>
+      </div>
+
+
+      <n-space>
+        <n-tag round :bordered="false" size="small"
+          :color="{ color: user_info.user.type.color ? user_info.user.type.color : '#FF9A57', textColor: '#FFF' }">
+          {{ user_info.user.type.text }}
+        </n-tag>
+        <n-tag round :bordered="false" size="small" :color="{ color: '#FF9A57', textColor: '#FFF' }">
+          {{ user_info.following_num }}关注
+        </n-tag>
+        <n-tag round :bordered="false" size="small" :color="{ color: '#FF9A57', textColor: '#FFF' }">
+          {{ user_info.follower_num }}粉丝
+        </n-tag>
+      </n-space>
+
+      <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space:pre-wrap;margin-top: 14px;">
+        {{ user_info.user.motto }}
+      </n-alert>
+      <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
+      <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
+    </n-card>
+
+    <br />
+
+    <Posters v-if="posters.uid != -1" :value="posters" />
+
     <n-modal :show="edit_info.model">
       <n-card style="width: 600px" title="编辑信息">
-        <n-avatar size="large" round :src="user.avatar + store.img_suffix" />
+        <n-avatar size="large" round :src="user_info.user.avatar + store.img_suffix" />
         <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
 
         <p style="margin-bottom: 0;">昵称</p>
-        <n-input v-model:value="user.nickname" maxlength="24"></n-input>
+        <n-input v-model:value="user_info.user.nickname" maxlength="24"></n-input>
 
         <p style="margin-bottom: 0;">格言/简介</p>
-        <n-input v-model:value="user.motto" type="textarea"></n-input>
+        <n-input v-model:value="user_info.user.motto" type="textarea"></n-input>
 
         <template #footer>
           <n-space>
@@ -92,25 +165,5 @@ function EditInfo() {
         </template>
       </n-card>
     </n-modal>
-
-    <n-card title="你好鸭ヾ(´▽｀))" v-if="user.type">
-      <div style="display: flex;align-items: center;">
-        <Avatar :user="user" round :size="42" />
-        <span style="margin-left: 4px;">
-          <div style="font-size: 17px;">{{ user.nickname }}</div>
-          <div style="margin-top: -4px;">uid:{{ user.id }}</div>
-        </span>
-      </div>
-      <n-tag round :bordered="false" size="small" :color="{color:user.type.color?user.type.color:'#FF9A57',textColor:'#FFF'}">
-        用户类型：{{ user.type.text }}
-      </n-tag>
-      <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space:pre-wrap;margin-top: 14px;">
-        {{ user.motto }}
-      </n-alert>
-      <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user.create_time) }} 来到BIT101</p>
-      <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
-    </n-card>
-
-    <br />
   </div>
 </template>

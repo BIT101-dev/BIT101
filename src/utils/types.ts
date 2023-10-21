@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-20 18:01:50
+ * @LastEditTime: 2023-10-21 11:27:35
  * @Description: _(:з」∠)_
  */
 
@@ -9,15 +9,19 @@
 // 帖子
 export interface Poster {
     anonymous: boolean; // 是否匿名
-    claim: string; // 声明
+    claim: {
+        id: number; // 声明id
+        text: string; // 声明内容
+    }
     comment_num: number; // 评论数量
     create_time: string; // 发布时间
     edit_time: string; // 编辑时间
     id: number;
-    images: string[]; // 图片链接列表
+    images: Image[]; // 图片链接列表
     like: boolean; // 是否赞过
     like_num: number; // 点赞数量
     own: boolean; // 是否可编辑
+    plugins: string; // 插件列表
     public: boolean; // 是否公开
     tags: string[]; // 标签列表
     text: string; // 文本内容
@@ -25,6 +29,13 @@ export interface Poster {
     update_time: string; // 更新时间
     user: User; // 发布用户
 }
+
+// 声明
+export interface Claim {
+    id: number;
+    text: string;
+}
+
 
 // 用户
 export interface User {
@@ -39,4 +50,22 @@ export interface User {
         text: string; // 用户类型描述
     }
 }
+
+
+// 图片
+export interface Image {
+    low_url: string; // 低分辨率图片链接
+    mid: string; // 图片唯一编码
+    url: string; // 原图链接
+}
+
+// 用户信息
+export interface UserInfo {
+    user: User; // 用户
+    following: boolean; // 我是否关注
+    follower: boolean; // 是否关注我
+    following_num: number; // 关注数量
+    follower_num: number; // 粉丝数量
+}
+
 

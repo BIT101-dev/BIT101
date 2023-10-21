@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-20 21:13:33
+ * @LastEditTime: 2023-10-20 21:26:51
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -85,7 +85,6 @@ watch(() => [gallery.tab, gallery.order], () => {
 
     <Posters :value="posters" />
 
-
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="Refresh()" circle :bordered="false"
         style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
@@ -93,7 +92,7 @@ watch(() => [gallery.tab, gallery.order], () => {
           <n-icon :component="RefreshRound" size="24" />
         </template>
       </n-button>
-      <n-button @click="Refresh()" circle :bordered="false"
+      <n-button @click="OpenLink('/#/gallery/edit/0')" circle :bordered="false"
         style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
         <template #icon>
           <n-icon :component="AddRound" size="24" />

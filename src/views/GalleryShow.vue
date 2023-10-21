@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-20 21:03:41
+ * @LastEditTime: 2023-10-21 13:34:59
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -75,8 +75,8 @@ onMounted(async () => {
       </span>
     </div>
 
-    <n-tag v-if="poster.claim" round :bordered="false" type="error" size="small" style="margin-bottom:11px;">
-      {{ poster.claim }}
+    <n-tag v-if="poster.claim.id!=0" round :bordered="false" type="error" size="small" style="margin-bottom:11px;">
+      {{ poster.claim.text }}
       <template #icon>
         <n-icon :component="ErrorOutlined" />
       </template>
@@ -86,7 +86,7 @@ onMounted(async () => {
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
         <n-gi v-for="image in poster.images">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover" :preview-src="image" :src="image + store.img_suffix"
+            <n-image object-fit="cover" :preview-src="image.url" :src="image.low_url"
               style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
               :img-props="{ 'style': 'width:100%;' }" />
           </div>
@@ -110,7 +110,7 @@ onMounted(async () => {
     </p>
 
     <n-space style="margin-top:4px" justify="end">
-      <n-button v-if="poster.own" @click="OpenLink('/#/user/' + poster.user.id)" icon-placement="right" ghost>
+      <n-button v-if="poster.own" @click="OpenLink('/#/gallery/edit/' + poster.id)" icon-placement="right" ghost>
         <template #icon>
           <n-icon :component="EditOutlined" />
         </template>
