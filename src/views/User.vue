@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-21 23:35:07
+ * @LastEditTime: 2023-10-22 16:56:56
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -57,7 +57,7 @@ function OpenEditInfo() {
 
 function EditInfo() {
   http.put("/user/info", {
-    avatar: edit_info.avatar_mid,
+    avatar_mid: edit_info.avatar_mid,
     nickname: edit_info.nickname,
     motto: edit_info.motto
   }).then(() => {

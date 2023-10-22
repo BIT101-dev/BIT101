@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-21 23:48:09
+ * @LastEditTime: 2023-10-22 19:37:26
  * @Description: 
  * _(:з」∠)_
  */
@@ -94,7 +94,8 @@ const router = createRouter({
     {
       path: '/gallery/:id',
       name: 'gallery_show',
-      component: () => import('@/views/GalleryShow.vue')
+      component: () => import('@/views/GalleryShow.vue'),
+      meta: { keepAlive: false }
     },
     {
       path: '/gallery/edit/:id',

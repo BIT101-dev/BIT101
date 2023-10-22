@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-21 15:35:54
+ * @LastEditTime: 2023-10-22 19:44:10
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -40,7 +40,7 @@ const posters = reactive({
 function LoadPosters() {
   if (posters.loading || posters.end) return;
   posters.loading = true;
-  let refresh_time=posters.refresh_time;
+  let refresh_time = posters.refresh_time;
   http.get("/posters", {
     params: {
       mode: props.value.mode,
@@ -51,7 +51,7 @@ function LoadPosters() {
     }
   }).then(res => {
     // 状态更新后可能之前的请求还没完成 得加上时间戳保证更新的是最新的
-    if(refresh_time!=posters.refresh_time)return;
+    if (refresh_time != posters.refresh_time) return;
     if (res.data.length == 0) posters.end = true;
     else {
       posters.list = posters.list.concat(res.data);
@@ -80,7 +80,7 @@ onMounted(() => {
 watch(props, () => {
   posters.page = 0;
   posters.list = [];
-  posters.loading=false;
+  posters.loading = false;
   posters.end = false;
   posters.refresh_time++;
   LoadPosters();
@@ -93,21 +93,30 @@ watch(props, () => {
 
     <h3 style="margin:0;color:#0087A8;">{{ i.title }}</h3>
 
-    <n-tag v-if="i.claim.id!=0" round :bordered="false" type="error" size="small">
-      {{ i.claim.text }}
-      <template #icon>
-        <n-icon :component="ErrorOutlined" />
-      </template>
-    </n-tag>
+    <n-space v-if="i.claim.id != 0 || i.public == false">
+      <n-tag v-if="i.public == false" round :bordered="false" type="warning" size="small">
+        仅自己可见
+        <template #icon>
+          <n-icon :component="ErrorOutlined" />
+        </template>
+      </n-tag>
+      <n-tag v-if="i.claim.id != 0" round :bordered="false" type="error" size="small">
+        {{ i.claim.text }}
+        <template #icon>
+          <n-icon :component="ErrorOutlined" />
+        </template>
+      </n-tag>
+      <br />
+    </n-space>
 
-    <br/>
+
     <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text }}</n-ellipsis>
-    
-    <n-image-group>
+
+    <n-image-group v-if="i.images.length">
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
         <n-gi v-for="(image, idx) in i.images" v-show="idx <= 2">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover"  :preview-src="image.url" :src="image.low_url"
+            <n-image object-fit="cover" :preview-src="image.url" :src="image.low_url"
               style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
               :img-props="{ 'style': 'width:100%;' }" />
             <div v-if="idx == 2 && i.images.length > 3"
@@ -129,7 +138,7 @@ watch(props, () => {
         </div>
       </div>
       <span>
-        {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.create_time) }}
+        {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.edit_time) }}
       </span>
     </div>
   </n-card>

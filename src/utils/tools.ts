@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-18 02:20:01
+ * @LastEditTime: 2023-10-22 22:02:23
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -37,12 +37,12 @@ function FormatTime(t: number | Date | string) {
   if (dt < 12 * 60 * 60) return Math.round(dt / 60 / 60) + "小时前"
 
   let now = new Date(t * 1000);
-  let year = now.getFullYear();
-  let month = now.getMonth() + 1;
-  let date = now.getDate();
-  let hour = now.getHours();
-  let minute = now.getMinutes();
-  let second = now.getSeconds();
+  let year = now.getFullYear()
+  let month = (now.getMonth() + 1).toString().padStart(2, '0');
+  let date = now.getDate().toString().padStart(2, '0');
+  let hour = now.getHours().toString().padStart(2, '0');
+  let minute = now.getMinutes().toString().padStart(2, '0');
+  let second = now.getSeconds().toString().padStart(2, '0');
   return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
 }
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-21 16:07:13
+ * @LastEditTime: 2023-10-22 19:48:44
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -27,18 +27,16 @@ function LoadPaper() {
     })
 }
 
-const status = reactive({
-  like_loading: false,
-})
-
+// 点赞
+const like_loading=ref(false);
 function Like() {
-  status.like_loading = true;
+  like_loading.value = true;
   http.post("/reaction/like", { 'obj': 'poster' + poster.value.id })
     .then(res => {
       poster.value.like = res.data.like;
       poster.value.like_num = res.data.like_num;
-      status.like_loading = false;
-    }).catch(() => { status.like_loading = false; })
+      like_loading.value = false;
+    }).catch(() => { like_loading.value = false; })
 }
 
 function ClipUrl() {
@@ -75,14 +73,22 @@ onMounted(async () => {
       </span>
     </div>
 
-    <n-tag v-if="poster.claim.id!=0" round :bordered="false" type="error" size="small" style="margin-bottom:11px;">
-      {{ poster.claim.text }}
-      <template #icon>
-        <n-icon :component="ErrorOutlined" />
-      </template>
-    </n-tag>
+    <n-space v-if="poster.claim.id != 0 || poster.public == false" style="margin-bottom:11px;">
+      <n-tag v-if="poster.public == false" round :bordered="false" type="warning" size="small">
+        仅自己可见
+        <template #icon>
+          <n-icon :component="ErrorOutlined" />
+        </template>
+      </n-tag>
+      <n-tag v-if="poster.claim.id != 0" round :bordered="false" type="error" size="small">
+        {{ poster.claim.text }}
+        <template #icon>
+          <n-icon :component="ErrorOutlined" />
+        </template>
+      </n-tag>
+    </n-space>
 
-    <n-image-group>
+    <n-image-group v-if="poster.images.length">
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;margin-bottom: 11px;">
         <n-gi v-for="image in poster.images">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
@@ -104,9 +110,9 @@ onMounted(async () => {
     </n-space>
 
     <p style="color:#809BA8;font-size:14px;">
-      首次发布于 {{ poster.create_time }}
+      首次发布于 {{ FormatTime(poster.create_time) }}
       <br />
-      最后编辑于 {{ poster.edit_time }}
+      最后编辑于 {{ FormatTime(poster.edit_time) }}
     </p>
 
     <n-space style="margin-top:4px" justify="end">
@@ -137,8 +143,8 @@ onMounted(async () => {
         分享
       </n-button>
 
-      <n-button @click="Like" icon-placement="right" color="#fb7299" :ghost="!poster.like" :loading="status.like_loading"
-        :disabled="status.like_loading">
+      <n-button @click="Like" icon-placement="right" color="#fb7299" :ghost="!poster.like" :loading="like_loading"
+        :disabled="like_loading">
         <template #icon>
           <n-icon :component="poster.like ? ThumbUpFilled : ThumbUpOutlined" />
         </template>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-21 16:10:33
+ * @LastEditTime: 2023-10-22 19:26:54
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -78,7 +78,8 @@ function LoadPoster() {
     })
 }
 
-//发表帖子
+
+// 检查信息
 function Check() {
   if (poster.value.title.length == 0) {
     window.$message.error("标题不能为空Orz");
@@ -92,13 +93,19 @@ function Check() {
     window.$message.error("标签不能少于3个Orz");
     return false;
   }
+  let tags = new Set(poster.value.tags);
+  if (tags.size != poster.value.tags.length) {
+    window.$message.error("标签不能重复Orz");
+    return false;
+  }
   return true;
 }
 
+
+// 发布帖子
 const posting = ref(false);
 function PostPoster() {
   if(!Check())return;
-  console.log(fileList.value);
   posting.value = true;
 
   let poster_data = {
