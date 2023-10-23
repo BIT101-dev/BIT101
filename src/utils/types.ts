@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-23 16:36:53
+ * @LastEditTime: 2023-10-23 20:33:48
  * @Description: _(:з」∠)_
  */
 
@@ -17,7 +17,7 @@ export interface Poster {
     create_time: string; // 发布时间
     edit_time: string; // 编辑时间
     id: number;
-    images: Image[]; // 图片链接列表
+    images: Image[]; // 图片列表
     like: boolean; // 是否赞过
     like_num: number; // 点赞数量
     own: boolean; // 是否可编辑
@@ -57,5 +57,25 @@ export interface Image {
     low_url: string; // 低分辨率图片链接
     mid: string; // 图片唯一编码
     url: string; // 原图链接
+}
+
+// 评论
+export interface Comment {
+    id: number; // 评论id
+    obj: string; // 评论对象
+    text: string; // 评论内容
+    images: Image[]; // 图片列表
+    user: User; // 评论用户
+    anonymous: boolean; // 是否匿名
+    create_time: string; // 发布时间
+    update_time: string; // 更新时间
+    like: boolean; // 是否赞过
+    like_num: number; // 点赞数量
+    comment_num: number; // 评论数量
+    own: boolean; // 是否可删除
+    rate: number; // 评分
+    reply_user: User; // 回复用户
+    reply_obj: string; // 回复对象
+    sub: Comment[]; // 子评论
 }
 

@@ -1,20 +1,21 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-23 16:47:17
+ * @LastEditTime: 2023-10-23 23:59:24
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import store from '@/utils/store';
-import { onMounted, reactive, ref } from 'vue';
+import { onDeactivated, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime, Clip, setTitle, OpenLink, RenderLink } from '@/utils/tools';
+import { FormatTime, Clip, setTitle, OpenLink } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
+import RenderLink from '@/components/RenderLink.vue';
 
 //文章数据
 const poster = ref({} as Poster)
@@ -39,6 +40,11 @@ function Like() {
     }).catch(() => { like_loading.value = false; })
 }
 
+// 上报
+function Stay(){
+  http.post("/reaction/stay", { obj: 'poster' + poster.value.id, time: 5 })
+}
+
 function ClipUrl() {
   Clip(window.location.href, "分享链接已复制OvO");
 }
@@ -53,9 +59,18 @@ function DeletePoster() {
 const router = useRouter();
 const route = useRoute();
 poster.value.id = Number(route.params.id);
+let timer=null as any;
 onMounted(async () => {
   await LoadPaper()
   setTitle(poster.value.title, '话廊')
+
+  timer=setTimeout(() => {
+    Stay();
+  }, 5000);
+})
+
+onUnmounted(()=>{
+  timer&&clearTimeout(timer);
 })
 </script>
 
@@ -100,7 +115,8 @@ onMounted(async () => {
       </n-grid>
     </n-image-group>
 
-    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-break:break-all;" v-html="RenderLink(i)">
+    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-break:break-all;">
+      <RenderLink :value="i" />
     </p>
 
     <n-space>

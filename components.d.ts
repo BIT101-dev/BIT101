@@ -10,6 +10,7 @@ declare module 'vue' {
     Avatar: typeof import('./src/components/Avatar.vue')['default']
     Billboard: typeof import('./src/components/Billboard.vue')['default']
     Comment: typeof import('./src/components/Comment.vue')['default']
+    CommentItem: typeof import('./src/components/CommentItem.vue')['default']
     GlobalComponents: typeof import('./src/components/GlobalComponents.vue')['default']
     MessageContent: typeof import('./src/components/MessageContent.vue')['default']
     NA: typeof import('naive-ui')['NA']
@@ -63,6 +64,7 @@ declare module 'vue' {
     NUploadDragger: typeof import('naive-ui')['NUploadDragger']
     PaperRender: typeof import('./src/components/PaperRender.vue')['default']
     Posters: typeof import('./src/components/Posters.vue')['default']
+    RenderLink: typeof import('./src/components/RenderLink.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -130,12 +130,6 @@ export function OpenLink(url: string, blank = false) {
   }
 }
 
-// 渲染文本中的链接
-export function RenderLink(text: string) {
-  if (!text) return '';
-  return text.replace(/(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))/g, '<a href="$1" target="_blank" style="text-decoration:none;color:#FF8533">$1</a>')
-}
-
 export {
   hitokoto,
   FormatTime,
