@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-21 22:16:27
+ * @LastEditTime: 2023-10-23 16:36:53
  * @Description: _(:з」∠)_
  */
 
@@ -58,14 +58,4 @@ export interface Image {
     mid: string; // 图片唯一编码
     url: string; // 原图链接
 }
-
-// 用户信息
-export interface UserInfo {
-    user: User; // 用户
-    following: boolean; // 我是否关注
-    follower: boolean; // 是否关注我
-    following_num: number; // 关注数量
-    follower_num: number; // 粉丝数量
-}
-
 

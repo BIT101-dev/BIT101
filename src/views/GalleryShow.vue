@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-22 19:48:44
+ * @LastEditTime: 2023-10-23 16:47:17
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -10,7 +10,7 @@ import store from '@/utils/store';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime, Clip, setTitle, OpenLink } from '@/utils/tools';
+import { FormatTime, Clip, setTitle, OpenLink, RenderLink } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
@@ -100,8 +100,7 @@ onMounted(async () => {
       </n-grid>
     </n-image-group>
 
-    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;">
-      {{ i }}
+    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-break:break-all;" v-html="RenderLink(i)">
     </p>
 
     <n-space>

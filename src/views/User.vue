@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-22 16:56:56
+ * @LastEditTime: 2023-10-23 19:51:39
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -12,9 +12,18 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
-import { User, UserInfo } from '@/utils/types';
+import { User } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import { PostersStatus } from '@/components/Posters.vue';
+
+interface UserInfo {
+  user: User; // 用户
+  following: boolean; // 我是否关注
+  follower: boolean; // 是否关注我
+  following_num: number; // 关注数量
+  follower_num: number; // 粉丝数量
+  own: boolean; // 是否是自己
+}
 
 const user_info = ref({} as UserInfo);
 function GetInfo(uid: any) {
@@ -61,6 +70,7 @@ function EditInfo() {
     nickname: edit_info.nickname,
     motto: edit_info.motto
   }).then(() => {
+    GetInfo(route.params.id);
     edit_info.modal = false;
   })
 }
@@ -149,6 +159,12 @@ onMounted(() => {
   posters.value.uid = Number(route.params.id);
 })
 
+function Switch() {
+  if (route.params.id == '0') OpenLink('/#/user/' + user_info.value.user.id);
+  else OpenLink('/#/user/0');
+  posters.value.uid = Number(route.params.id);
+}
+
 </script>
 
 <template>
@@ -198,6 +214,7 @@ onMounted(() => {
       </n-alert>
       <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
       <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
+      <n-button v-if="user_info.own" @click="Switch" block style="margin-top: 8px;">{{ route.params.id=='0'?'切换到访客视角':'切换到用户中心' }}</n-button>
     </n-card>
 
     <br />
@@ -230,7 +247,7 @@ onMounted(() => {
       <n-scrollbar style="max-height:75vh">
         <n-space vertical>
           <template v-for="user in follows.list">
-            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/#/user/'+user.id,true)">
+            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/#/user/' + user.id, true)">
               <Avatar :user="user" :size="36" />
               <div style="margin-left: 4px;">
                 <div style="font-size: 16px;margin-top:-4px;">{{ user.nickname }}</div>

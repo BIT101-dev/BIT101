@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-22 22:02:23
+ * @LastEditTime: 2023-10-23 19:51:25
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -128,6 +128,12 @@ export function OpenLink(url: string, blank = false) {
   if (url) {
     window.open(url, blank ? '_blank' : '_self');
   }
+}
+
+// 渲染文本中的链接
+export function RenderLink(text: string) {
+  if (!text) return '';
+  return text.replace(/(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))/g, '<a href="$1" target="_blank" style="text-decoration:none;color:#FF8533">$1</a>')
 }
 
 export {
