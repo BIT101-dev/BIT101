@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-03-30 14:26:39
- * @LastEditTime: 2023-10-22 22:44:48
+ * @LastEditTime: 2023-10-24 14:53:04
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -167,7 +167,7 @@ function OpenModal(message: Message) {
         <n-space style="color:#809BA8;font-size:14px;">
           {{ FormatTime(i.update_time) }}
           <n-button @click="OpenModal(i)" text>详情></n-button>
-          <n-button @click="router.push(GetUrl(i.link_obj))" text>查看></n-button>
+          <n-button v-if="i.link_obj" @click="router.push(GetUrl(i.link_obj))" text>查看></n-button>
         </n-space>
       </n-card>
       <n-divider style="color:#809BA8;font-size:14px;">已加载{{ messages.list.length }}条</n-divider>

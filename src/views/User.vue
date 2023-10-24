@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-24 10:53:42
+ * @LastEditTime: 2023-10-24 14:04:48
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -160,9 +160,14 @@ onMounted(() => {
 })
 
 function Switch() {
-  if (route.params.id == '0') OpenLink('/#/user/' + user_info.value.user.id);
-  else OpenLink('/#/user/0');
-  posters.value.uid = Number(route.params.id);
+  if (route.params.id == '0') {
+    OpenLink('/#/user/' + user_info.value.user.id);
+    posters.value.uid = user_info.value.user.id;
+  }
+  else {
+    OpenLink('/#/user/0');
+    posters.value.uid = 0;
+  }
 }
 
 </script>
@@ -214,7 +219,8 @@ function Switch() {
       </n-alert>
       <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
       <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
-      <n-button v-if="user_info.own" @click="Switch" block style="margin-top: 8px;">{{ route.params.id=='0'?'切换到访客视角':'切换到个人中心' }}</n-button>
+      <n-button v-if="user_info.own" @click="Switch" block style="margin-top: 8px;">{{
+        route.params.id == '0' ? '切换到访客视角' : '切换到个人中心' }}</n-button>
     </n-card>
 
     <br />
