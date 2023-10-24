@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-21 15:44:12
+ * @LastEditTime: 2023-10-24 10:52:52
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -41,6 +41,13 @@ function Load(force = false) {
   if (force) posters.value = JSON.parse(JSON.stringify(posters.value));
 }
 
+// 轮播图
+const carousel_data = ref([])
+function LoadCarousel() {
+  http.get("/variables?obj=gallery_carousel").then((res) => {
+    carousel_data.value = JSON.parse(res.data.data);
+  })
+}
 
 function Refresh() {
   window.scrollTo(0, 0);
@@ -51,15 +58,22 @@ watch(() => [gallery.tab, gallery.order], () => {
   Load();
 })
 
+onMounted(() => {
+  LoadCarousel();
+})
+
 </script>
 
 <template>
   <div class="container">
     <div style="text-align:center;">
-      <h2 style="color:#00BCD4">话廊 | Gallery</h2>
+      <h2 style="color:#00BCD4;margin:4px;">话廊 | Gallery</h2>
+      <n-carousel v-if="carousel_data.length" autoplay show-arrow style="border-radius:11px;margin-bottom:4px;">
+        <img v-for="i in carousel_data" @click="OpenLink(i['url'])" :src="i['img']"
+          style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;"
+          :style="{ 'cursor': i['url'] ? 'pointer' : 'auto' }">
+      </n-carousel>
     </div>
-
-    <n-divider></n-divider>
 
     <n-tabs type="segment" v-model:value="gallery.tab">
       <n-tab-pane name="follow" tab="关注">

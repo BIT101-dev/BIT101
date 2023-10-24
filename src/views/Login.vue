@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-03-20 14:36:07
+ * @LastEditTime: 2023-10-24 10:53:34
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -165,7 +165,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
       </n-alert>
       <h3 v-if="status" style="text-align:center;color:#3E5C6B;">
         人不能两次登入同一个账号<br />
-        你或许可以到<router-link to="/user/0/" style="color:#FF8533;text-decoration: none;">用户中心</router-link>康康
+        你或许可以到<router-link to="/user/0/" style="color:#FF8533;text-decoration: none;">个人中心</router-link>康康
       </h3>
       <n-tabs v-else class="card-tabs" size="large" animated pane-style="box-sizing: border-box;">
         <n-tab-pane name="登录" style="padding: 4px;">
