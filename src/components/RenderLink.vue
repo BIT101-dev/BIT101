@@ -1,3 +1,9 @@
+<!--
+ * @Author: flwfdd
+ * @Date: 2023-10-24 11:52:42
+ * @LastEditTime: 2023-10-25 10:36:56
+ * @Description: _(:з」∠)_
+-->
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 
@@ -38,7 +44,6 @@ onMounted(() => {
     type: 'text',
     text: props.value
   })
-  console.log(list);
 })
 
 </script>

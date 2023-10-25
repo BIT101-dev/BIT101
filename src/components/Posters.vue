@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-22 19:44:10
+ * @LastEditTime: 2023-10-25 12:25:36
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -110,7 +110,7 @@ watch(props, () => {
     </n-space>
 
 
-    <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text }}</n-ellipsis>
+    <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0,2333) }}</n-ellipsis>
 
     <n-image-group v-if="i.images.length">
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">

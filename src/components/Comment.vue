@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-24 00:31:04
+ * @LastEditTime: 2023-10-25 12:22:38
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -187,7 +187,7 @@ onBeforeRouteLeave((to, from) => {
 <template>
   <n-space vertical>
     <n-rate v-if="props.rate" v-model:value="now_comment.rate" allow-half size="large" />
-    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" />
+    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" maxlength="23333" show-count />
     <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
       @finish="UploadHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
     <n-space justify="space-between">
@@ -211,7 +211,7 @@ onBeforeRouteLeave((to, from) => {
 
 
   <!-- 主评论列表 -->
-  <template v-for="i in comments.list">
+  <template v-for="i in comments.list" :key="i.id">
     <n-divider></n-divider>
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
@@ -261,7 +261,7 @@ onBeforeRouteLeave((to, from) => {
 
         <!-- 子评论预览 -->
         <div v-if="i.sub.length != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
-          <div v-for="j in i.sub.slice(0, 3)" style="margin:4px;">
+          <div v-for="j in i.sub.slice(0, 3)" :key="j.id" style="margin:4px;">
             {{ j.user.nickname }}：
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
             <span style="white-space:pre-wrap;margin-top:4px;word-break:break-all;">{{ j.text }}</span>
@@ -279,7 +279,7 @@ onBeforeRouteLeave((to, from) => {
   <n-modal v-model:show="sub_comment.modal" preset="card" style="width:624px"
     :title="'回复' + (sub_comment.reply_user.id == 0 ? '' : '@' + sub_comment.reply_user.nickname)">
     <n-space vertical>
-      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" />
+      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" maxlength="23333" show-count />
       <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
         @finish="UploadHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
       <n-space justify="space-between">
@@ -327,7 +327,7 @@ onBeforeRouteLeave((to, from) => {
       </div>
 
       <!-- 子评论列表 -->
-      <template v-for="i in sub_comments.list">
+      <template v-for="i in sub_comments.list" :key="i.id">
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>

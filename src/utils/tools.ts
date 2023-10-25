@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-23 19:51:25
+ * @LastEditTime: 2023-10-25 10:48:59
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -126,7 +126,7 @@ export function setTitle(...titles: string[]): void {
 // 打开链接
 export function OpenLink(url: string, blank = false) {
   if (url) {
-    window.open(url, blank ? '_blank' : '_self');
+    window.open(url, blank ? '_blank' : (url.startsWith('/')?'_self':'_blank'));
   }
 }
 

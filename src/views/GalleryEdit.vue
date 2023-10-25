@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-22 19:26:54
+ * @LastEditTime: 2023-10-25 12:22:13
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -160,7 +160,7 @@ onMounted(async () => {
 
       <n-space vertical size="small">
         <div>内容</div>
-        <n-input v-model:value="poster.text" type="textarea" placeholder="请输入内容" :autosize="{ minRows: 6 }" />
+        <n-input v-model:value="poster.text" type="textarea" placeholder="请输入内容" :autosize="{ minRows: 6 }" maxlength="23333" show-count />
       </n-space>
 
       <n-space vertical size="small">

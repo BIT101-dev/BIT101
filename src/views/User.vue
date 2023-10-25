@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-24 14:04:48
+ * @LastEditTime: 2023-10-25 12:23:01
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -238,7 +238,7 @@ function Switch() {
         <n-input v-model:value="edit_info.nickname" maxlength="24"></n-input>
 
         <p style="margin-bottom: 0;">格言/简介</p>
-        <n-input v-model:value="edit_info.motto" type="textarea"></n-input>
+        <n-input v-model:value="edit_info.motto" type="textarea" maxlength="23333" show-count></n-input>
 
         <template #footer>
           <n-space>
