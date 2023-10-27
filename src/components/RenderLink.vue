@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-24 11:52:42
- * @LastEditTime: 2023-10-25 10:36:56
+ * @LastEditTime: 2023-10-27 23:57:15
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -40,6 +40,12 @@ onMounted(() => {
       })
       last = match.index!! + match[0].length;
     }
+    if (last < props.value.length) {
+      list.push({
+        type: 'text',
+        text: props.value.slice(last)
+      })
+    }
   } else list.push({
     type: 'text',
     text: props.value
@@ -53,6 +59,6 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <a v-if="i.type=='link'" :href="i.text" target="_blank" style="text-decoration:none;color:#FF8533">{{ i.text }}</a>
+    <a v-if="i.type == 'link'" :href="i.text" target="_blank" style="text-decoration:none;color:#FF8533">{{ i.text }}</a>
   </template>
 </template>

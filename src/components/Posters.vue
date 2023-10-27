@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-25 12:25:36
+ * @LastEditTime: 2023-10-27 15:28:16
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -18,7 +18,7 @@ import store from '@/utils/store';
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
   search: string;
-  order: 'like' | 'new';
+  order: 'similar' | 'new';
   uid: number;
 }
 

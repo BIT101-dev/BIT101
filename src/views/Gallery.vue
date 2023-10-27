@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-24 10:52:52
+ * @LastEditTime: 2023-10-27 15:27:55
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -25,18 +25,26 @@ const posters = ref({
 const gallery = reactive({
   tab: "recommend",
   search: "",
-  order: "recommend",
+  order: "new",
 })
 
 function Load(force = false) {
   if (gallery.tab == "follow") {
     posters.value.mode = "follow";
+    posters.value.search = "";
+    posters.value.order = "new";
+  } else if (gallery.tab == "new") {
+    posters.value.mode = "search";
+    posters.value.search = "";
+    posters.value.order = "new";
   } else if (gallery.tab == "recommend") {
-    posters.value.mode = (gallery.search||gallery.order!='recommend') ? "search" : "recommend";
-    posters.value.search = gallery.search;
-    posters.value.order = gallery.order == "new" ? "new" : "like";
+    posters.value.mode = "recommend";
   } else if (gallery.tab == "hot") {
     posters.value.mode = "hot";
+  } else if (gallery.tab == "search") {
+    posters.value.mode = "search";
+    posters.value.search = gallery.search;
+    posters.value.order = gallery.order == "new" ? "new" : "similar";
   }
   if (force) posters.value = JSON.parse(JSON.stringify(posters.value));
 }
@@ -78,7 +86,17 @@ onMounted(() => {
     <n-tabs type="segment" v-model:value="gallery.tab">
       <n-tab-pane name="follow" tab="关注">
       </n-tab-pane>
+
+      <n-tab-pane name="new" tab="最新">
+      </n-tab-pane>
+
       <n-tab-pane name="recommend" tab="推荐">
+      </n-tab-pane>
+
+      <n-tab-pane name="hot" tab="热门">
+      </n-tab-pane>
+
+      <n-tab-pane name="search" tab="搜索">
         <n-space vertical style="margin-bottom: 11px;">
           <n-input-group>
             <n-input v-model:value="gallery.search" @keyup.enter="Refresh" placeholder="请输入关键词" maxlength="42"></n-input>
@@ -86,14 +104,11 @@ onMounted(() => {
           </n-input-group>
           <n-radio-group v-model:value="gallery.order">
             <n-space>
-              <n-radio value="recommend">推荐</n-radio>
               <n-radio value="new">最新</n-radio>
+              <n-radio value="similar">相似</n-radio>
             </n-space>
           </n-radio-group>
         </n-space>
-      </n-tab-pane>
-
-      <n-tab-pane name="hot" tab="热榜">
       </n-tab-pane>
     </n-tabs>
 

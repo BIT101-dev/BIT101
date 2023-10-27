@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-25 12:22:38
+ * @LastEditTime: 2023-10-27 13:37:38
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -67,6 +67,13 @@ function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressE
   let data = JSON.parse(res.response);
   file.name = data.mid;
   window.$message.success("上传成功OvO");
+}
+
+function UploadErrorHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
+  let res = JSON.parse((event.target as XMLHttpRequest).response);
+  if (res && res.msg) {
+    window.$message.error(res.msg);
+  }
 }
 
 const image_remove_modal = ref(false);
@@ -187,9 +194,9 @@ onBeforeRouteLeave((to, from) => {
 <template>
   <n-space vertical>
     <n-rate v-if="props.rate" v-model:value="now_comment.rate" allow-half size="large" />
-    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" maxlength="23333" show-count />
+    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }" maxlength="23333" show-count />
     <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
-      @finish="UploadHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
+      @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
     <n-space justify="space-between">
       <n-space>
         <n-button @click="now_comment.with_image = !now_comment.with_image" ghost>附图:{{ now_comment.with_image ? '是'
@@ -219,11 +226,11 @@ onBeforeRouteLeave((to, from) => {
           <Avatar :user="i.user" :size="36" round />
         </a>
       </div>
-      <span style="margin-left: 4px;margin-top:-4px">
+      <span style="margin-left: 4px;margin-top:-4px;width:0;flex:1;">
         <div style="font-size: 16px;">{{ i.user.nickname }}</div>
         <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
         <n-rate v-if="props.rate" :value="i.rate / 2" allow-half size="large" readonly />
-        <div style="white-space:pre-wrap;margin-top:4px;word-break:break-all;">
+        <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
           <RenderLink :value="i.text" />
         </div>
         <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].url" :src="i.images[0].low_url"
@@ -264,7 +271,7 @@ onBeforeRouteLeave((to, from) => {
           <div v-for="j in i.sub.slice(0, 3)" :key="j.id" style="margin:4px;">
             {{ j.user.nickname }}：
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
-            <span style="white-space:pre-wrap;margin-top:4px;word-break:break-all;">{{ j.text }}</span>
+            <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ j.text }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i.comment_num }}条回复>></n-button>
         </div>
@@ -279,9 +286,9 @@ onBeforeRouteLeave((to, from) => {
   <n-modal v-model:show="sub_comment.modal" preset="card" style="width:624px"
     :title="'回复' + (sub_comment.reply_user.id == 0 ? '' : '@' + sub_comment.reply_user.nickname)">
     <n-space vertical>
-      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" maxlength="23333" show-count />
+      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }" maxlength="23333" show-count />
       <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
-        @finish="UploadHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
+        @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
       <n-space justify="space-between">
         <n-space>
           <n-button @click="now_comment.with_image = !now_comment.with_image" ghost>附图:{{ now_comment.with_image ? '是'
@@ -317,7 +324,7 @@ onBeforeRouteLeave((to, from) => {
         <span style="margin-left: 4px;margin-top:-4px">
           <div style="font-size: 16px;">{{ sub_comments.parent.user.nickname }}</div>
           <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(sub_comments.parent.create_time) }}</div>
-          <div style="white-space:pre-wrap;margin-top:4px;word-break:break-all;">
+          <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
             <RenderLink :value="sub_comments.parent.text" />
           </div>
           <n-image v-if="sub_comments.parent.images.length > 0" object-fit="cover"
@@ -338,7 +345,7 @@ onBeforeRouteLeave((to, from) => {
           <span style="margin-left: 4px;margin-top:-4px">
             <div style="font-size: 16px;">{{ i.user.nickname }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
-            <div style="white-space: pre-wrap;margin-top:4px;word-break:break-all;">
+            <div style="white-space: pre-wrap;margin-top:4px;word-wrap:break-word;">
               <a v-if="i.reply_user.id != 0" :href="'/#/user/' + i.reply_user.id" target="_blank"
                 style="text-decoration:none;color:#FF8533">
                 @{{ i.reply_user.nickname + ' ' }}

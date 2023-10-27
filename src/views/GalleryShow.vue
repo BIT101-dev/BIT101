@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-23 23:59:24
+ * @LastEditTime: 2023-10-27 13:25:33
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -76,7 +76,7 @@ onUnmounted(()=>{
 
 <template>
   <div class="container" v-if="poster.user">
-    <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:11px;">{{ poster.title }}</h2>
+    <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:11px;word-wrap:break-word;">{{ poster.title }}</h2>
 
     <div style="display:flex;align-items:center;color:#3E5C6B;margin-bottom:11px;">
       <div @click="OpenLink('/#/user/' + poster.user.id, true)" @click.stop="" style="cursor:pointer;">
@@ -115,7 +115,7 @@ onUnmounted(()=>{
       </n-grid>
     </n-image-group>
 
-    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-break:break-all;">
+    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-wrap:break-word;">
       <RenderLink :value="i" />
     </p>
 

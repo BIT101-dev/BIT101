@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-25 12:22:13
+ * @LastEditTime: 2023-10-27 13:34:40
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -44,6 +44,13 @@ function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressE
   let data = JSON.parse(res.response);
   file.name = data.mid;
   window.$message.success("上传成功OvO");
+}
+
+function UploadErrorHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
+  let res = JSON.parse((event.target as XMLHttpRequest).response);
+  if (res && res.msg) {
+    window.$message.error(res.msg);
+  }
 }
 
 const image_remove_modal = ref(false);
@@ -105,7 +112,7 @@ function Check() {
 // 发布帖子
 const posting = ref(false);
 function PostPoster() {
-  if(!Check())return;
+  if (!Check()) return;
   posting.value = true;
 
   let poster_data = {
@@ -151,7 +158,8 @@ onMounted(async () => {
 <template>
   <div class="container">
     <n-space vertical size="large">
-      <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:-6px;">🌟 {{ poster.id == 0 ? '发布 Poster' : '编辑 Poster ' }}</h2>
+      <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:-6px;">🌟 {{ poster.id == 0 ? '发布 Poster' : '编辑 Poster ' }}
+      </h2>
 
       <n-space vertical size="small">
         <div>标题</div>
@@ -160,13 +168,14 @@ onMounted(async () => {
 
       <n-space vertical size="small">
         <div>内容</div>
-        <n-input v-model:value="poster.text" type="textarea" placeholder="请输入内容" :autosize="{ minRows: 6 }" maxlength="23333" show-count />
+        <n-input v-model:value="poster.text" type="textarea" placeholder="请输入内容" :autosize="{ minRows: 6 }"
+          maxlength="23333" show-count />
       </n-space>
 
       <n-space vertical size="small">
         <div>图片</div>
-        <n-upload list-type="image-card" :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="9"
-          v-model:file-list="fileList" :on-remove="OnImageRemove" />
+        <n-upload list-type="image-card" :action="upload_url" :headers="upload_head" @finish="UploadHandler"
+          @error="UploadErrorHandler" :max="9" v-model:file-list="fileList" :on-remove="OnImageRemove" />
       </n-space>
 
       <n-space vertical size="small">

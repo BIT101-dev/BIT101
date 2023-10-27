@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-25 12:23:01
+ * @LastEditTime: 2023-10-27 13:37:07
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -55,6 +55,13 @@ function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressE
   edit_info.avatar_mid = data.mid;
   edit_info.avatar_url = data.low_url;
   window.$message.success("上传成功OvO");
+}
+
+function UploadErrorHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
+  let res = JSON.parse((event.target as XMLHttpRequest).response);
+  if (res && res.msg) {
+    window.$message.error(res.msg);
+  }
 }
 
 function OpenEditInfo() {
@@ -230,7 +237,7 @@ function Switch() {
     <n-modal :show="edit_info.modal">
       <n-card style="width: 600px" title="编辑信息">
         <n-avatar size="large" round :src="edit_info.avatar_url" />
-        <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" :max="1">
+        <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" @error="UploadErrorHandler" :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
 
