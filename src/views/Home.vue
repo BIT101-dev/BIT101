@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-03-25 15:42:45
+ * @LastEditTime: 2023-10-28 20:17:47
  * @Description: 主页
  * _(:з」∠)_
 -->
@@ -9,6 +9,7 @@
 import http from '@/utils/request';
 import { onMounted, ref, reactive } from 'vue';
 import Billboard from '@/components/Billboard.vue';
+import { OpenLink } from '@/utils/tools';
 
 const carousel_data = ref([])
 function LoadCarousel() {
@@ -22,12 +23,6 @@ function LoadBillboard() {
   http.get("/variables?obj=billboard").then((res) => {
     billboard_data.value = JSON.parse(res.data.data);
   })
-}
-
-function Open(url: string) {
-  if (url) {
-    window.open(url, url[0] == '/' ? '_self' : '_blank');
-  }
 }
 
 onMounted(() => {
@@ -51,7 +46,7 @@ h2 {
   <div class="container">
     <n-space vertical>
       <n-carousel autoplay show-arrow style="border-radius:11px;">
-        <img v-for="i in carousel_data" @click="Open(i['url'])" :src="i['img']"
+        <img v-for="i in carousel_data" @click="OpenLink(i['url'])" :src="i['img']"
           style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;"
           :style="{ 'cursor': i['url'] ? 'pointer' : 'auto' }">
       </n-carousel>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-27 15:27:55
+ * @LastEditTime: 2023-10-28 20:25:53
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -17,7 +17,7 @@ import Posters, { PostersStatus } from '@/components/Posters.vue';
 const posters = ref({
   mode: 'recommend',
   search: "",
-  order: "like",
+  order: "new",
   uid: -1
 } as PostersStatus
 );
@@ -121,7 +121,7 @@ onMounted(() => {
           <n-icon :component="RefreshRound" size="24" />
         </template>
       </n-button>
-      <n-button @click="OpenLink('/#/gallery/edit/0')" circle :bordered="false"
+      <n-button @click="OpenLink('/gallery/edit/0')" circle :bordered="false"
         style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
         <template #icon>
           <n-icon :component="AddRound" size="24" />

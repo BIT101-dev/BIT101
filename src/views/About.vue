@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-31 19:29:48
- * @LastEditTime: 2023-09-17 16:16:11
+ * @LastEditTime: 2023-10-28 20:10:59
  * @Description: 
  * _(:з」∠)_
 -->
@@ -24,7 +24,7 @@ li {
       </li>
       <li>我们正在建立BIT101企划组，如果你感兴趣，欢迎<n-a href="https://bit101-project.feishu.cn/wiki/OY1Xw6y27iNZqgkSDCkc5Cfdnjc" target="_blank">加入我们</n-a></li>
       <li>欢迎到<n-a href="https://github.com/BIT101-dev/BIT101" target="_blank">GitHub</n-a>来给上一颗可爱的Star⭐~</li>
-      <li>关于这个网站背后的故事可以康康<n-a href="/#/paper/show/1">这篇文章</n-a></li>
+      <li>关于这个网站背后的故事可以康康<n-a href="/paper/1">这篇文章</n-a></li>
       <li>希望你能喜欢这个网站</li>
       <li>也请分享给更多人哦_(:з」∠)_</li>
       <li>这个网站完完全全是用爱发电的</li>

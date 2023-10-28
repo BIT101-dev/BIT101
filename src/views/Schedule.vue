@@ -1,14 +1,14 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-02-13 21:52:38
- * @LastEditTime: 2023-08-19 12:03:11
+ * @LastEditTime: 2023-10-28 20:18:04
  * @Description: 课程表页面
  * _(:з」∠)_
 -->
 
 <script setup lang="ts">
 import http from '@/utils/request';
-import { WebvpnVerify, webvpn } from '@/utils/tools';
+import { OpenLink, WebvpnVerify, webvpn } from '@/utils/tools';
 import { reactive, ref, onMounted, watch } from 'vue';
 
 const user = reactive({
@@ -37,10 +37,6 @@ function GetSchedule() {
         }).catch(() => {
             schedule.loading = false;
         })
-}
-
-function Open(url: string) {
-    window.open(url, '_blank');
 }
 
 onMounted(() => {
@@ -74,7 +70,7 @@ watch(() => webvpn.cookie, () => {
             </div>
             <div v-if="schedule.url">
                 <p style="margin-top:0;">{{ schedule.msg }}</p>
-                <n-button @click="Open(schedule.url)" block>
+                <n-button @click="OpenLink(schedule.url)" block>
                     打开课程表
                 </n-button>
             </div>
@@ -82,9 +78,9 @@ watch(() => webvpn.cookie, () => {
         </n-card>
         <n-alert :show-icon="false" type="info">
             导出的是当前学期的课表（.ics格式），iOS用户直接打开链接即可添加到日历，安卓用户可使用BIT101-Android APP（或支持.ics格式的日历软件）,桌面端也有软件可以适配.ics格式。具体请见：
-            <a style="color:#888" target="_blank" href="/#/paper/show/21">
+            <router-link style="color:#888" target="_blank" to="/paper/21">
                 使用攻略
-            </a>
+            </router-link>
         </n-alert>
 
     </div>

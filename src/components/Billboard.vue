@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { OpenLink } from '@/utils/tools';
 import { computed } from 'vue';
 
 const props = defineProps(['data'])
@@ -49,11 +50,6 @@ const billboard = computed(() => {
     return l
 })
 
-function Open(url: string) {
-    if (url) {
-        window.open(url, url[0] == '/' ? '_self' : '_blank');
-    }
-}
 </script>
 
 <style scoped>
@@ -69,7 +65,7 @@ h2 {
         <n-gi>
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[0]">
-                    <n-card @click="Open(i['url'])"
+                    <n-card @click="OpenLink(i['url'])"
                         :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
                         content-style="padding:0 11px 11px 11px;">
                         <template #cover>
@@ -84,7 +80,7 @@ h2 {
         <n-gi>
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[1]">
-                    <n-card @click="Open(i['url'])"
+                    <n-card @click="OpenLink(i['url'])"
                         :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
                         content-style="padding:0 11px 11px 11px;">
                         <template #cover>

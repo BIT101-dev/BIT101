@@ -1,20 +1,22 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-28 11:51:14
+ * @LastEditTime: 2023-10-28 20:42:54
  * @Description: 用户中心
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import { FormatTime, OpenLink, hitokoto, setTitle } from '@/utils/tools';
 import http from '@/utils/request';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
 import { User } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import { PostersStatus } from '@/components/Posters.vue';
+
+const route = useRoute();
 
 interface UserInfo {
   user: User; // 用户
@@ -160,22 +162,28 @@ const posters = ref({
 } as PostersStatus
 );
 
-const route = useRoute();
+
+// 切换视角
+function Switch() {
+  if (route.params.id == '0') {
+    OpenLink('/user/' + user_info.value.user.id);
+    window.$message.success("已切换到访客视角OvO");
+  }
+  else {
+    OpenLink('/user/0');
+    window.$message.success("已切换到个人中心OvO");
+  }
+}
+
 onMounted(() => {
   GetInfo(route.params.id);
   posters.value.uid = Number(route.params.id);
 })
 
-function Switch() {
-  if (route.params.id == '0') {
-    OpenLink('/#/user/' + user_info.value.user.id);
-    posters.value.uid = user_info.value.user.id;
-  }
-  else {
-    OpenLink('/#/user/0');
-    posters.value.uid = 0;
-  }
-}
+watch(() => route.params.id, () => {
+  GetInfo(route.params.id);
+  posters.value.uid = Number(route.params.id);
+})
 
 </script>
 
@@ -239,7 +247,8 @@ function Switch() {
     <n-modal :show="edit_info.modal">
       <n-card style="width: 600px" title="编辑信息">
         <n-avatar size="large" round :src="edit_info.avatar_url" />
-        <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" @error="UploadErrorHandler" :max="1">
+        <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" @error="UploadErrorHandler"
+          :max="1">
           <n-button block>上传头像</n-button>
         </n-upload>
 
@@ -262,7 +271,7 @@ function Switch() {
       <n-scrollbar style="max-height:75vh">
         <n-space vertical>
           <template v-for="user in follows.list">
-            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/#/user/' + user.id, true)">
+            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/user/' + user.id, true)">
               <Avatar :user="user" :size="36" />
               <div style="margin-left: 4px;">
                 <div style="font-size: 16px;margin-top:-4px;">{{ user.nickname }}</div>

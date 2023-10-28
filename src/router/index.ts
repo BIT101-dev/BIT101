@@ -1,15 +1,15 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-28 12:30:38
+ * @LastEditTime: 2023-10-28 20:28:43
  * @Description: 
  * _(:з」∠)_
  */
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { setTitle } from '@/utils/tools'
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -44,12 +44,12 @@ const router = createRouter({
       component: () => import('@/views/PaperEdit.vue')
     },
     {
-      path: '/paper/show/:id',
+      path: '/paper/:id',
       name: 'paper_show',
       component: () => import('@/views/PaperShow.vue')
     },
     {
-      path: '/course/show/:id',
+      path: '/course/:id',
       name: 'course_show',
       component: () => import('@/views/CourseShow.vue')
     },

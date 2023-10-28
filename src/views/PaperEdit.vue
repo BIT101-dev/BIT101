@@ -193,14 +193,14 @@ function PostPaper() {
     if (paper.id == '0') {
       http.post("/papers",paper_data).then((res) => {
         posting.value = false;
-        router.push('/paper/show/' + res.data.id);
+        router.push('/paper/' + res.data.id);
       }).catch(() => {
         posting.value = false;
       })
     } else {
       http.put("/papers/" + paper.id, paper_data).then(() => {
         posting.value = false;
-        router.push('/paper/show/' + paper.id);
+        router.push('/paper/' + paper.id);
       }).catch(() => {
         posting.value = false;
       })

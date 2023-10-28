@@ -80,7 +80,7 @@ function Search() {
 
     <n-divider></n-divider>
 
-    <n-card v-for="i in course.list" @click="router.push('/course/show/' + i['id'])" hoverable
+    <n-card v-for="i in course.list" @click="router.push('/course/' + i['id'])" hoverable
       style="margin-bottom:11px;cursor:pointer;background-color: #F0FCFF;">
       <h3 style="margin:0;color:#0087A8;">{{ i['name'] }}</h3>
       <n-rate :value="i['rate'] / 2" allow-half readonly />

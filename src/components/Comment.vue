@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-28 13:26:05
+ * @LastEditTime: 2023-10-28 20:09:56
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -244,9 +244,9 @@ onBeforeRouteLeave((to, from) => {
     <n-divider></n-divider>
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
-        <a :href="'/#/user/' + i.user.id" target="_blank">
+        <router-link :to="'/user/' + i.user.id" target="_blank">
           <Avatar :user="i.user" :size="36" round />
-        </a>
+        </router-link>
       </div>
       <span style="margin-left: 4px;margin-top:-4px;width:0;flex:1;">
         <div style="font-size: 16px;">{{ i.user.nickname }}</div>
@@ -351,9 +351,9 @@ onBeforeRouteLeave((to, from) => {
 
         <!-- 子评论的父评论 -->
         <div>
-          <a :href="'/#/user/' + sub_comments.parent.user.id" target="_blank">
+          <router-link :to="'/user/' + sub_comments.parent.user.id" target="_blank">
             <Avatar :user="sub_comments.parent.user" :size="36" round />
-          </a>
+          </router-link>
         </div>
         <span style="margin-left: 4px;margin-top:-4px">
           <div style="font-size: 16px;">{{ sub_comments.parent.user.nickname }}</div>
@@ -372,18 +372,18 @@ onBeforeRouteLeave((to, from) => {
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>
-            <a :href="'/#/user/' + i.user.id" target="_blank">
+            <router-link :to="'/user/' + i.user.id" target="_blank">
               <Avatar :user="i.user" :size="36" round />
-            </a>
+            </router-link>
           </div>
           <span style="margin-left: 4px;margin-top:-4px">
             <div style="font-size: 16px;">{{ i.user.nickname }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;word-wrap:break-word;">
-              <a v-if="i.reply_user.id != 0" :href="'/#/user/' + i.reply_user.id" target="_blank"
+              <router-link v-if="i.reply_user.id != 0" :to="'/user/' + i.reply_user.id" target="_blank"
                 style="text-decoration:none;color:#FF8533">
                 @{{ i.reply_user.nickname + ' ' }}
-              </a>
+              </router-link>
               <RenderLink :value="i.text" />
             </div>
             <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"

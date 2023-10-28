@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-03-30 14:26:39
- * @LastEditTime: 2023-10-24 14:53:04
+ * @LastEditTime: 2023-10-28 20:29:10
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -77,15 +77,15 @@ function GetObjName(type: string) {
 }
 
 function GetUrl(obj: string) {
-  if (obj.startsWith("paper")) return "/paper/show/" + obj.substring(5);
-  if (obj.startsWith("course")) return "/course/show/" + obj.substring(6);
+  if (obj.startsWith("paper")) return "/paper/" + obj.substring(5);
+  if (obj.startsWith("course")) return "/course/" + obj.substring(6);
   if (obj.startsWith("poster")) return "/gallery/" + obj.substring(6);
   return "";
 }
 
 function GenerateHTML(message: Message) {
   let s = "";
-  let user_link = `<a href="/#/user/${message.from_user.id}" target="_blank" style="text-decoration:none;color:#FF8533">@${message.from_user.nickname}</a>`;
+  let user_link = `<a href="/user/${message.from_user.id}" target="_blank" style="text-decoration:none;color:#FF8533">@${message.from_user.nickname}</a>`;
   if (message.from_user.id == 0) user_link = '';
   let obj_name = GetObjName(message.obj);
   if (messages.type == 'like') {

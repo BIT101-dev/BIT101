@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from '@/utils/request';
-import { Clip, setTitle } from '@/utils/tools';
+import { Clip, OpenLink, setTitle } from '@/utils/tools';
 import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
@@ -157,10 +157,6 @@ function ClipUrl() {
   Clip(window.location.href, "课程链接已复制OvO");
 }
 
-function Open(url: string) {
-  window.open(url, '_blank');
-}
-
 function LoadCourse() {
   return http.get('/courses/' + course.id).then(res => {
     let data = res.data;
@@ -228,10 +224,10 @@ onMounted(async () => {
           </template>
           分享
         </n-button>
-        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/教学大纲/${course.name}-${course.number}/`)" ghost>
+        <n-button @click="OpenLink(`https://onedrive.bit101.cn/zh-CN/教学大纲/${course.name}-${course.number}/`)" ghost>
           教学大纲
         </n-button>
-        <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
+        <n-button @click="OpenLink(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" ghost>
           共享资料
         </n-button>
         <n-button @click="router.push('/course/upload/' + course.id)" ghost>

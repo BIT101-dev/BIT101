@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-25 10:48:59
+ * @LastEditTime: 2023-10-28 20:20:51
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -9,6 +9,7 @@ import { ref, reactive } from 'vue'
 import http from '@/utils/request';
 import { encryptPassword } from './EncryptPassword';
 import useClipboard from 'vue-clipboard3'
+import router from '@/router';
 
 //一言
 const hitokoto = ref("")
@@ -126,7 +127,8 @@ export function setTitle(...titles: string[]): void {
 // 打开链接
 export function OpenLink(url: string, blank = false) {
   if (url) {
-    window.open(url, blank ? '_blank' : (url.startsWith('/')?'_self':'_blank'));
+    if (url.startsWith('/') && blank == false) router.push(url);
+    else window.open(url, blank ? '_blank' : (url.startsWith('/') ? '_self' : '_blank'))
   }
 }
 

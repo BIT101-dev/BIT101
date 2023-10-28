@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-08-19 12:11:35
+ * @LastEditTime: 2023-10-28 20:29:33
  * @Description: 
  * _(:з」∠)_
 -->
@@ -336,7 +336,7 @@ watch(() => webvpn.cookie, () => {
         <a style="color:#888" target="_blank"
           href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>
         计算。可手动勾选纳入计算的课程，点击课程名称可查看详情。更多说明请见：
-        <a style="color:#888" target="_blank" href="/#/paper/show/20">BIT101常见问题解惑</a>
+        <router-link style="color:#888" target="_blank" to="/paper/20">BIT101常见问题解惑</router-link>
       </p>
       总学分：{{ stat.credit }}（{{ stat.num }}门）<br />
       个人学分绩 | GPA：{{ stat.score }} | {{ stat.gpa }}<br />

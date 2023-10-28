@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-30 14:05:26
- * @LastEditTime: 2023-03-23 20:48:59
+ * @LastEditTime: 2023-10-28 20:17:03
  * @Description: 
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import { useRoute } from 'vue-router'
 import { UploadCustomRequestOptions, UploadInst } from 'naive-ui'
 import { UploadRound } from '@vicons/material'
 import http from '@/utils/request'
-import { setTitle } from '@/utils/tools'
+import { OpenLink, setTitle } from '@/utils/tools'
 import axios from 'axios'
 
 const course = reactive({
@@ -88,10 +88,6 @@ function Submit() {
   uploadRef.value?.submit()
 }
 
-function Open(url:string){
-  window.open(url,'_blank');
-}
-
 function LoadCourse() {
   return http.get('/courses/' + course.id).then(res => {
     let data = res.data;
@@ -125,7 +121,7 @@ onMounted(async () => {
         </div>
       </n-alert>
 
-      <n-button @click="Open(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" block ghost>
+      <n-button @click="OpenLink(`https://onedrive.bit101.cn/zh-CN/course/${course.name}-${course.number}`)" block ghost>
           查看课程资料
         </n-button>
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-28 12:36:57
+ * @LastEditTime: 2023-10-28 20:11:11
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -79,7 +79,7 @@ onUnmounted(() => {
     <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:11px;word-wrap:break-word;">{{ poster.title }}</h2>
 
     <div style="display:flex;align-items:center;color:#3E5C6B;margin-bottom:11px;">
-      <div @click="OpenLink('/#/user/' + poster.user.id, true)" @click.stop="" style="cursor:pointer;">
+      <div @click="OpenLink('/user/' + poster.user.id, true)" @click.stop="" style="cursor:pointer;">
         <Avatar :user="poster.user" :size="36" round />
       </div>
       <span style="margin-left:4px;">
@@ -131,7 +131,7 @@ onUnmounted(() => {
     </p>
 
     <n-space style="margin-top:4px" justify="end">
-      <n-button v-if="poster.own" @click="OpenLink('/#/gallery/edit/' + poster.id)" icon-placement="right" ghost>
+      <n-button v-if="poster.own" @click="OpenLink('/gallery/edit/' + poster.id)" icon-placement="right" ghost>
         <template #icon>
           <n-icon :component="EditOutlined" />
         </template>
