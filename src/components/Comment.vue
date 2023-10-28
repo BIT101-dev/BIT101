@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-27 13:37:38
+ * @LastEditTime: 2023-10-28 11:37:44
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -91,12 +91,12 @@ function OnImageRemove() {
 }
 
 function Check() {
-  if (now_comment.with_image == false&& fileList.value.length==0 && now_comment.text.length == 0) {
+  if (now_comment.with_image == false && fileList.value.length == 0 && now_comment.text.length == 0) {
     window.$message.error('评论不能为空Orz');
     return false;
   }
-  if (now_comment.with_image==false){
-    fileList.value=[];
+  if (now_comment.with_image == false) {
+    fileList.value = [];
   }
   return true;
 }
@@ -194,9 +194,11 @@ onBeforeRouteLeave((to, from) => {
 <template>
   <n-space vertical>
     <n-rate v-if="props.rate" v-model:value="now_comment.rate" allow-half size="large" />
-    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }" maxlength="23333" show-count />
+    <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }"
+      maxlength="23333" show-count />
     <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
-      @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
+      @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList"
+      :on-remove="OnImageRemove" />
     <n-space justify="space-between">
       <n-space>
         <n-button @click="now_comment.with_image = !now_comment.with_image" ghost>附图:{{ now_comment.with_image ? '是'
@@ -233,8 +235,8 @@ onBeforeRouteLeave((to, from) => {
         <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
           <RenderLink :value="i.text" />
         </div>
-        <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].url" :src="i.images[0].low_url"
-          style="width:84px;height:84px;border-radius:5%;margin-top:4px;" :img-props="{ 'style': 'width:100%;' }" />
+        <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url" :src="i.images[0].low_url"
+          lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;" :img-props="{ 'style': 'width:100%;' }" />
         <n-space>
           <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]" :disabled="like_loading[i.id]">
             <template #icon>
@@ -286,9 +288,11 @@ onBeforeRouteLeave((to, from) => {
   <n-modal v-model:show="sub_comment.modal" preset="card" style="width:624px"
     :title="'回复' + (sub_comment.reply_user.id == 0 ? '' : '@' + sub_comment.reply_user.nickname)">
     <n-space vertical>
-      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }" maxlength="23333" show-count />
+      <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }"
+        maxlength="23333" show-count />
       <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
-        @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList" :on-remove="OnImageRemove" />
+        @finish="UploadHandler" @error="UploadErrorHandler" :max="1" v-model:file-list="fileList"
+        :on-remove="OnImageRemove" />
       <n-space justify="space-between">
         <n-space>
           <n-button @click="now_comment.with_image = !now_comment.with_image" ghost>附图:{{ now_comment.with_image ? '是'
@@ -328,7 +332,7 @@ onBeforeRouteLeave((to, from) => {
             <RenderLink :value="sub_comments.parent.text" />
           </div>
           <n-image v-if="sub_comments.parent.images.length > 0" object-fit="cover"
-            :preview-src="sub_comments.parent.images[0].url" :src="sub_comments.parent.images[0].low_url"
+            :preview-src="sub_comments.parent.images[0].low_url" :src="sub_comments.parent.images[0].low_url" lazy
             style="width:84px;height:84px;border-radius:5%;margin-top:4px;" :img-props="{ 'style': 'width:100%;' }" />
         </span>
       </div>
@@ -352,8 +356,8 @@ onBeforeRouteLeave((to, from) => {
               </a>
               <RenderLink :value="i.text" />
             </div>
-            <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].url"
-              :src="i.images[0].low_url" style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
+            <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"
+              :src="i.images[0].low_url" lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
               :img-props="{ 'style': 'width:100%;' }" />
             <n-space>
               <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]"
@@ -403,6 +407,5 @@ onBeforeRouteLeave((to, from) => {
 
 
   <!-- 删除图片确认 -->
-  <n-modal v-model:show="image_remove_modal" preset="dialog" title="汝真断舍离耶？" positive-text="确认" negative-text="取消"
-    @positive-click="ConfirmRemoveImage(true)" @negative-click="ConfirmRemoveImage(false)" />
-</template>
+<n-modal v-model:show="image_remove_modal" preset="dialog" title="汝真断舍离耶？" positive-text="确认" negative-text="取消"
+  @positive-click="ConfirmRemoveImage(true)" @negative-click="ConfirmRemoveImage(false)" /></template>

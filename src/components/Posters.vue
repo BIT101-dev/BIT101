@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-27 15:28:16
+ * @LastEditTime: 2023-10-28 11:34:24
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -116,12 +116,12 @@ watch(props, () => {
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
         <n-gi v-for="(image, idx) in i.images" v-show="idx <= 2">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover" :preview-src="image.url" :src="image.low_url"
+            <n-image object-fit="cover" :preview-src="image.low_url" :src="image.low_url" lazy
               style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
               :img-props="{ 'style': 'width:100%;' }" />
             <div v-if="idx == 2 && i.images.length > 3"
               style="width:100%;height:100%;position:absolute;border-radius:5%;background-color:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;pointer-events:none;">
-              <h2 style="color:#fff">+{{ i.images.length - 3 }}</h2>
+              <h2 style="color:#fff">+{{ i.images.length - 2 }}</h2>
             </div>
           </div>
         </n-gi>

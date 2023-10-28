@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-27 13:25:33
+ * @LastEditTime: 2023-10-28 11:38:18
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -103,11 +103,11 @@ onUnmounted(()=>{
       </n-tag>
     </n-space>
 
-    <n-image-group v-if="poster.images.length">
+    <n-image-group v-if="poster.images.length" show-toolbar-tooltip>
       <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;margin-bottom: 11px;">
         <n-gi v-for="image in poster.images">
           <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover" :preview-src="image.url" :src="image.low_url"
+            <n-image object-fit="cover" :preview-src="image.low_url" :src="image.low_url"
               style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
               :img-props="{ 'style': 'width:100%;' }" />
           </div>

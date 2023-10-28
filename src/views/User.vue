@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-27 13:37:07
+ * @LastEditTime: 2023-10-28 11:51:14
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -184,7 +184,9 @@ function Switch() {
     <n-card title="你好鸭ヾ(´▽｀))" v-if="user_info.user">
       <div style="display: flex;justify-content: space-between;align-items: center;">
         <div style="display: flex;align-items: center;">
-          <Avatar :user="user_info.user" round :size="42" />
+          <div>
+            <Avatar :user="user_info.user" round :size="42" preview />
+          </div>
           <span style="margin-left: 4px;">
             <div style="font-size: 17px;">{{ user_info.user.nickname }}</div>
             <div style="margin-top: -4px;">uid:{{ user_info.user.id }}</div>
