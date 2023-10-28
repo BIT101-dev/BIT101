@@ -1,24 +1,25 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-28 11:37:44
+ * @LastEditTime: 2023-10-28 13:26:05
  * @Description: 评论模块
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onMounted, reactive, ref } from 'vue';
+import { h, onMounted, reactive, ref } from 'vue';
 import { MessageOutlined } from '@vicons/material';
 import store from '@/utils/store';
 import { FormatTime } from '@/utils/tools';
-import { ThumbUpOutlined, ThumbUpFilled, DeleteOutlined, ReplyOutlined } from '@vicons/material';
-import { onBeforeRouteLeave } from 'vue-router';
+import { ThumbUpOutlined, ThumbUpFilled, DeleteOutlined, ReplyOutlined, FeedbackOutlined, MoreVertOutlined } from '@vicons/material';
+import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Comment, User } from '@/utils/types';
 import RenderLink from './RenderLink.vue';
-import { UploadFileInfo } from 'naive-ui';
+import { UploadFileInfo, NIcon } from 'naive-ui';
 
 
 const props = defineProps(['obj', 'rate'])
+const router = useRouter()
 
 // 发表评论
 const now_comment = reactive({
@@ -182,6 +183,25 @@ function Delete(i: any, cmts: any) {
     })
 }
 
+function renderIcon(icon: any) {
+  return () => h(NIcon, null, { default: () => h(icon) })
+}
+const dropdown = reactive({
+  comment: {} as Comment,
+  options: [
+    {
+      label: '举报',
+      key: 'report',
+      icon: renderIcon(FeedbackOutlined),
+      props: {
+        onClick: () => {
+          router.push('/report/comment' + dropdown.comment.id);
+        }
+      }
+    },
+  ]
+})
+
 onMounted(() => {
   LoadComments(props.obj, comments);
 })
@@ -235,9 +255,10 @@ onBeforeRouteLeave((to, from) => {
         <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
           <RenderLink :value="i.text" />
         </div>
-        <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url" :src="i.images[0].low_url"
-          lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;" :img-props="{ 'style': 'width:100%;' }" />
-        <n-space>
+        <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"
+          :src="i.images[0].low_url" lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
+          :img-props="{ 'style': 'width:100%;' }" />
+        <n-space :align="'center'">
           <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]" :disabled="like_loading[i.id]">
             <template #icon>
               <n-icon>
@@ -266,6 +287,15 @@ onBeforeRouteLeave((to, from) => {
             </template>
             汝真断舍离耶？
           </n-popconfirm>
+          <n-dropdown :options="dropdown.options" trigger="click">
+            <div style="display:flex;align-items: center;">
+              <n-button @click="dropdown.comment = i" text>
+                <template #icon>
+                  <n-icon :component="MoreVertOutlined" />
+                </template>
+              </n-button>
+            </div>
+          </n-dropdown>
         </n-space>
 
         <!-- 子评论预览 -->
@@ -359,7 +389,8 @@ onBeforeRouteLeave((to, from) => {
             <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"
               :src="i.images[0].low_url" lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
               :img-props="{ 'style': 'width:100%;' }" />
-            <n-space>
+
+            <n-space :align="'center'">
               <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]"
                 :disabled="like_loading[i.id]">
                 <template #icon>
@@ -394,6 +425,16 @@ onBeforeRouteLeave((to, from) => {
                 </template>
                 汝真断舍离耶？
               </n-popconfirm>
+
+              <n-dropdown :options="dropdown.options" trigger="click">
+                <div style="display:flex;align-items: center;">
+                  <n-button @click="dropdown.comment = i" text>
+                    <template #icon>
+                      <n-icon :component="MoreVertOutlined" />
+                    </template>
+                  </n-button>
+                </div>
+              </n-dropdown>
             </n-space>
           </span>
         </div>
@@ -407,5 +448,6 @@ onBeforeRouteLeave((to, from) => {
 
 
   <!-- 删除图片确认 -->
-<n-modal v-model:show="image_remove_modal" preset="dialog" title="汝真断舍离耶？" positive-text="确认" negative-text="取消"
-  @positive-click="ConfirmRemoveImage(true)" @negative-click="ConfirmRemoveImage(false)" /></template>
+  <n-modal v-model:show="image_remove_modal" preset="dialog" title="汝真断舍离耶？" positive-text="确认" negative-text="取消"
+    @positive-click="ConfirmRemoveImage(true)" @negative-click="ConfirmRemoveImage(false)" />
+</template>

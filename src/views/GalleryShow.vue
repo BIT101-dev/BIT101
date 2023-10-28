@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-28 11:38:18
+ * @LastEditTime: 2023-10-28 12:36:57
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -11,7 +11,7 @@ import { onDeactivated, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
 import { FormatTime, Clip, setTitle, OpenLink } from '@/utils/tools';
-import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined } from '@vicons/material';
+import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
@@ -29,7 +29,7 @@ function LoadPaper() {
 }
 
 // 点赞
-const like_loading=ref(false);
+const like_loading = ref(false);
 function Like() {
   like_loading.value = true;
   http.post("/reaction/like", { 'obj': 'poster' + poster.value.id })
@@ -41,7 +41,7 @@ function Like() {
 }
 
 // 上报
-function Stay(){
+function Stay() {
   http.post("/reaction/stay", { obj: 'poster' + poster.value.id, time: 5 })
 }
 
@@ -59,18 +59,18 @@ function DeletePoster() {
 const router = useRouter();
 const route = useRoute();
 poster.value.id = Number(route.params.id);
-let timer=null as any;
+let timer = null as any;
 onMounted(async () => {
   await LoadPaper()
   setTitle(poster.value.title, '话廊')
 
-  timer=setTimeout(() => {
+  timer = setTimeout(() => {
     Stay();
   }, 5000);
 })
 
-onUnmounted(()=>{
-  timer&&clearTimeout(timer);
+onUnmounted(() => {
+  timer && clearTimeout(timer);
 })
 </script>
 
@@ -150,6 +150,13 @@ onUnmounted(()=>{
         </template>
         汝真断舍离耶？
       </n-popconfirm>
+
+      <n-button @click="router.push('/report/poster'+poster.id)" icon-placement="right" ghost>
+        <template #icon>
+          <n-icon :component="FeedbackOutlined" />
+        </template>
+        举报
+      </n-button>
 
       <n-button @click="ClipUrl" icon-placement="right" ghost>
         <template #icon>
