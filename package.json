@@ -31,6 +31,7 @@
     "@editorjs/inline-code": "^1.4.0",
     "@editorjs/quote": "^2.5.0",
     "@editorjs/raw": "^2.4.0",
+    "@types/node": "^20.8.9",
     "@vicons/antd": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "@vitejs/plugin-vue": "^4.4.0",
@@ -39,6 +40,7 @@
     "naive-ui": "^2.35.0",
     "typescript": "^5.2.2",
     "unplugin-vue-components": "^0.25.2",
-    "vite": "^4.5.0"
+    "vite": "^4.5.0",
+    "vite-plugin-pwa": "^0.16.6"
   }
 }
