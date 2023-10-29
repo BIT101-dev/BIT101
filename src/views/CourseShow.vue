@@ -154,7 +154,9 @@ function Like() {
 }
 
 function ShareCourse() {
-  Share(document.title, document.title, window.location.href)
+  let teachers_names = course.teachers.map(t => t.name);
+  let title='BIT101课程｜'+`${course.name}（${teachers_names.join(' ')}）`;
+  Share(title, title, window.location.href);
 }
 
 function LoadCourse() {

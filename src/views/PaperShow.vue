@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-10-29 11:22:16
+ * @LastEditTime: 2023-10-29 12:07:52
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -29,9 +29,9 @@ const paper = reactive({
   like_num: 0,
   like: false,
   like_loading: false,
-  comment_num:0,
-  public_edit:true,
-  own:false,
+  comment_num: 0,
+  public_edit: true,
+  own: false,
 })
 
 //加载文章
@@ -44,11 +44,11 @@ function LoadPaper() {
       paper.create_time = FormatTime(res.data.create_time);
       paper.update_time = FormatTime(res.data.update_time);
       paper.like_num = res.data.like_num;
-      paper.comment_num=res.data.comment_num;
+      paper.comment_num = res.data.comment_num;
       paper.like = res.data.like;
       paper.user = res.data.update_user;
-      paper.public_edit=res.data.public_edit;
-      paper.own=res.data.own;
+      paper.public_edit = res.data.public_edit;
+      paper.own = res.data.own;
     })
 }
 
@@ -63,7 +63,8 @@ function Like() {
 }
 
 function SharePaper() {
-  Share(document.title, paper.intro, window.location.href);
+  let title = 'BIT101文章｜' + paper.title;
+  Share(title, title, window.location.href)
 }
 
 const router = useRouter();
@@ -116,7 +117,8 @@ onMounted(async () => {
     <n-divider style="color:#809BA8;font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
     <PaperRender :paper="paper" />
     <n-divider style="color:#809BA8;font-size:14px;">
-      <n-button v-if="(paper.public_edit || paper.own)" @click="router.push('/paper/edit/' + paper.id)" icon-placement="right" text>
+      <n-button v-if="(paper.public_edit || paper.own)" @click="router.push('/paper/edit/' + paper.id)"
+        icon-placement="right" text>
         <template #icon>
           <n-icon>
             <EditOutlined />
@@ -146,7 +148,7 @@ onMounted(async () => {
         {{ paper.like_num }}赞同
       </n-button>
     </n-space>
-    <n-divider style="color:#809BA8;font-size:14px;">现有{{paper.comment_num}}条评论</n-divider>
+    <n-divider style="color:#809BA8;font-size:14px;">现有{{ paper.comment_num }}条评论</n-divider>
     <Comment :obj='"paper" + paper.id'></Comment>
   </div>
 </template>

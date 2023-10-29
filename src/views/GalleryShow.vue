@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-29 11:19:46
+ * @LastEditTime: 2023-10-29 12:07:21
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -44,7 +44,8 @@ function Stay() {
 }
 
 function SharePoster() {
-  Share(document.title, poster.value.text, window.location.href)
+  let title = 'BIT101话廊｜' + poster.value.title;
+  Share(title, title, window.location.href)
 }
 
 // 删除
