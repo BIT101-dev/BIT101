@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-29 11:18:55
+ * @LastEditTime: 2023-10-29 20:09:05
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -120,7 +120,7 @@ async function Clip(s: string, msg = "已复制到剪贴板OvO") {
 }
 
 // 分享
-export function Share(title: string,text: string, url: string) {
+export function Share(title: string, text: string, url: string) {
   if (navigator.share) {
     navigator.share({
       title: title,
@@ -136,17 +136,31 @@ export function Share(title: string,text: string, url: string) {
   }
 }
 
-/** 设置页面标题 */
-export function setTitle(...titles: string[]): void {
-  document.title = `${titles.join(' - ')} | BIT101`
-}
-
 // 打开链接
 export function OpenLink(url: string, blank = false) {
   if (url) {
     if (url.startsWith('/') && blank == false) router.push(url);
     else window.open(url, blank ? '_blank' : (url.startsWith('/') ? '_self' : '_blank'))
   }
+}
+
+// 监测网络情况
+const network = ref(true);
+export function WatchNetwork() {
+  window.addEventListener('offline', () => {
+    if (network.value == true) window.$message.error("网络已断开Orz");
+    network.value = false;
+  });
+
+  window.addEventListener('online', () => {
+    if (network.value == false) window.$message.success("网络已连接OvO");
+    network.value = true;
+  });
+}
+
+/** 设置页面标题 */
+export function setTitle(...titles: string[]): void {
+  document.title = `${titles.join(' - ')} | BIT101`
 }
 
 export {

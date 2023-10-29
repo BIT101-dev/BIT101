@@ -105,7 +105,7 @@ onMounted(() => {
           <n-radio-group v-model:value="gallery.order">
             <n-space>
               <n-radio value="new">最新</n-radio>
-              <n-radio value="similar">相似</n-radio>
+              <n-radio value="similar">相关</n-radio>
             </n-space>
           </n-radio-group>
         </n-space>

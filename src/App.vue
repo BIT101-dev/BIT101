@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-29 16:12:44
+ * @LastEditTime: 2023-10-29 20:07:24
  * @Description: 
  * _(:з」∠)_
 -->
@@ -13,7 +13,7 @@ import { h, ref, onMounted } from 'vue';
 import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined, PagesOutlined, ForumOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
-import { hitokoto } from './utils/tools';
+import { hitokoto,WatchNetwork } from './utils/tools';
 import http from './utils/request';
 import axios from 'axios';
 
@@ -105,6 +105,9 @@ onMounted(() => {
       location.protocol = 'https:';
     })
   };
+
+  // 监测网络
+  WatchNetwork();
 
   LoadUnreadNum();
 })
