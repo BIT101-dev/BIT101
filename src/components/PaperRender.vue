@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-29 22:48:31
- * @LastEditTime: 2022-08-01 00:40:23
+ * @LastEditTime: 2023-10-29 15:17:43
  * @Description: 
  * _(:з」∠)_
 -->
@@ -47,7 +47,7 @@ b {
 
     <template v-else-if="i.type == 'image'">
       <div style="text-align:center;margin-top: 11px;margin-bottom: 11px;">
-        <n-image :preview-src="i.data.file.url" :src="i.data.file.url + store.img_suffix" width="424"
+        <n-image :preview-src="i.data.file.url" :src="i.data.file.low_url?i.data.file.low_url:i.data.file.url" width="424"
           :img-props="{ 'style': 'max-width:100%;' }" :alt="i.data.caption" />
         <div style="color:#6291A8" v-html="i.data.caption"></div>
       </div>

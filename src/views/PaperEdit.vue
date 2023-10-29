@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2023-03-23 22:29:41
+ * @LastEditTime: 2023-10-29 15:21:53
  * @Description: 
  * _(:з」∠)_
 -->
@@ -51,7 +51,8 @@ function UploadFile(file: File) {
       return {
         success: true,
         file: {
-          url: res.data.url
+          url: res.data.url,
+          low_url: res.data.low_url,
         }
       }
     })
@@ -70,7 +71,8 @@ function UploadUrl(url: string) {
       return {
         success: true,
         file: {
-          url: res.data.url
+          url: res.data.url,
+          low_url: res.data.low_url,
         }
       }
     })

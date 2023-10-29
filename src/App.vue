@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-18 01:41:22
+ * @LastEditTime: 2023-10-29 16:12:44
  * @Description: 
  * _(:з」∠)_
 -->
@@ -15,6 +15,7 @@ import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto } from './utils/tools';
 import http from './utils/request';
+import axios from 'axios';
 
 const themeOverrides: GlobalThemeOverrides = Theme;
 const router = useRouter();
@@ -98,6 +99,13 @@ function LoadUnreadNum() {
 }
 
 onMounted(() => {
+  // 自动升级到https
+  if (location.protocol == 'http:') {
+    axios.get(`https${location.href.substring(4)}`).then(() => {
+      location.protocol = 'https:';
+    })
+  };
+
   LoadUnreadNum();
 })
 
@@ -133,7 +141,8 @@ onMounted(() => {
                 </n-icon>
               </template>
             </n-button>
-            <n-button @click="unread_num=0,router.push('/message/')" quaternary circle size="large" color="white" style="margin-right:4px">
+            <n-button @click="unread_num = 0, router.push('/message/')" quaternary circle size="large" color="white"
+              style="margin-right:4px">
               <template #icon>
                 <n-badge :value="unread_num" :max="99">
                   <n-icon color="white">
@@ -171,7 +180,7 @@ onMounted(() => {
           <n-a href="https://bit101-project.feishu.cn/wiki/OY1Xw6y27iNZqgkSDCkc5Cfdnjc" target="_blank">加入BIT101</n-a>
         </div>
         <div style="font-size: 14px;">Powered⚡ by BIT101 Project Team with 💖.</div>
-        
+
       </n-layout-footer>
     </n-layout>
   </n-config-provider>

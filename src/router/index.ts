@@ -1,12 +1,13 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-29 11:25:50
+ * @LastEditTime: 2023-10-29 16:04:15
  * @Description: 
  * _(:з」∠)_
  */
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { setTitle } from '@/utils/tools'
+import axios from 'axios';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -120,6 +121,11 @@ const router = createRouter({
       name: 'admin_billboard',
       component: () => import('@/views/admin/Billboard.vue')
     },
+    {
+      path: '/:pathMatch(.*)',
+      name: '404',
+      component: () => import('@/views/404.vue')
+    }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
