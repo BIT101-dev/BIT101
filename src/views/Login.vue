@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-10-24 10:53:34
+ * @LastEditTime: 2023-10-29 11:32:22
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -9,9 +9,13 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
-import { Md5 } from "ts-md5/dist/md5"
+import { Md5 } from "ts-md5"
 import store from '@/utils/store';
 import { webvpn, WebvpnVerify } from '@/utils/tools'
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute();
+const router = useRouter();
 
 const user = reactive({
   sid: "",
@@ -83,6 +87,7 @@ function CheckStatus() {
   http.get('/user/check')
     .then(() => {
       status.value = true;
+      if (route.query.redirect) router.push(decodeURIComponent(route.query.redirect as string));
     })
     .catch(() => {
       status.value = false;

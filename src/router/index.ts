@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-28 20:28:43
+ * @LastEditTime: 2023-10-29 11:25:50
  * @Description: 
  * _(:з」∠)_
  */
@@ -89,23 +89,26 @@ const router = createRouter({
     {
       path: '/gallery/',
       name: 'gallery',
-      component: () => import('@/views/Gallery.vue')
+      component: () => import('@/views/Gallery.vue'),
+      meta: { login: true }
     },
     {
       path: '/gallery/:id',
       name: 'gallery_show',
       component: () => import('@/views/GalleryShow.vue'),
-      meta: { keepAlive: false }
+      meta: { keepAlive: false, login: true }
     },
     {
       path: '/gallery/edit/:id',
       name: 'gallery_edit',
-      component: () => import('@/views/GalleryEdit.vue')
+      component: () => import('@/views/GalleryEdit.vue'),
+      meta: { keepAlive: false, login: true }
     },
     {
       path: '/report/:obj',
       name: 'report',
-      component: () => import('@/views/Report.vue')
+      component: () => import('@/views/Report.vue'),
+      meta: { login: true }
     },
     {
       path: '/admin/carousel/',

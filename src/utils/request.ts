@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 08:34:05
- * @LastEditTime: 2022-07-10 20:19:11
+ * @LastEditTime: 2023-10-29 11:27:13
  * @Description: 
  * _(:з」∠)_
  */
@@ -38,9 +38,11 @@ http.interceptors.response.use(
     else if (err.request.status == 401) {
       // 如果当前已经处于登录页面，什么也不做
       const route = router.currentRoute.value;
-      console.log("currentRoute", route);
       if (route.name != "login") {
         window.$message.error(err.response.data.msg || '请先登录awa');
+      }
+      if (route.meta.login) {
+        router.push({ name: 'login', query: { redirect: encodeURIComponent(route.fullPath) } });
       }
     }
     else if (err.request.status == 400) {

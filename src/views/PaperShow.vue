@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-10-28 20:11:53
+ * @LastEditTime: 2023-10-29 11:22:16
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -11,7 +11,7 @@ import store from '@/utils/store';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime, Clip, setTitle } from '@/utils/tools';
+import { FormatTime, Clip, setTitle, Share } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import Avatar from '@/components/Avatar.vue';
@@ -62,8 +62,8 @@ function Like() {
     }).catch(() => { paper.like_loading = false; })
 }
 
-function ClipUrl() {
-  Clip(window.location.href, "文章链接已复制OvO");
+function SharePaper() {
+  Share(document.title, paper.intro, window.location.href);
 }
 
 const router = useRouter();
@@ -103,7 +103,7 @@ onMounted(async () => {
         </template>
         {{ paper.like_num }}赞同
       </n-button>
-      <n-button @click="ClipUrl" icon-placement="right" ghost>
+      <n-button @click="SharePaper" icon-placement="right" ghost>
         <template #icon>
           <n-icon>
             <ShareOutlined />
@@ -127,7 +127,7 @@ onMounted(async () => {
       <template v-else>不允许编辑</template>
     </n-divider>
     <n-space style="margin-top:4px" justify="end">
-      <n-button @click="ClipUrl" icon-placement="right" ghost>
+      <n-button @click="SharePaper" icon-placement="right" ghost>
         <template #icon>
           <n-icon>
             <ShareOutlined />

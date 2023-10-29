@@ -1,14 +1,14 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-29 11:09:53
+ * @LastEditTime: 2023-10-29 11:19:46
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { FormatTime, Clip, setTitle, OpenLink } from '@/utils/tools';
+import { FormatTime, Clip, setTitle, OpenLink, Share } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
@@ -44,19 +44,7 @@ function Stay() {
 }
 
 function SharePoster() {
-  if (navigator.share) {
-    navigator.share({
-      title: document.title,
-      text: poster.value.text,
-      url: window.location.href,
-    }).then(() => {
-      window.$message.success("分享成功OvO");
-    }).catch(() => {
-      window.$message.error("分享失败Orz");
-    })
-  } else {
-    Clip(window.location.href, "分享链接已复制OvO");
-  }
+  Share(document.title, poster.value.text, window.location.href)
 }
 
 // 删除

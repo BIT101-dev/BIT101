@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-28 20:20:51
+ * @LastEditTime: 2023-10-29 11:18:55
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -116,6 +116,23 @@ async function Clip(s: string, msg = "已复制到剪贴板OvO") {
   } catch (e) {
     console.error(e)
     window.$message.error("复制失败Orz");
+  }
+}
+
+// 分享
+export function Share(title: string,text: string, url: string) {
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      text: text,
+      url: url,
+    }).then(() => {
+      window.$message.success("分享成功OvO");
+    }).catch(() => {
+      window.$message.error("分享失败Orz");
+    })
+  } else {
+    Clip(url, "分享链接已复制OvO");
   }
 }
 

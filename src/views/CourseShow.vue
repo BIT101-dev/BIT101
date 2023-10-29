@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from '@/utils/request';
-import { Clip, OpenLink, setTitle } from '@/utils/tools';
+import { Clip, OpenLink, Share, setTitle } from '@/utils/tools';
 import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
@@ -153,8 +153,8 @@ function Like() {
     }).catch(() => { course.like_loading = false; })
 }
 
-function ClipUrl() {
-  Clip(window.location.href, "课程链接已复制OvO");
+function ShareCourse() {
+  Share(document.title, document.title, window.location.href)
 }
 
 function LoadCourse() {
@@ -216,7 +216,7 @@ onMounted(async () => {
           </template>
           {{ course.like_num }}人点赞
         </n-button>
-        <n-button @click="ClipUrl" icon-placement="right" ghost>
+        <n-button @click="ShareCourse" icon-placement="right" ghost>
           <template #icon>
             <n-icon>
               <ShareOutlined />
