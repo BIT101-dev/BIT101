@@ -1,15 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-28 20:11:11
+ * @LastEditTime: 2023-10-29 11:09:53
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import store from '@/utils/store';
-import { onDeactivated, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import PaperRender from '@/components/PaperRender.vue';
 import { FormatTime, Clip, setTitle, OpenLink } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
@@ -45,8 +43,20 @@ function Stay() {
   http.post("/reaction/stay", { obj: 'poster' + poster.value.id, time: 5 })
 }
 
-function ClipUrl() {
-  Clip(window.location.href, "分享链接已复制OvO");
+function SharePoster() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      text: poster.value.text,
+      url: window.location.href,
+    }).then(() => {
+      window.$message.success("分享成功OvO");
+    }).catch(() => {
+      window.$message.error("分享失败Orz");
+    })
+  } else {
+    Clip(window.location.href, "分享链接已复制OvO");
+  }
 }
 
 // 删除
@@ -151,14 +161,14 @@ onUnmounted(() => {
         汝真断舍离耶？
       </n-popconfirm>
 
-      <n-button @click="router.push('/report/poster'+poster.id)" icon-placement="right" ghost>
+      <n-button @click="router.push('/report/poster' + poster.id)" icon-placement="right" ghost>
         <template #icon>
           <n-icon :component="FeedbackOutlined" />
         </template>
         举报
       </n-button>
 
-      <n-button @click="ClipUrl" icon-placement="right" ghost>
+      <n-button @click="SharePoster" icon-placement="right" ghost>
         <template #icon>
           <n-icon :component="ShareOutlined" />
         </template>
