@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-29 20:09:05
+ * @LastEditTime: 2023-10-30 11:22:41
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -160,6 +160,10 @@ export function WatchNetwork() {
 
 /** 设置页面标题 */
 export function setTitle(...titles: string[]): void {
+  if (titles.length === 0) {
+    document.title = 'BIT101'
+    return
+  }
   document.title = `${titles.join(' - ')} | BIT101`
 }
 

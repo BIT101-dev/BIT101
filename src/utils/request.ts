@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 08:34:05
- * @LastEditTime: 2023-10-29 11:27:13
+ * @LastEditTime: 2023-10-30 11:07:28
  * @Description: 
  * _(:з」∠)_
  */
@@ -36,7 +36,8 @@ http.interceptors.response.use(
       else window.$message.error('出错了Orz');
     }
     else if (err.request.status == 401) {
-      // 如果当前已经处于登录页面，什么也不做
+      store.fake_cookie = "";
+      // 自动跳转
       const route = router.currentRoute.value;
       if (route.name != "login") {
         window.$message.error(err.response.data.msg || '请先登录awa');

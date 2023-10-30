@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-29 20:07:24
+ * @LastEditTime: 2023-10-30 11:17:11
  * @Description: 
  * _(:з」∠)_
 -->
@@ -29,7 +29,7 @@ function renderIcon(icon: any) {
 const menu_options = [
   {
     label: "回家",
-    key: '/',
+    key: '/home/',
     icon: renderIcon(HomeOutlined)
   },
   {
@@ -127,7 +127,7 @@ onMounted(() => {
                 <MenuRound />
               </n-icon>
             </n-button>
-            <n-button @click="router.push('/')" text style="font-size: 24px;color:#FFF">BIT101</n-button>
+            <n-button @click="router.push('/home')" text style="font-size: 24px;color:#FFF">BIT101</n-button>
           </div>
           <div style="display:flex;align-items:center;height:100%;">
             <n-button @click="router.go(-1)" quaternary circle size="large" color="white">

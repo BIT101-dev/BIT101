@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-29 22:16:55
+ * @LastEditTime: 2023-10-30 12:03:02
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -138,7 +138,7 @@ watch(props, () => {
         </div>
       </div>
       <span>
-        {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.edit_time) }}
+        {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.create_time) }}
       </span>
     </div>
   </n-card>
@@ -148,6 +148,6 @@ watch(props, () => {
   <n-divider style="color:#809BA8;font-size:14px;">已加载{{ posters.list.length }}条</n-divider>
 
   <n-button block @click="LoadPosters()" :disabled="posters.end || posters.loading" :loading="posters.loading">
-    {{ posters.end ? '木有更多了' : '加载更多' }}
+    {{ posters.end ? '去做点更有意思的事情吧' : '加载更多' }}
   </n-button>
 </template>

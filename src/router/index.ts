@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-29 22:37:01
+ * @LastEditTime: 2023-10-30 11:21:27
  * @Description: 
  * _(:з」∠)_
  */
@@ -14,6 +14,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'intro',
+      component: () => import('@/views/Intro.vue')
+    },
+    {
+      path: '/home',
       name: 'home',
       component: () => import('@/views/Home.vue')
     },
@@ -126,6 +131,7 @@ const router = createRouter({
       component: () => import('@/views/404.vue')
     }
   ],
+  // 保存滚动位置
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
     else return { top: 0 }
@@ -137,7 +143,7 @@ router.beforeEach(({ path }) => {
   // 之后各组件可以再覆盖。
 
   const titleMap: Record<string, string> = {
-    '': '主页',
+    home: '主页',
     login: '登录',
     user: '我的',
     paper: '文章',
@@ -152,7 +158,7 @@ router.beforeEach(({ path }) => {
   }
   const top = path.split('/').filter(piece => piece.length > 0)[0] ?? ''
   const title = titleMap[top] ?? top
-  setTitle(title)
+  if (title) setTitle(title)
 })
 
 export default router;
