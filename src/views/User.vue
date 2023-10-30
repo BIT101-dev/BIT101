@@ -1,15 +1,15 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-28 20:42:54
+ * @LastEditTime: 2023-10-29 22:33:51
  * @Description: 用户中心
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import { FormatTime, OpenLink, hitokoto, setTitle } from '@/utils/tools';
 import http from '@/utils/request';
-import { onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { onActivated, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, routerKey, useRoute } from 'vue-router';
 import store from '@/utils/store';
 import { UploadFileInfo } from 'naive-ui';
 import { User } from '@/utils/types';
@@ -180,7 +180,13 @@ onMounted(() => {
   posters.value.uid = Number(route.params.id);
 })
 
+
+// 监听路由变化 重新加载数据
+const last_uid = ref(route.params.id);
 watch(() => route.params.id, () => {
+  if (!route.path.startsWith("/user/")) return;
+  if (last_uid.value == route.params.id && route.params.id != '0') return;
+  last_uid.value = route.params.id;
   GetInfo(route.params.id);
   posters.value.uid = Number(route.params.id);
 })
@@ -271,7 +277,7 @@ watch(() => route.params.id, () => {
       <n-scrollbar style="max-height:75vh">
         <n-space vertical>
           <template v-for="user in follows.list">
-            <div style="display:flex;align-items:center;cursor:pointer" @click="OpenLink('/user/' + user.id, true)">
+            <div style="display:flex;align-items:center;cursor:pointer" @click="follows.modal=false;OpenLink('/user/' + user.id);">
               <Avatar :user="user" :size="36" />
               <div style="margin-left: 4px;">
                 <div style="font-size: 16px;margin-top:-4px;">{{ user.nickname }}</div>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-28 20:09:56
+ * @LastEditTime: 2023-10-29 22:35:23
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -207,7 +207,7 @@ onMounted(() => {
 })
 
 onBeforeRouteLeave((to, from) => {
-  // sub_comments.modal=false;
+  sub_comments.modal=false;
 })
 </script>
 
@@ -244,7 +244,7 @@ onBeforeRouteLeave((to, from) => {
     <n-divider></n-divider>
     <div style="display: flex;align-items: top;color:#3E5C6B;">
       <div>
-        <router-link :to="'/user/' + i.user.id" target="_blank">
+        <router-link :to="'/user/' + i.user.id">
           <Avatar :user="i.user" :size="36" round />
         </router-link>
       </div>
@@ -351,7 +351,7 @@ onBeforeRouteLeave((to, from) => {
 
         <!-- 子评论的父评论 -->
         <div>
-          <router-link :to="'/user/' + sub_comments.parent.user.id" target="_blank">
+          <router-link :to="'/user/' + sub_comments.parent.user.id">
             <Avatar :user="sub_comments.parent.user" :size="36" round />
           </router-link>
         </div>
@@ -372,7 +372,7 @@ onBeforeRouteLeave((to, from) => {
         <n-divider style="margin:11px"></n-divider>
         <div style="display: flex;align-items: top;color:#3E5C6B;">
           <div>
-            <router-link :to="'/user/' + i.user.id" target="_blank">
+            <router-link :to="'/user/' + i.user.id">
               <Avatar :user="i.user" :size="36" round />
             </router-link>
           </div>
@@ -380,7 +380,7 @@ onBeforeRouteLeave((to, from) => {
             <div style="font-size: 16px;">{{ i.user.nickname }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;word-wrap:break-word;">
-              <router-link v-if="i.reply_user.id != 0" :to="'/user/' + i.reply_user.id" target="_blank"
+              <router-link v-if="i.reply_user.id != 0" :to="'/user/' + i.reply_user.id"
                 style="text-decoration:none;color:#FF8533">
                 @{{ i.reply_user.nickname + ' ' }}
               </router-link>

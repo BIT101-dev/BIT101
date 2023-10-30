@@ -1,12 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-24 11:52:42
- * @LastEditTime: 2023-10-27 23:57:15
+ * @LastEditTime: 2023-10-29 22:57:47
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 
+const origin=window.location.origin;
 
 const props = defineProps({
   value: {
@@ -59,6 +60,6 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <a v-if="i.type == 'link'" :href="i.text" target="_blank" style="text-decoration:none;color:#FF8533">{{ i.text }}</a>
+    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:#FF8533">{{ i.text }}</a>
   </template>
 </template>

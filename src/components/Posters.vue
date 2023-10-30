@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-28 20:10:41
+ * @LastEditTime: 2023-10-29 22:16:55
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -129,7 +129,7 @@ watch(props, () => {
     </n-image-group>
 
     <div style="color:#809BA8;font-size:14px;margin-top: 11px;display:flex;align-items:center;">
-      <div @click="OpenLink('/user/' + i.user.id, true)" @click.stop=""
+      <div @click="OpenLink('/user/' + i.user.id)" @click.stop=""
         style="display:flex;align-items: center;flex:1;">
         <Avatar :user="i.user" :size="24" round />
 

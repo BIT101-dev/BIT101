@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-10-29 11:32:22
+ * @LastEditTime: 2023-10-29 21:51:52
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -35,8 +35,6 @@ const rules: FormRules = {
       validator(rule: FormItemRule, value: string) {
         if (!value) {
           return new Error('空空如也呢')
-        } else if (!/^\d*$/.test(value)) {
-          return new Error('不大对劲')
         }
         return true
       },
@@ -176,7 +174,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
         <n-tab-pane name="登录" style="padding: 4px;">
           <n-form ref="form_ref" :rules="rules" :model="user">
             <n-form-item path="sid" label="学号">
-              <n-input v-model:value="user.sid" type="number" placeholder="请输入BIT学号" />
+              <n-input v-model:value="user.sid" placeholder="请输入BIT学号" />
             </n-form-item>
 
             <n-form-item path="password" label="密码">

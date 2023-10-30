@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 09:18:09
- * @LastEditTime: 2023-10-29 15:23:39
+ * @LastEditTime: 2023-10-29 21:52:17
  * @Description: 全局状态管理
  * _(:з」∠)_
  */
@@ -15,13 +15,13 @@ else x={};
 
 const store = reactive({
   version: package_json.version,
-  api_url: "https://bit101.flwfdd.xyz",
+  // api_url: "https://bit101.flwfdd.xyz",
   // api_url: "http://127.0.0.1:8080",
-  // api_url: "http://e5.flwfdd.xyz:8080",
+  api_url: "http://e5.flwfdd.xyz:8080",
   // api_url:"http://127.0.0.1:4523/m1/2401657-0-default",
   // api_url:"http://192.168.0.108:4523/m1/2401657-0-default",
-  img_suffix:"!low",
   fake_cookie: x.fake_cookie||"Here's fake_cookie",
+  grade_query: x.grade_query || {},
 })
 
 watch(store, () => {

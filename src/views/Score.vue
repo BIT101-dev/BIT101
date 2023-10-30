@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-10-28 20:29:33
+ * @LastEditTime: 2023-10-29 21:53:29
  * @Description: 
  * _(:з」∠)_
 -->
@@ -15,7 +15,7 @@ import { RowData } from 'naive-ui/es/data-table/src/interface';
 import { reactive, ref, onMounted, watch } from 'vue';
 
 const user = reactive({
-  sid: store.grade_query_sid,
+  sid: store.grade_query.sid,
   password: ""
 })
 
@@ -104,11 +104,11 @@ const detail = ref(false);
 const search = ref("");
 const course_type = reactive({
   "list": [] as any,
-  "filter": store.grade_query_course_type_filter,
+  "filter": store.grade_query.course_type_filter,
 });
 const course_time = reactive({
   "list": [] as any,
-  "filter": store.grade_query_course_time_filter,
+  "filter": store.grade_query.course_time_filter,
 });
 const stat = reactive({
   credit: 0,
@@ -204,8 +204,8 @@ function Filter() {
     }
   }
 
-  store.grade_query_course_type_filter = course_type.filter;
-  store.grade_query_course_time_filter = course_time.filter;
+  store.grade_query.course_type_filter = course_type.filter;
+  store.grade_query.course_time_filter = course_time.filter;
   
   Compute();
 }
@@ -224,7 +224,7 @@ function GetList() {
       },
     })
     .then((res) => {
-      store.grade_query_sid = user.sid;
+      store.grade_query.sid = user.sid;
       loading.value = false;
       let ori_table = res.data.data;
       let ori_head = ori_table[0];

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-10-29 12:07:52
+ * @LastEditTime: 2023-10-29 23:07:30
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -83,7 +83,7 @@ onMounted(async () => {
     </div>
     <n-divider></n-divider>
     <div style="display: flex;align-items: center;color:#3E5C6B;">
-      <router-link :to="'/user/' + paper.user.id" target="_blank">
+      <router-link :to="'/user/' + paper.user.id">
         <Avatar :user="paper.user" :size="36" />
       </router-link>
       <span style="margin-left: 4px;">
