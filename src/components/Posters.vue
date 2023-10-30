@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-30 12:03:02
+ * @LastEditTime: 2023-10-30 20:35:29
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -91,7 +91,9 @@ watch(props, () => {
   <n-card v-for="i in posters.list" @click="router.push('/gallery/' + i['id'])" hoverable
     style="margin-bottom:11px;cursor:pointer;">
 
-    <h3 style="margin:0;color:#0087A8;">{{ i.title }}</h3>
+    <div>
+      <n-ellipsis :line-clamp="2" :tooltip="false" style="color:#0087A8;font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
+    </div>
 
     <n-space v-if="i.claim.id != 0 || i.public == false">
       <n-tag v-if="i.public == false" round :bordered="false" type="warning" size="small">

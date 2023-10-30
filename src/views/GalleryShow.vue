@@ -1,13 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-29 22:49:16
+ * @LastEditTime: 2023-10-30 22:23:28
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { FormatTime, Clip, setTitle, OpenLink, Share } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
@@ -15,12 +15,12 @@ import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import RenderLink from '@/components/RenderLink.vue';
 
-//文章数据
+//Poster数据
 const poster = ref({} as Poster)
 
-//加载文章
-function LoadPaper() {
-  return http.get("/posters/" + poster.value.id)
+//加载Poster
+function LoadPoster() {
+  http.get("/posters/" + poster.value.id)
     .then(res => {
       poster.value = res.data;
     })
@@ -57,20 +57,33 @@ function DeletePoster() {
 
 const router = useRouter();
 const route = useRoute();
-poster.value.id = Number(route.params.id);
 let timer = null as any;
 onMounted(async () => {
-  await LoadPaper()
+  poster.value.id = Number(route.params.id);
+  await LoadPoster();
   setTitle(poster.value.title, '话廊')
 
+  // 反馈停留
   timer = setTimeout(() => {
     Stay();
   }, 5000);
 })
 
-onUnmounted(() => {
+// 离开页面时清除反馈定时器
+onDeactivated(() => {
   timer && clearTimeout(timer);
 })
+
+// 编辑后刷新
+const path = ref(route.path);
+router.afterEach(async (to, from) => {
+  if (to.path != path.value) return;
+  if (from.name == "gallery_edit" && Number(from.params.id) == poster.value.id) {
+    await LoadPoster();
+    setTitle(poster.value.title, '话廊')
+  }
+})
+
 </script>
 
 <template>
@@ -83,7 +96,7 @@ onUnmounted(() => {
       </div>
       <span style="margin-left:4px;">
         <div style="font-size: 16px;">{{ poster.user.nickname }}</div>
-        <div style="margin-top: -4px;font-size:14px;">{{ poster.user.type.text }}</div>
+        <div style="margin-top: -4px;font-size:14px;">{{ poster.user.identity.text }}</div>
       </span>
     </div>
 

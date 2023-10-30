@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-28 12:27:23
- * @LastEditTime: 2023-10-29 10:55:04
+ * @LastEditTime: 2023-10-30 18:17:02
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -37,9 +37,9 @@ function PostReport() {
   report.posting = true;
   http.post("/manage/reports", {
     obj: route.params.obj,
+    type_id: report.type_id,
     text: report.text
   }).then(() => {
-    window.$message.success("举报成功OvO");
     router.go(-1);
   }).finally(() => {
     report.posting = false;

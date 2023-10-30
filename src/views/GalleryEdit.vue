@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-27 13:34:40
+ * @LastEditTime: 2023-10-30 21:49:54
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -96,8 +96,8 @@ function Check() {
     window.$message.error("内容不能为空Orz");
     return false;
   }
-  if (poster.value.tags.length < 3) {
-    window.$message.error("标签不能少于3个Orz");
+  if (poster.value.tags.length < 2) {
+    window.$message.error("标签不能少于2个Orz");
     return false;
   }
   let tags = new Set(poster.value.tags);
@@ -129,14 +129,14 @@ function PostPoster() {
   if (poster.value.id == 0) {
     http.post("/posters", poster_data).then((res) => {
       posting.value = false;
-      router.push('/gallery/' + res.data.id);
+      router.replace('/gallery/' + res.data.id);
     }).catch(() => {
       posting.value = false;
     })
   } else {
     http.put("/posters/" + poster.value.id, poster_data).then(() => {
       posting.value = false;
-      router.push('/gallery/' + poster.value.id);
+      router.go(-1);
     }).catch(() => {
       posting.value = false;
     })
@@ -180,7 +180,7 @@ onMounted(async () => {
 
       <n-space vertical size="small">
         <div>标签</div>
-        <div style="color:#809BA8;font-size:14px;margin-top:-6px;">请至少添加3个标签，合适的标签将有助于内容推荐。</div>
+        <div style="color:#809BA8;font-size:14px;margin-top:-6px;">请至少添加2个标签，合适的标签将有助于内容推荐。</div>
         <n-dynamic-tags v-model:value="poster.tags" :input-props="{ 'maxlength': 11, 'show-count': true }" />
       </n-space>
 

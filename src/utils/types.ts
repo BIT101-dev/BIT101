@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-23 20:33:48
+ * @LastEditTime: 2023-10-30 18:39:34
  * @Description: _(:з」∠)_
  */
 
@@ -45,7 +45,7 @@ export interface User {
     level: number; // 等级
     motto: string; // 格言 简介
     nickname: string; // 昵称
-    type: {
+    identity: {
         color: string; // 勾勾颜色
         text: string; // 用户类型描述
     }

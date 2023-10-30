@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-29 22:33:51
+ * @LastEditTime: 2023-10-30 18:40:47
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -224,8 +224,8 @@ watch(() => route.params.id, () => {
 
       <n-space>
         <n-tag round :bordered="false" size="small"
-          :color="{ color: user_info.user.type.color ? user_info.user.type.color : '#FF9A57', textColor: '#FFF' }">
-          {{ user_info.user.type.text }}
+          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : '#FF9A57', textColor: '#FFF' }">
+          {{ user_info.user.identity.text }}
         </n-tag>
         <n-tag @click="ShowFollowingList" round :bordered="false" size="small"
           :color="{ color: '#FF9A57', textColor: '#FFF' }" style="cursor:pointer">

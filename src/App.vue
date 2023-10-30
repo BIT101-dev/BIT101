@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-30 11:17:11
+ * @LastEditTime: 2023-10-30 22:25:40
  * @Description: 
  * _(:з」∠)_
 -->
@@ -166,7 +166,7 @@ onMounted(() => {
 
       <n-layout-content justify="center" style="margin: 11px;min-height: 89vh;">
         <router-view v-slot="{ Component }">
-          <keep-alive>
+          <keep-alive :max="42">
             <component :is="Component" v-if="route.meta.keepAlive != false" :key="route.fullPath" />
           </keep-alive>
           <component :is="Component" v-if="route.meta.keepAlive == false" />
