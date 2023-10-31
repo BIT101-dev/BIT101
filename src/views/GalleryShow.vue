@@ -1,15 +1,15 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-31 10:40:37
+ * @LastEditTime: 2023-10-31 11:07:15
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import { FormatTime, Clip, setTitle, OpenLink, Share } from '@/utils/tools';
-import { AddCommentOutlined, EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
+import { onActivated, onDeactivated, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { FormatTime, setTitle, OpenLink, Share } from '@/utils/tools';
+import { MessageOutlined, EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
@@ -21,7 +21,7 @@ const actions = ref<HTMLDivElement>()
 
 //加载Poster
 function LoadPoster() {
-  http.get("/posters/" + poster.value.id)
+  return http.get("/posters/" + poster.value.id)
     .then(res => {
       poster.value = res.data;
       // 设置页面标题
@@ -60,7 +60,6 @@ function DeletePoster() {
 
 // 滚动到actions
 function ScrollToActions() {
-  console.log(actions)
   actions.value!.scrollIntoView({
     behavior: "smooth"
   })
@@ -69,19 +68,27 @@ function ScrollToActions() {
 const router = useRouter();
 const route = useRoute();
 let timer = null as any;
-onMounted(async () => {
+onMounted(() => {
   poster.value.id = Number(route.params.id);
-  await LoadPoster();
+  LoadPoster();
+})
+
+onActivated(() => {
+  // 设置页面标题
+  if (poster.value.title) setTitle(poster.value.title, '话廊');
 
   // 反馈停留
-  timer = setTimeout(() => {
+  if (!timer) timer = setTimeout(() => {
     Stay();
   }, 5000);
 })
 
 // 离开页面时清除反馈定时器
 onDeactivated(() => {
-  timer && clearTimeout(timer);
+  if(timer){
+    clearTimeout(timer);
+    timer = null;
+  }
 })
 
 // 编辑后刷新
@@ -89,8 +96,7 @@ const path = ref(route.path);
 router.afterEach(async (to, from) => {
   if (to.path != path.value) return;
   if (from.name == "gallery_edit" && Number(from.params.id) == poster.value.id) {
-    await LoadPoster();
-    setTitle(poster.value.title, '话廊')
+    LoadPoster();
   }
 })
 
@@ -201,13 +207,15 @@ router.afterEach(async (to, from) => {
     </div>
     <n-divider style="color:#809BA8;font-size:14px;">现有{{ poster.comment_num }}条评论</n-divider>
     <Comment :obj='"poster" + poster.id'></Comment>
+
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="ScrollToActions()" circle :bordered="false"
         style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
         <template #icon>
-          <n-icon :component="AddCommentOutlined" size="24" />
+          <n-icon :component="MessageOutlined" size="24" />
         </template>
       </n-button>
     </n-space>
+    
   </div>
 </template>

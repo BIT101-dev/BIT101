@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-03-30 14:26:39
- * @LastEditTime: 2023-10-28 20:29:10
+ * @LastEditTime: 2023-10-31 09:06:12
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -10,7 +10,8 @@ import http from '@/utils/request';
 import { FormatTime } from '@/utils/tools';
 import { User } from '@/utils/types';
 import { ThumbUpFilled, TextsmsFilled, PersonAddFilled, NotificationsFilled } from '@vicons/material';
-import { onMounted, reactive, ref } from 'vue';
+import { PropType, defineComponent, h, onActivated, onDeactivated, onMounted, reactive, ref, render } from 'vue';
+import { RouterLink } from 'vue-router';
 
 interface Message {
   id: number;
@@ -65,10 +66,6 @@ function StartLoadMessages(type: 'like' | 'comment' | 'follow' | 'system') {
   LoadMessages();
 }
 
-onMounted(() => {
-  LoadUnreadNums();
-})
-
 function GetObjName(type: string) {
   if (type.startsWith("like")) return "赞";
   if (type.startsWith("poster")) return "帖子";
@@ -83,36 +80,51 @@ function GetUrl(obj: string) {
   return "";
 }
 
-function GenerateHTML(message: Message) {
-  let s = "";
-  let user_link = `<a href="/user/${message.from_user.id}" target="_blank" style="text-decoration:none;color:#FF8533">@${message.from_user.nickname}</a>`;
-  if (message.from_user.id == 0) user_link = '';
-  let obj_name = GetObjName(message.obj);
-  if (messages.type == 'like') {
-    s = `${user_link} 赞了你的 ${obj_name} ${message.text}`;
+const MessageContent = defineComponent({
+  props: {
+    message: {
+      type: Object as PropType<Message>,
+      required: true,
+    }
+  },
+  setup(props) {
+    return () => {
+      let message = props.message;
+      let l = [];
+      let user_link = message.from_user.id != 0 ? h(RouterLink, { to: "/user/" + props.message.from_user.id, style: { textDecoration: 'none', color: '#FF8533' } }, '@' + props.message.from_user.nickname) : '';
+      let obj_name = GetObjName(message.obj);
+      if (messages.type == 'like') {
+        l.push(user_link, ' 赞了你的 ', obj_name, ' ', message.text);
+      } else if (messages.type == 'comment') {
+        l.push(user_link, ' 评论了你的 ', obj_name, ' ', message.text);
+      } else if (messages.type == 'follow') {
+        l.push(user_link, ' 关注了你');
+      } else if (messages.type == 'system') {
+        if (message.from_user.id) l.push('关联用户：', user_link, ' ');
+        if (message.obj) l.push('关联对象：', message.obj, ' ');
+        l.push(message.text);
+      }
+      return l;
+    }
   }
-  if (messages.type == 'comment') {
-    s = `${user_link} 评论了你的 ${obj_name} ${message.text}`;
-  }
-  if (messages.type == 'follow') {
-    s = `${user_link} 关注了你`;
-  }
-  if (messages.type == 'system') {
-    if (message.from_user.id) s += `关联用户：${user_link} `;
-    if (message.obj) s += `关联对象：${message.obj} `;
-    s += `${message.text}`;
-  }
-  return s;
-}
+})
 
 const modal = reactive({
   show: false,
-  html: "",
+  message: {} as Message,
 })
 function OpenModal(message: Message) {
+  modal.message = message;
   modal.show = true;
-  modal.html = GenerateHTML(message);
 }
+
+onActivated(() => {
+  LoadUnreadNums();
+})
+
+onDeactivated(() => {
+  modal.show = false;
+})
 
 </script>
 
@@ -162,7 +174,8 @@ function OpenModal(message: Message) {
 
     <template v-if="messages.type">
       <n-card v-for="i in messages.list" hoverable style="margin-bottom:11px;background-color: #F0FCFF;">
-        <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;" v-html="GenerateHTML(i)">
+        <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
+          <MessageContent :message="i"></MessageContent>
         </n-ellipsis>
         <n-space style="color:#809BA8;font-size:14px;">
           {{ FormatTime(i.update_time) }}
@@ -177,7 +190,9 @@ function OpenModal(message: Message) {
 
     <n-modal v-model:show="modal.show" preset="card" title="消息详情" style="width:600px;">
       <n-scrollbar style="max-height:75vh;">
-        <div style="white-space: pre-wrap;" v-html="modal.html"></div>
+        <div style="white-space: pre-wrap;">
+          <MessageContent :message="modal.message"></MessageContent>
+        </div>
       </n-scrollbar>
     </n-modal>
   </div>

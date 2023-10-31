@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 08:34:05
- * @LastEditTime: 2023-10-30 11:07:28
+ * @LastEditTime: 2023-10-31 00:11:43
  * @Description: 
  * _(:з」∠)_
  */
@@ -41,6 +41,8 @@ http.interceptors.response.use(
       const route = router.currentRoute.value;
       if (route.name != "login") {
         window.$message.error(err.response.data.msg || '请先登录awa');
+      } else if (err.response.data.msg) {
+        window.$message.error(err.response.data.msg);
       }
       if (route.meta.login) {
         router.push({ name: 'login', query: { redirect: encodeURIComponent(route.fullPath) } });

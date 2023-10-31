@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-29 22:35:23
+ * @LastEditTime: 2023-10-31 03:17:56
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -207,7 +207,7 @@ onMounted(() => {
 })
 
 onBeforeRouteLeave((to, from) => {
-  sub_comments.modal=false;
+  sub_comments.modal = false;
 })
 </script>
 
@@ -303,7 +303,8 @@ onBeforeRouteLeave((to, from) => {
           <div v-for="j in i.sub.slice(0, 3)" :key="j.id" style="margin:4px;">
             {{ j.user.nickname }}：
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
-            <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ j.text }}</span>
+            <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ (j.images.length ? '【图片】' : '') + j.text
+            }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i.comment_num }}条回复>></n-button>
         </div>

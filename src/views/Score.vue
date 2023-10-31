@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-10-29 21:53:29
+ * @LastEditTime: 2023-10-31 09:32:05
  * @Description: 
  * _(:з」∠)_
 -->
@@ -103,12 +103,12 @@ const loading = ref(false);
 const detail = ref(false);
 const search = ref("");
 const course_type = reactive({
-  "list": [] as any,
-  "filter": store.grade_query.course_type_filter,
+  list: [] as any,
+  filter: store.grade_query.course_type_filter,
 });
 const course_time = reactive({
-  "list": [] as any,
-  "filter": store.grade_query.course_time_filter,
+  list: [] as any,
+  filter: store.grade_query.course_time_filter,
 });
 const stat = reactive({
   credit: 0,
@@ -257,12 +257,12 @@ function GetList() {
       }
 
       // 保留之前的筛选
-      if(course_type.filter.length == 0)
+      if(!course_type.filter || course_type.filter.length == 0)
         course_type.filter = course_type_tmp.concat();
       else
         course_type.filter = course_type.filter.filter((s: string) => course_type_tmp.indexOf(s) != -1);
 
-      if(course_time.filter.length == 0)
+      if(!course_time.filter || course_time.filter.length == 0)
         course_time.filter = course_time_tmp.concat();
       else
         course_time.filter = course_time.filter.filter((s: string) => course_time_tmp.indexOf(s) != -1);
