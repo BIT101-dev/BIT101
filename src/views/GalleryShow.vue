@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-30 22:23:28
+ * @LastEditTime: 2023-10-31 09:52:55
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -23,6 +23,8 @@ function LoadPoster() {
   http.get("/posters/" + poster.value.id)
     .then(res => {
       poster.value = res.data;
+      // 设置页面标题
+      setTitle(poster.value.title, '话廊')
     })
 }
 
@@ -61,7 +63,6 @@ let timer = null as any;
 onMounted(async () => {
   poster.value.id = Number(route.params.id);
   await LoadPoster();
-  setTitle(poster.value.title, '话廊')
 
   // 反馈停留
   timer = setTimeout(() => {
