@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-10-29 21:51:52
+ * @LastEditTime: 2023-11-01 22:50:35
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -124,7 +124,6 @@ function Login() {
         CheckStatus();
       })
     } else {
-      console.log(err)
       window.$message.error('请检查输入qwq')
     }
   })
@@ -142,7 +141,6 @@ function Register() {
         CheckStatus();
       })
     } else {
-      console.log(err)
       window.$message.error('请检查输入qwq')
     }
   })

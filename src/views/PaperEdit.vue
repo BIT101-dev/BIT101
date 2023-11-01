@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-28 20:46:23
- * @LastEditTime: 2023-10-29 15:21:53
+ * @LastEditTime: 2023-11-01 22:51:08
  * @Description: 
  * _(:з」∠)_
 -->
@@ -136,7 +136,9 @@ function PreviewPaper() {
   editor.save().then((out) => {
     paper.data = out;
     modal.value = true;
-  }).catch(err => { console.log(err) })
+  }).catch(err => {
+    window.$message.error("预览失败Orz");
+  })
 }
 
 //加载文章
@@ -148,7 +150,7 @@ function LoadPaper() {
       paper.title = res.data.title;
       paper.intro = res.data.intro;
       paper.data = JSON.parse(res.data.content);
-      paper.last_time = new Date(res.data.update_time).getTime()/1000;
+      paper.last_time = new Date(res.data.update_time).getTime() / 1000;
       paper.anonymous = res.data.anonymous;
       paper.public_edit = res.data.public_edit;
       paper.own = res.data.own;
@@ -193,7 +195,7 @@ function PostPaper() {
     }
 
     if (paper.id == '0') {
-      http.post("/papers",paper_data).then((res) => {
+      http.post("/papers", paper_data).then((res) => {
         posting.value = false;
         router.push('/paper/' + res.data.id);
       }).catch(() => {
@@ -236,9 +238,11 @@ function DeletePaper() {
             汝真发表耶？
           </n-popconfirm>
           <n-button @click="paper.anonymous = !paper.anonymous" ghost>匿名:{{ paper.anonymous ? '是' : '否' }}</n-button>
-          <n-button v-if="paper.own" @click="paper.public_edit = !paper.public_edit" ghost>其他人可编辑:{{ paper.public_edit ? '是' : '否' }}
+          <n-button v-if="paper.own" @click="paper.public_edit = !paper.public_edit" ghost>其他人可编辑:{{ paper.public_edit ?
+            '是' : '否' }}
           </n-button>
-          <n-popconfirm v-if="paper.own" @positive-click="DeletePaper" :show-icon="false" positive-text="确定" negative-text="取消">
+          <n-popconfirm v-if="paper.own" @positive-click="DeletePaper" :show-icon="false" positive-text="确定"
+            negative-text="取消">
             <template #trigger>
               <n-button :disabled="posting" type="error" ghost>删除</n-button>
             </template>
