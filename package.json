@@ -23,9 +23,7 @@
     "vue": "^3.3.7",
     "vue-clipboard3": "^2.0.0",
     "vue-echarts": "^6.6.1",
-    "vue-router": "^4.2.5",
-    "workbox-precaching": "^7.0.0",
-    "workbox-routing": "^7.0.0"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@editorjs/code": "^2.8.0",
