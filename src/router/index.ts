@@ -1,13 +1,12 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-10-30 22:11:15
+ * @LastEditTime: 2023-11-01 23:20:50
  * @Description: 
  * _(:з」∠)_
  */
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { setTitle } from '@/utils/tools'
-import axios from 'axios';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -32,6 +31,7 @@ const router = createRouter({
       path: '/user/:id',
       name: 'user',
       component: () => import('@/views/User.vue'),
+      meta: { login: true }
     },
     {
       path: '/score',
@@ -84,7 +84,8 @@ const router = createRouter({
     {
       path: '/message/',
       name: 'message',
-      component: () => import('@/views/Message.vue')
+      component: () => import('@/views/Message.vue'),
+      meta: { login: true }
     },
     {
       path: '/map/',
