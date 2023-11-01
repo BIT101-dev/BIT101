@@ -41,7 +41,7 @@ jobs:
           # `true` to identify the endpoint is your custom domain.
           cname: false # optional, default is false
           # `true` to skip setting static pages related configuration. `indexPage`, `notFoundPage` will not be used.
-          skipSetting: false # optional, default is false
+          skipSetting: true # optional, default is false
           # Save info of uploaded files to increase next upload speed
           incremental: true # optional, default is true
           # index page
