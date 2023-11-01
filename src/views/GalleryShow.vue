@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-10-31 11:07:15
+ * @LastEditTime: 2023-11-01 14:03:41
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -14,6 +14,7 @@ import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import RenderLink from '@/components/RenderLink.vue';
+import { Md5 } from 'ts-md5';
 
 //Poster数据
 const poster = ref({} as Poster)
@@ -27,6 +28,22 @@ function LoadPoster() {
       // 设置页面标题
       setTitle(poster.value.title, '话廊')
     })
+}
+
+// 解析文字
+function ParseText(text: string) {
+  let l = [];
+  let s = "";
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] == '\n') {
+      l.push(s);
+      s = "";
+    } else {
+      s += text[i];
+    }
+  }
+  if (s.length) l.push(s);
+  return l;
 }
 
 // 点赞
@@ -46,6 +63,7 @@ function Stay() {
   http.post("/reaction/stay", { obj: 'poster' + poster.value.id, time: 5 })
 }
 
+// 分享
 function SharePoster() {
   let title = 'BIT101话廊｜' + poster.value.title;
   Share(title, title, window.location.href)
@@ -86,7 +104,7 @@ onActivated(() => {
 
 // 离开页面时清除反馈定时器
 onDeactivated(() => {
-  if(timer){
+  if (timer) {
     clearTimeout(timer);
     timer = null;
   }
@@ -144,9 +162,13 @@ router.afterEach(async (to, from) => {
       </n-grid>
     </n-image-group>
 
-    <p v-for="i in poster.text.split('\n')" style="color:#3E5C6B;margin-top:0;word-wrap:break-word;">
-      <RenderLink :value="i" />
-    </p>
+    <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
+      <br v-if="i == ''" />
+      <div v-else style="color:#3E5C6B;margin-top:0;word-wrap:break-word;white-space:pre-wrap;">
+        <RenderLink :value="i" />
+      </div>
+    </div>
+    <div style="height:11px;"></div>
 
     <n-space>
       <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: '#E3F9FF', textColor: '#FF7E29' }">{{ i
@@ -217,6 +239,6 @@ router.afterEach(async (to, from) => {
         </template>
       </n-button>
     </n-space>
-    
+
   </div>
 </template>
