@@ -62,6 +62,7 @@ declare module 'vue' {
     NTabs: typeof import('naive-ui')['NTabs']
     NTag: typeof import('naive-ui')['NTag']
     NUpload: typeof import('naive-ui')['NUpload']
+    NUploadDragger: typeof import('naive-ui')['NUploadDragger']
     PaperRender: typeof import('./src/components/PaperRender.vue')['default']
     Posters: typeof import('./src/components/Posters.vue')['default']
     RenderLink: typeof import('./src/components/RenderLink.vue')['default']

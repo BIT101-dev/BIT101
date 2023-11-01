@@ -79,7 +79,8 @@ function DeletePoster() {
 // 滚动到actions
 function ScrollToActions() {
   actions.value!.scrollIntoView({
-    behavior: "smooth"
+    behavior: "smooth",
+    block: "center"
   })
 }
 
