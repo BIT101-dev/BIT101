@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-10-29 17:13:09
+ * @LastEditTime: 2023-11-02 00:41:16
  * @Description: 
  * _(:з」∠)_
  */
@@ -20,7 +20,6 @@ export default defineConfig({
       resolvers: [NaiveUiResolver()],
     }),
     VitePWA({
-      strategies: "injectManifest",
       registerType: "autoUpdate",
       workbox: {
         clientsClaim: true,
