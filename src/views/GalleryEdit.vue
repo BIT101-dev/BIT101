@@ -1,18 +1,18 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-10-30 21:49:54
+ * @LastEditTime: 2023-11-01 14:23:38
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import store from '@/utils/store';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { setTitle } from '@/utils/tools';
 import { Image, Poster } from '@/utils/types';
 import { AddRound } from '@vicons/material';
-import { UploadFileInfo } from 'naive-ui';
+import { UploadFileInfo, AutoCompleteInst } from 'naive-ui';
 
 const route = useRoute();
 const router = useRouter();
@@ -65,6 +65,47 @@ function OnImageRemove() {
   })
   image_remove_modal.value = true;
   return promise;
+}
+
+// 设置Tag
+const autoCompleteInstRef = ref<AutoCompleteInst | null>(null)
+watch(autoCompleteInstRef, (value) => {
+  updateTag()
+  if (value) nextTick(() => value.focus())
+})
+
+const rawTag = ref("")
+const rawTagLengthLimit = ref("" as "error" | undefined)
+const tags = ref([] as { label: string, value: string }[])
+watch(rawTag, updateTag)
+
+async function updateTag() {
+  if (rawTag.value.length > 11) {
+    rawTagLengthLimit.value = "error"
+    return ;
+  }
+  rawTagLengthLimit.value = undefined
+  
+  if (!rawTag.value) {
+    // let { data } = await http.get<string[]>(**推荐tag api**)
+    let data = ["水", "活动", "表白", "树洞", "求助", "聊天", "抽象"]
+    tags.value = data.map((tag) => { return { label: tag, value: tag } })
+    return
+  }
+
+  let data = ["水", "活动", "表白", "树洞", "求助", "聊天", "抽象"]
+  // let { data } = await http.get<string[]>(**tag api**)
+
+  let exactMatched = false
+  let matchedTags = data.map((tag) => {
+    if (tag === rawTag.value) exactMatched = true
+    if (tag.indexOf(rawTag.value) !== -1) return { label: tag, value: tag }
+  }).filter(item => item !== undefined) as { label: string, value: string }[]
+
+  // 将用户输入项放在首位 方便直接选择
+  if (!exactMatched) matchedTags.unshift({ label: rawTag.value, value: rawTag.value })
+  tags.value = matchedTags
+  return
 }
 
 // 声明
@@ -181,7 +222,13 @@ onMounted(async () => {
       <n-space vertical size="small">
         <div>标签</div>
         <div style="color:#809BA8;font-size:14px;margin-top:-6px;">请至少添加2个标签，合适的标签将有助于内容推荐。</div>
-        <n-dynamic-tags v-model:value="poster.tags" :input-props="{ 'maxlength': 11, 'show-count': true }" />
+        <n-dynamic-tags v-model:value="poster.tags">
+          <template #input="{ submit, deactivate }">
+            <n-auto-complete ref="autoCompleteInstRef" v-model:value="rawTag" size="small" :clear-after-select="true"
+              :options="tags" @select="submit($event)" @blur="deactivate" placeholder="选一个吧，或者输入你想要的" :get-show="() => true"
+              :status="rawTagLengthLimit"/>
+          </template>
+        </n-dynamic-tags>
       </n-space>
 
       <n-space vertical size="small">
