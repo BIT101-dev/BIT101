@@ -1,0 +1,243 @@
+<script setup lang="ts">
+import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router'
+import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled } from '@vicons/material'
+import { useThemeVars } from 'naive-ui'
+import './ImageModal.css'
+
+const props = defineProps({
+  src: {
+    type: String,
+    required: true,
+  },
+  idx: {
+    type: Number,
+    default: 0
+  },
+  amount: {
+    type: Number,
+    default: 1
+  }
+})
+
+const containerStyle = reactive({
+  background: "transparent",
+  position: "absolute",
+  left: "0px",
+  right: "0px",
+  top: "0px",
+  bottom: "0px",
+  display: "flex",
+  "align-items": "center",
+  "justify-content": "center",
+  overflow: "hidden"
+})
+
+const baseStyle = reactive({
+  "object-fit": "contain",
+  "max-height": "100%",
+  "max-width": "100%",
+})
+
+const button = reactive({
+  position: "absolute",
+  color: useThemeVars().value.iconColor,
+  background: "rgba(255, 255, 255, 0.2)"
+})
+const leftButton = reactive({
+  left: "8px"
+})
+
+const rightButton = reactive({
+  right: "8px"
+})
+
+const fadeIn = (from: "left" | "right") => ({
+  animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.267s cubic-bezier(.22, .61, .36, 1)`
+})
+
+const picStyle = ref<{[k: string]: string}[]>([baseStyle])
+
+const loadError = ref(false)
+
+const emits = defineEmits(["close", "prev", "next"])
+const close = () => emits("close")
+const prev = () => emits("prev")
+const next = () => emits("next")
+
+let touch: TouchList
+let start = false
+let scale = false
+let thisTimeScaled = false
+let scaleCenter: { centerX: number, centerY: number, distance: number }
+const distance = (a: Touch, b: Touch) => Math.sqrt((a.clientX - b.clientX) ** 2 + (a.clientY - b.clientY) ** 2)
+
+const touchStart = (e: TouchEvent) => {
+  touch = e.touches
+  start = true
+  scaleCenter = { centerX: 0, centerY: 0, distance: 0 }
+
+  if (touch.length === 2) {
+    scale = true
+    scaleCenter.centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2
+    scaleCenter.centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2
+    scaleCenter.distance = distance(e.touches[0], e.touches[1])
+  }
+}
+const touchEventHandler = (e: TouchEvent) => {
+  if (e.touches.length === 1) {
+    // 单点触控
+    let clientX = e.touches[0].clientX
+    let clientY = e.touches[0].clientY
+
+    let { clientX: startX , clientY: startY } = touch[0]
+
+    if (!scale) {
+      // 未缩放, 切换
+      switchPic(clientX, startX)
+      return
+    }
+
+    else if (!thisTimeScaled) {
+      // 平移
+      movePic(clientX, clientY, startX, startY)
+    }
+  }
+  
+  if (e.touches.length === 2) {
+    scalePic(e)
+  }
+}
+
+const switchPic = (clientX: number, startX: number) => {
+  if (clientX - startX < -100 && props.idx + 1 !== props.amount && start) {
+    next()
+    start = false
+  }
+  if (clientX - startX > 100 && props.idx !== 0 && start) {
+    prev()
+    start = false
+  }
+}
+
+let offsetX = 0, offsetY = 0
+let displayOffsetX = 0, displayOffsetY = 0
+let reactiveOffsetX = ref("0")
+let reactiveOffsetY = ref("0")
+const movePic = (clientX: number, clientY: number, startX: number, startY: number) => {
+  offsetX = clientX - startX + displayOffsetX
+  offsetY = clientY - startY + displayOffsetY
+
+  reactiveOffsetX.value = offsetX.toString() + "px"
+  reactiveOffsetY.value = offsetY.toString() + "px"
+}
+
+let displayRatio = 100
+let ratio = 100
+let transform = ref("scale(100%)")
+const scalePic = (e: TouchEvent) => {
+  // 这次缩放了 不能平移
+  thisTimeScaled = true
+
+  let nowDistance = distance(e.touches[0], e.touches[1])
+  ratio = nowDistance / scaleCenter.distance
+
+  let vh = window.innerHeight / 100
+  let vw = window.innerWidth / 100
+
+  // 玄学 缩放的时候进行偏移 让缩放后内容在手底下
+  offsetX = (50 * vw - scaleCenter.centerX) * (ratio - 1) + displayOffsetX
+  offsetY = (50 * vh - scaleCenter.centerY) * (ratio - 1) + displayOffsetY
+
+  reactiveOffsetX.value = offsetX.toString() + "px"
+  reactiveOffsetY.value = offsetY.toString() + "px"
+
+  ratio *= displayRatio;
+  ratio = ratio > 100 ? ratio : 100;
+  transform.value = `scale(${ratio}%)`
+}
+
+const touchEndHandler = (e: TouchEvent) => {
+  thisTimeScaled = e.touches.length >= 1
+  if (scale) {
+    displayRatio = ratio
+    displayOffsetX = offsetX
+    displayOffsetY = offsetY
+    
+    if (displayRatio === 100) {
+      scale = false
+      transform.value = ""
+      displayOffsetX = 0, displayOffsetY = 0
+      picStyle.value = [baseStyle, transition]
+      reactiveOffsetX.value = "0px"
+      reactiveOffsetY.value = "0px"
+      setTimeout(() => picStyle.value = [baseStyle], 133)
+    }
+  }
+}
+
+const transition = {
+  transition: "0.133s ease-out"
+}
+
+const transformStyle = reactive({
+  transform,
+  "position": "relative",
+  "top": reactiveOffsetY,
+  "left": reactiveOffsetX
+})
+
+// 监听有没有图片变化
+let prevIdx: number = props.idx
+watch(props, () => {
+  if (prevIdx !== props.idx) {
+    if (props.idx > prevIdx) {
+      picStyle.value = [baseStyle, fadeIn("right")]
+    }
+    if (props.idx < prevIdx) {
+      picStyle.value = [baseStyle, fadeIn("left")]
+    }
+    prevIdx = props.idx
+    setTimeout(() => picStyle.value = [baseStyle], 267)
+  }
+})
+
+onBeforeRouteLeave((to, from) => {
+  close()
+  return false
+})
+</script>
+
+<template>
+  <n-element :style="containerStyle" @click="() => { console.log('modal'); close() }">
+    <div @click.stop style="display: flex; align-items: center; justify-content: center;">
+      <!-- @vue-ignore-error -->
+      <img :src="props.src" :style="[picStyle, transformStyle]" @touchstart="touchStart" @touchmove="touchEventHandler" @touchend="touchEndHandler" onerror="this.style.display = 'none'" @error="() => loadError = true" />
+      <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
+        <template #icon>
+          <n-icon>
+            <BrokenImageFilled style="color: #ffffff"/>
+          </n-icon>
+        </template>
+        <template #extra>
+          <n-button style="color: #ffffff">再试试</n-button>
+        </template>
+      </n-empty>
+    </div>
+    <n-button @click.stop="prev()" circle v-if="props.amount > 1 && props.idx !== 0" :style="[button, leftButton]">
+      <template #icon>
+        <n-icon>
+          <ArrowBackFilled />
+        </n-icon>
+      </template>
+    </n-button>
+    <n-button @click.stop="next()" circle v-if="props.amount > 1 && props.idx + 1 !== props.amount"
+      :style="[button, rightButton]">
+      <template #icon>
+        <n-icon>
+          <ArrowForwardFilled />
+        </n-icon>
+      </template>
+    </n-button>
+  </n-element>
+</template>
