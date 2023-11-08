@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
-import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled } from '@vicons/material'
+import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled, CloseFilled } from '@vicons/material'
 import { useThemeVars } from 'naive-ui'
 import './ImageModal.css'
 
@@ -52,13 +52,27 @@ const rightButton = reactive({
   right: "8px"
 })
 
+const topButton = reactive({
+  top: "8px"
+})
+
 const fadeIn = (from: "left" | "right") => ({
   animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.267s cubic-bezier(.22, .61, .36, 1)`
 })
 
 const picStyle = ref<{[k: string]: string}[]>([baseStyle])
+const swipeStyle = ref<{[k: string]: string}[]>([])
 
+const load = ref(false)
 const loadError = ref(false)
+
+const loadingStyle = ref([{ display: "none" }])
+watch(load, () => {
+  console.log(load.value)
+  if (load.value && !loadError.value) {
+    loadingStyle.value = [{ display: "block" }]
+  }
+})
 
 const emits = defineEmits(["close", "prev", "next"])
 const close = () => emits("close")
@@ -69,13 +83,12 @@ let touch: TouchList
 let start = false
 let scale = false
 let thisTimeScaled = false
-let scaleCenter: { centerX: number, centerY: number, distance: number }
+let scaleCenter: { centerX: number, centerY: number, distance: number } = { centerX: 0, centerY: 0, distance: 0 }
 const distance = (a: Touch, b: Touch) => Math.sqrt((a.clientX - b.clientX) ** 2 + (a.clientY - b.clientY) ** 2)
 
 const touchStart = (e: TouchEvent) => {
   touch = e.touches
   start = true
-  scaleCenter = { centerX: 0, centerY: 0, distance: 0 }
 
   if (touch.length === 2) {
     scale = true
@@ -105,7 +118,9 @@ const touchEventHandler = (e: TouchEvent) => {
   }
   
   if (e.touches.length === 2) {
-    scalePic(e)
+    // 这次缩放了 不能平移
+    thisTimeScaled = true
+    scalePic(distance(e.touches[0], e.touches[1]))
   }
 }
 
@@ -135,12 +150,9 @@ const movePic = (clientX: number, clientY: number, startX: number, startY: numbe
 let displayRatio = 100
 let ratio = 100
 let transform = ref("scale(100%)")
-const scalePic = (e: TouchEvent) => {
-  // 这次缩放了 不能平移
-  thisTimeScaled = true
-
-  let nowDistance = distance(e.touches[0], e.touches[1])
-  ratio = nowDistance / scaleCenter.distance
+const scalePic = (distance: number) => {
+  console.log(distance)
+  ratio = distance / scaleCenter.distance
 
   let vh = window.innerHeight / 100
   let vw = window.innerWidth / 100
@@ -159,10 +171,15 @@ const scalePic = (e: TouchEvent) => {
 
 const touchEndHandler = (e: TouchEvent) => {
   thisTimeScaled = e.touches.length >= 1
+  operationCleanUp()
+}
+
+const operationCleanUp = () => {
   if (scale) {
     displayRatio = ratio
     displayOffsetX = offsetX
     displayOffsetY = offsetY
+    console.log(displayRatio)
     
     if (displayRatio === 100) {
       scale = false
@@ -173,6 +190,20 @@ const touchEndHandler = (e: TouchEvent) => {
       reactiveOffsetY.value = "0px"
       setTimeout(() => picStyle.value = [baseStyle], 133)
     }
+  }
+}
+
+const wheelEventHandler = (e: WheelEvent) => {
+  if (e.deltaY !== 0) {
+    scale = true
+
+    scaleCenter.centerX = e.clientX
+    scaleCenter.centerY = e.clientY
+    scaleCenter.distance = 1
+
+    scalePic(-e.deltaY / 100 + 1)
+
+    operationCleanUp()
   }
 }
 
@@ -192,13 +223,13 @@ let prevIdx: number = props.idx
 watch(props, () => {
   if (prevIdx !== props.idx) {
     if (props.idx > prevIdx) {
-      picStyle.value = [baseStyle, fadeIn("right")]
+      swipeStyle.value = [fadeIn("right")]
     }
     if (props.idx < prevIdx) {
-      picStyle.value = [baseStyle, fadeIn("left")]
+      swipeStyle.value = [fadeIn("left")]
     }
     prevIdx = props.idx
-    setTimeout(() => picStyle.value = [baseStyle], 267)
+    setTimeout(() => swipeStyle.value = [], 267)
   }
 })
 
@@ -209,10 +240,14 @@ onBeforeRouteLeave((to, from) => {
 </script>
 
 <template>
-  <n-element :style="containerStyle" @click="() => { console.log('modal'); close() }">
-    <div @click.stop style="display: flex; align-items: center; justify-content: center;">
+  <n-element :style="containerStyle" @click="() => close()"
+    @touchstart.stop="touchStart" @touchmove.stop="touchEventHandler" @touchend.stop="touchEndHandler"
+    @wheel.stop="wheelEventHandler">
+    <div @click.stop :style="swipeStyle" style="display: flex; align-items: center; justify-content: center;">
       <!-- @vue-ignore-error -->
-      <img :src="props.src" :style="[picStyle, transformStyle]" @touchstart="touchStart" @touchmove="touchEventHandler" @touchend="touchEndHandler" onerror="this.style.display = 'none'" @error="() => loadError = true" />
+      <img :src="props.src" :style="[picStyle, transformStyle, loadingStyle]"
+        @error="() => { loadError = true; load = true }"
+        @load="() => load = true" />
       <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
         <template #icon>
           <n-icon>
@@ -223,6 +258,7 @@ onBeforeRouteLeave((to, from) => {
           <n-button style="color: #ffffff">再试试</n-button>
         </template>
       </n-empty>
+      <n-spin v-if="!load"/>
     </div>
     <n-button @click.stop="prev()" circle v-if="props.amount > 1 && props.idx !== 0" :style="[button, leftButton]">
       <template #icon>
@@ -239,5 +275,12 @@ onBeforeRouteLeave((to, from) => {
         </n-icon>
       </template>
     </n-button>
+    <n-button @click.stop="close()" circle :style="[button, rightButton, topButton]">
+        <template #icon>
+          <n-icon>
+            <CloseFilled />
+          </n-icon>
+        </template>
+      </n-button>
   </n-element>
 </template>

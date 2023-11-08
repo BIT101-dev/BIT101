@@ -16,6 +16,7 @@ import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Comment, User } from '@/utils/types';
 import RenderLink from './RenderLink.vue';
 import { UploadFileInfo, NIcon } from 'naive-ui';
+import ImageViewer from "@/components/ImageViewer/ImageViewer.vue"
 
 
 const props = defineProps(['obj', 'rate'])
@@ -255,9 +256,7 @@ onBeforeRouteLeave((to, from) => {
         <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
           <RenderLink :value="i.text" />
         </div>
-        <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"
-          :src="i.images[0].low_url" lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
-          :img-props="{ 'style': 'width:100%;' }" />
+        <ImageViewer v-if="i.images.length > 0" :images="i.images" />
         <n-space :align="'center'">
           <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]" :disabled="like_loading[i.id]">
             <template #icon>
@@ -362,9 +361,7 @@ onBeforeRouteLeave((to, from) => {
           <div style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">
             <RenderLink :value="sub_comments.parent.text" />
           </div>
-          <n-image v-if="sub_comments.parent.images.length > 0" object-fit="cover"
-            :preview-src="sub_comments.parent.images[0].low_url" :src="sub_comments.parent.images[0].low_url" lazy
-            style="width:84px;height:84px;border-radius:5%;margin-top:4px;" :img-props="{ 'style': 'width:100%;' }" />
+          <ImageViewer v-if="sub_comments.parent.images.length > 0" :images="sub_comments.parent.images" />
         </span>
       </div>
 
@@ -387,9 +384,7 @@ onBeforeRouteLeave((to, from) => {
               </router-link>
               <RenderLink :value="i.text" />
             </div>
-            <n-image v-if="i.images.length > 0" object-fit="cover" :preview-src="i.images[0].low_url"
-              :src="i.images[0].low_url" lazy style="width:84px;height:84px;border-radius:5%;margin-top:4px;"
-              :img-props="{ 'style': 'width:100%;' }" />
+            <ImageViewer v-if="i.images.length > 0" :images="i.images" />
 
             <n-space :align="'center'">
               <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]"
