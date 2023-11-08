@@ -37,6 +37,8 @@ const baseStyle = reactive({
   "object-fit": "contain",
   "max-height": "100%",
   "max-width": "100%",
+  "user-select": "none",
+  "user-drag": "none"
 })
 
 const button = reactive({
@@ -248,9 +250,9 @@ onBeforeRouteLeave((to, from) => {
   <n-element :style="containerStyle" @click="() => close()"
     @touchstart.stop="touchStart" @touchmove.stop="touchEventHandler" @touchend.stop="touchEndHandler"
     @wheel.stop="wheelEventHandler">
-    <div @click.stop :style="swipeStyle" style="display: flex; align-items: center; justify-content: center;">
+    <div @click.stop :style="swipeStyle" style="max-height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center;">
       <!-- @vue-ignore-error -->
-      <img :src="props.src" :style="[picStyle, transformStyle, loadingStyle]"
+      <img :src="props.src" :style="[picStyle, transformStyle, loadingStyle]" draggable="false"
         @error="() => { loadError = true; load = true }"
         @load="() => load = true" />
       <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
