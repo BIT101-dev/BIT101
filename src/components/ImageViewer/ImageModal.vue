@@ -35,8 +35,8 @@ const containerStyle = reactive({
 
 const baseStyle = reactive({
   "object-fit": "contain",
-  "max-height": "100%",
-  "max-width": "100%",
+  "max-height": "100vh",
+  "max-width": "100vw",
   "user-select": "none",
   "user-drag": "none"
 })
@@ -201,6 +201,7 @@ const operationCleanUp = () => {
 }
 
 const wheelEventHandler = (e: WheelEvent) => {
+  e.preventDefault()
   if (e.deltaY !== 0) {
     scale = true
 
@@ -212,6 +213,23 @@ const wheelEventHandler = (e: WheelEvent) => {
 
     operationCleanUp()
   }
+}
+
+let drag: MouseEvent
+const dragStart = (e: MouseEvent) => {
+  start = true
+  drag = e
+}
+
+const dragEventHandler = (e: MouseEvent) => {
+  if (start && scale) {
+    movePic(e.clientX, e.clientY, drag.clientX, drag.clientY)
+  }
+}
+
+const dragEndHandler = () => {
+  start = false
+  operationCleanUp()
 }
 
 const transition = {
@@ -248,6 +266,7 @@ onBeforeRouteLeave((to, from) => {
 
 <template>
   <n-element :style="containerStyle" @click="() => close()"
+    @mousedown.stop="dragStart" @mousemove.stop="dragEventHandler" @mouseup.stop="dragEndHandler"
     @touchstart.stop="touchStart" @touchmove.stop="touchEventHandler" @touchend.stop="touchEndHandler"
     @wheel.stop="wheelEventHandler">
     <div @click.stop :style="swipeStyle" style="max-height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center;">
