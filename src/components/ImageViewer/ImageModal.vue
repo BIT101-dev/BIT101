@@ -68,7 +68,6 @@ const loadError = ref(false)
 
 const loadingStyle = ref([{ display: "none" }])
 watch(load, () => {
-  console.log(load.value)
   if (load.value && !loadError.value) {
     loadingStyle.value = [{ display: "block" }]
   }
@@ -125,13 +124,21 @@ const touchEventHandler = (e: TouchEvent) => {
 }
 
 const switchPic = (clientX: number, startX: number) => {
-  if (clientX - startX < -100 && props.idx + 1 !== props.amount && start) {
+  if (clientX - startX < -50 && props.idx + 1 !== props.amount && start) {
     next()
     start = false
+
+    // 重置加载状态
+    load.value = false
+    loadError.value = false
   }
-  if (clientX - startX > 100 && props.idx !== 0 && start) {
+  if (clientX - startX > 50 && props.idx !== 0 && start) {
     prev()
     start = false
+
+    // 重置加载状态
+    load.value = false
+    loadError.value = false
   }
 }
 
@@ -151,7 +158,6 @@ let displayRatio = 100
 let ratio = 100
 let transform = ref("scale(100%)")
 const scalePic = (distance: number) => {
-  console.log(distance)
   ratio = distance / scaleCenter.distance
 
   let vh = window.innerHeight / 100
@@ -179,7 +185,6 @@ const operationCleanUp = () => {
     displayRatio = ratio
     displayOffsetX = offsetX
     displayOffsetY = offsetY
-    console.log(displayRatio)
     
     if (displayRatio === 100) {
       scale = false
