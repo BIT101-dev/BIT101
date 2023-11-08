@@ -125,8 +125,8 @@ const touchEventHandler = (e: TouchEvent) => {
   }
 }
 
-const switchPic = (clientX: number, startX: number) => {
-  if (clientX - startX < -50 && props.idx + 1 !== props.amount && start) {
+const switchPic = (clientX: number, startX: number, distance: number = 50) => {
+  if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) {
     next()
     start = false
 
@@ -134,7 +134,7 @@ const switchPic = (clientX: number, startX: number) => {
     load.value = false
     loadError.value = false
   }
-  if (clientX - startX > 50 && props.idx !== 0 && start) {
+  if (clientX - startX > distance && props.idx !== 0 && start) {
     prev()
     start = false
 
@@ -224,6 +224,9 @@ const dragStart = (e: MouseEvent) => {
 const dragEventHandler = (e: MouseEvent) => {
   if (start && scale) {
     movePic(e.clientX, e.clientY, drag.clientX, drag.clientY)
+  }
+  if (start && !scale) {
+    switchPic(e.clientX, drag.clientX, 100)
   }
 }
 
