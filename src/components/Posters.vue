@@ -14,6 +14,8 @@ import { FormatTime, OpenLink } from '@/utils/tools';
 import { ErrorOutlined } from '@vicons/material'
 import Avatar from '@/components/Avatar.vue';
 import store from '@/utils/store';
+import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
+import ImageBox from "@/components/ImageViewer/ImageBox.vue";
 
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
@@ -111,24 +113,9 @@ watch(props, () => {
       <br />
     </n-space>
 
-
     <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0,2333) }}</n-ellipsis>
 
-    <n-image-group v-if="i.images.length">
-      <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;">
-        <n-gi v-for="(image, idx) in i.images" v-show="idx <= 2">
-          <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover" :preview-src="image.low_url" :src="image.low_url" lazy
-              style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
-              :img-props="{ 'style': 'width:100%;' }" />
-            <div v-if="idx == 2 && i.images.length > 3"
-              style="width:100%;height:100%;position:absolute;border-radius:5%;background-color:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;pointer-events:none;">
-              <h2 style="color:#fff">+{{ i.images.length - 2 }}</h2>
-            </div>
-          </div>
-        </n-gi>
-      </n-grid>
-    </n-image-group>
+    <ImageViewer v-if="i.images.length" :images="i.images" />
 
     <div style="color:#809BA8;font-size:14px;margin-top: 11px;display:flex;align-items:center;">
       <div @click="OpenLink('/user/' + i.user.id)" @click.stop=""
