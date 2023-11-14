@@ -80,17 +80,17 @@ const tags = ref([] as { label: string, value: string }[])
 watch(rawTag, updateTag)
 
 async function updateTag() {
-  if (rawTag.value.length > 11) {
+  if (rawTag.value !== null && rawTag.value.length > 11) {
     rawTagLengthLimit.value = "error"
     return ;
   }
   rawTagLengthLimit.value = undefined
   
-  if (!rawTag.value) {
+  if (rawTag.value === "" || rawTag.value === null) {
     // let { data } = await http.get<string[]>(**推荐tag api**)
     let data = ["水", "活动", "表白", "树洞", "求助", "聊天", "抽象"]
     tags.value = data.map((tag) => { return { label: tag, value: tag } })
-    return
+    return ;
   }
 
   let data = ["水", "活动", "表白", "树洞", "求助", "聊天", "抽象"]
@@ -225,7 +225,7 @@ onMounted(async () => {
         <n-dynamic-tags v-model:value="poster.tags">
           <template #input="{ submit, deactivate }">
             <n-auto-complete ref="autoCompleteInstRef" v-model:value="rawTag" size="small" :clear-after-select="true"
-              :options="tags" @select="submit($event)" @blur="deactivate" placeholder="选一个吧，或者输入你想要的" :get-show="() => true"
+              :options="tags" @select="($event: any) => { submit($event); deactivate() }" @blur="() => { deactivate(); rawTag = ''; }" placeholder="选一个吧，或者输入你想要的" :get-show="() => true"
               :status="rawTagLengthLimit"/>
           </template>
         </n-dynamic-tags>
