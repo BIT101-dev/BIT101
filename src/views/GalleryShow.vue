@@ -15,6 +15,7 @@ import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
 import RenderLink from '@/components/RenderLink.vue';
 import { Md5 } from 'ts-md5';
+import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
 
 //Poster数据
 const poster = ref({} as Poster)
@@ -150,17 +151,7 @@ router.afterEach(async (to, from) => {
       </n-tag>
     </n-space>
 
-    <n-image-group v-if="poster.images.length" show-toolbar-tooltip>
-      <n-grid x-gap="5" y-gap="5" :cols="3" style="max-width: 424px;margin-bottom: 11px;">
-        <n-gi v-for="image in poster.images">
-          <div @click.stop="" style="height:0;padding-bottom:100%;position:relative;">
-            <n-image object-fit="cover" :preview-src="image.low_url" :src="image.low_url"
-              style="width:100%;height:100%;position:absolute;top:0;left:0;border-radius: 5%;"
-              :img-props="{ 'style': 'width:100%;' }" />
-          </div>
-        </n-gi>
-      </n-grid>
-    </n-image-group>
+    <ImageViewer v-if="poster.images.length" :images="poster.images" />
 
     <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
       <br v-if="i == ''" />

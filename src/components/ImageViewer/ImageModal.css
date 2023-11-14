@@ -1,0 +1,21 @@
+@keyframes fadeInRight {
+  0% {
+    transform: translateX(40%);
+    opacity: 0
+  }
+
+  100% {
+    opacity: 1
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    transform: translateX(-40%);
+    opacity: 0
+  }
+
+  100% {
+    opacity: 1
+  }
+}
