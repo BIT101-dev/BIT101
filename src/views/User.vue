@@ -224,15 +224,15 @@ watch(() => route.params.id, () => {
 
       <n-space>
         <n-tag round :bordered="false" size="small"
-          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : '#FF9A57', textColor: '#FFF' }">
+          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : 'var(--primary)', textColor: '#FFF' }">
           {{ user_info.user.identity.text }}
         </n-tag>
         <n-tag @click="ShowFollowingList" round :bordered="false" size="small"
-          :color="{ color: '#FF9A57', textColor: '#FFF' }" style="cursor:pointer">
+          :color="{ color: 'var(--primary)', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.following_num }}关注
         </n-tag>
         <n-tag @click="ShowFollowerList" round :bordered="false" size="small"
-          :color="{ color: '#FF9A57', textColor: '#FFF' }" style="cursor:pointer">
+          :color="{ color: 'var(--primary)', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.follower_num }}粉丝
         </n-tag>
       </n-space>

@@ -116,13 +116,13 @@ onMounted(() => {
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="Refresh()" circle :bordered="false"
-        style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
+        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: var(--fab-shadow)">
         <template #icon>
           <n-icon :component="RefreshRound" size="24" />
         </template>
       </n-button>
       <n-button @click="OpenLink('/gallery/edit/0')" circle :bordered="false"
-        style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
+        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: var(--fab-shadow)">
         <template #icon>
           <n-icon :component="AddRound" size="24" />
         </template>

@@ -78,8 +78,8 @@ function Search() {
     <n-divider></n-divider>
 
     <n-card v-for="i in papers.list" @click="router.push('/paper/' + i['id'])" hoverable
-      style="margin-bottom:11px;cursor:pointer;background-color: #F0FCFF;">
-      <h3 style="margin:0;color:#0087A8;">{{ i['title'] }}</h3>
+      style="margin-bottom:11px;cursor:pointer;background-color: var(--card-bg-color);">
+      <h3 style="margin:0;color:var(--card-title-color);">{{ i['title'] }}</h3>
       <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
         {{ i['intro'] }}
       </n-ellipsis>

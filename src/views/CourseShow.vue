@@ -201,10 +201,10 @@ onMounted(async () => {
       <n-space>
         授课教师：
         <router-link :to="'/course/?search=' + i['number']" v-for="(i, ind) in course.teachers"
-          style="text-decoration:none;color:#FF8533">
+          style="text-decoration:none;color:var(--primary)">
           {{ i['name'] }}</router-link>
       </n-space>
-      <router-link :to="'/course/?search=' + course.number" style="text-decoration:none;color:#FF8533">查找其他老师讲授的该课程
+      <router-link :to="'/course/?search=' + course.number" style="text-decoration:none;color:var(--primary)">查找其他老师讲授的该课程
       </router-link>
 
       <n-space style="margin-top:4px">

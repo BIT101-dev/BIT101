@@ -243,7 +243,7 @@ onBeforeRouteLeave((to, from) => {
   <!-- 主评论列表 -->
   <template v-for="i in comments.list" :key="i.id">
     <n-divider></n-divider>
-    <div style="display: flex;align-items: top;color:#3E5C6B;">
+    <div style="display: flex;align-items: top;color: var(--gallery-show-text-color);">
       <div>
         <router-link :to="'/user/' + i.user.id">
           <Avatar :user="i.user" :size="36" round />
@@ -298,7 +298,7 @@ onBeforeRouteLeave((to, from) => {
         </n-space>
 
         <!-- 子评论预览 -->
-        <div v-if="i.sub.length != 0" style="background-color:#fafafa;padding:4px;border-radius: 4px;">
+        <div v-if="i.sub.length != 0" style="background-color:var(--comment-preview-bg-color);padding:4px;border-radius: 4px;">
           <div v-for="j in i.sub.slice(0, 3)" :key="j.id" style="margin:4px;">
             {{ j.user.nickname }}：
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
@@ -347,7 +347,7 @@ onBeforeRouteLeave((to, from) => {
   <!-- 子评论模态框 -->
   <n-modal v-model:show="sub_comments.modal" preset="card" style="width:624px">
     <n-scrollbar style="max-height:84vh">
-      <div style="display: flex;align-items: top;color:#3E5C6B;">
+      <div style="display: flex;align-items: top;color:var(--gallery-show-text-color);">
 
         <!-- 子评论的父评论 -->
         <div>
@@ -368,7 +368,7 @@ onBeforeRouteLeave((to, from) => {
       <!-- 子评论列表 -->
       <template v-for="i in sub_comments.list" :key="i.id">
         <n-divider style="margin:11px"></n-divider>
-        <div style="display: flex;align-items: top;color:#3E5C6B;">
+        <div style="display: flex;align-items: top;color:var(--gallery-show-text-color);">
           <div>
             <router-link :to="'/user/' + i.user.id">
               <Avatar :user="i.user" :size="36" round />
@@ -379,7 +379,7 @@ onBeforeRouteLeave((to, from) => {
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;word-wrap:break-word;">
               <router-link v-if="i.reply_user.id != 0" :to="'/user/' + i.reply_user.id"
-                style="text-decoration:none;color:#FF8533">
+                style="text-decoration:none;color:var(--primary)">
                 @{{ i.reply_user.nickname + ' ' }}
               </router-link>
               <RenderLink :value="i.text" />
