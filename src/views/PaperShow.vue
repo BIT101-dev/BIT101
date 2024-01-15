@@ -82,7 +82,7 @@ onMounted(async () => {
       <h2 style="color:#00BCD4">{{ paper.title }}</h2>
     </div>
     <n-divider></n-divider>
-    <div style="display: flex;align-items: center;color:#3E5C6B;">
+    <div style="display: flex;align-items: center;color:var(--paper-render-text-color);">
       <router-link :to="'/user/' + paper.user.id">
         <Avatar :user="paper.user" :size="36" />
       </router-link>
