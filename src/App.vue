@@ -124,7 +124,7 @@ onMounted(() => {
 
 <template>
   <n-config-provider
-    :theme-overrides="isDark === 'dark' ? DarkThemeOverrides : LightThemeOverrides"
+    :theme-overrides="themeOverrides"
     :theme="theme"
   >
     <n-global-style />
@@ -204,7 +204,7 @@ onMounted(() => {
 <style>
 #app,
 body {
-  font-family: Noto Serif SC;
+  font-family: "Noto Serif SC" !important;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
