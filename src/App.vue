@@ -202,9 +202,51 @@ onMounted(() => {
 </template>
 
 <style>
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Light"),
+      local("Noto Serif SC"),
+      local("Noto Serif CJK Light"),
+      local("Noto Serif CJK"),
+      local("Source Han Serif CN Light"),
+      local("Source Han Serif CN");
+  font-display: swap;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Medium"),
+      local("Noto Serif SC"),
+      local("Noto Serif CJK Medium"),
+      local("Noto Serif CJK"),
+      local("Source Han Serif CN Medium"),
+      local("Source Han Serif CN");
+  font-display: swap;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Bold"),
+      local("Noto Serif CJK Bold"),
+      local("Source Han Serif CN Bold");
+  font-display: swap;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Heavy"),
+      local("Noto Serif CJK Heavy"),
+      local("Source Han Serif CN Heavy");
+  font-display: swap;
+  font-weight: 800;
+}
+
 #app,
 body {
-  font-family: "Noto Serif SC" !important;
+  font-family: "Noto Serif", "Noto Serif SC", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;

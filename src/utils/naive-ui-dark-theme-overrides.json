@@ -4,9 +4,11 @@
     "primaryColorHover": "#E88341FF",
     "primaryColorSuppl": "#E88341FF",
     "primaryColorPressed": "#CC5200FF",
-    "fontSize": "16px"
+    "fontSize": "16px",
+    "fontFamily": "Noto Serif, Noto Serif SC, sans-serif",
+    "fontWeight": "500"
   },
   "Badge": {
-    "fontFamily": "inherit"
+    "fontFamily": "Noto Serif, Noto Serif SC, sans-serif"
   }
 }
