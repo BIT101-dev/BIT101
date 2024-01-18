@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import router from '@/router';
 import http from '@/utils/request';
-import { PropType, onMounted, reactive, ref, watch } from 'vue';
+import { PropType, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { Poster } from '@/utils/types';
 import { FormatTime, OpenLink } from '@/utils/tools';
@@ -16,6 +16,7 @@ import Avatar from '@/components/Avatar.vue';
 import store from '@/utils/store';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
 import ImageBox from "@/components/ImageViewer/ImageBox.vue";
+import { loadingBarRef } from '@/router';
 
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
@@ -41,7 +42,10 @@ const posters = reactive({
 
 function LoadPosters() {
   if (posters.loading || posters.end) return;
+  
   posters.loading = true;
+  loadingBarRef.value.start()
+  
   let refresh_time = posters.refresh_time;
   http.get("/posters", {
     params: {
@@ -52,6 +56,7 @@ function LoadPosters() {
       uid: props.value.uid
     }
   }).then(res => {
+    loadingBarRef.value.finish()
     // 状态更新后可能之前的请求还没完成 得加上时间戳保证更新的是最新的
     if (refresh_time != posters.refresh_time) return;
     if (res.data.length == 0) posters.end = true;
@@ -64,7 +69,9 @@ function LoadPosters() {
 }
 
 const load_more_observer = ref(null as any);
-onMounted(() => {
+onMounted(async () => {
+  await nextTick()
+  loadingBarRef.value.start()
   LoadPosters();
 
   // 构建滚动观察器

@@ -10,6 +10,10 @@
   --card-title-color: #0087A8;
 
   --primary: #FF9A57;
+  
+  --loading-bar-color: #00ABD6;
+  --loading-bar-shadow: 0 0 5px var(--loading-bar-color);
+
   --header-bg-color: #FF9A57;
   --course-bg-color: #F0FCFF;
   --card-bg-color: #F0FCFF;
@@ -33,6 +37,10 @@
     --card-title-color: #37B9D9;
 
     --primary: #E88341;
+
+    --loading-bar-color: #3dbcdc;
+    --loading-bar-shadow: 0 0 10px var(--loading-bar-color);
+
     --header-bg-color: #E88341;
     --course-bg-color: #0C191C;
     --card-bg-color: #0C191C;

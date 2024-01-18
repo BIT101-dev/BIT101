@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onActivated, onDeactivated, onMounted, ref } from 'vue';
+import { nextTick, onActivated, onDeactivated, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FormatTime, setTitle, OpenLink, Share } from '@/utils/tools';
 import { MessageOutlined, EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
@@ -16,6 +16,7 @@ import Avatar from '@/components/Avatar.vue';
 import RenderLink from '@/components/RenderLink.vue';
 import { Md5 } from 'ts-md5';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
+import { loadingBarRef } from '@/router';
 
 //Poster数据
 const poster = ref({} as Poster)
@@ -28,6 +29,7 @@ function LoadPoster() {
       poster.value = res.data;
       // 设置页面标题
       setTitle(poster.value.title, '话廊')
+      loadingBarRef.value.finish()
     })
 }
 
@@ -88,8 +90,10 @@ function ScrollToActions() {
 const router = useRouter();
 const route = useRoute();
 let timer = null as any;
-onMounted(() => {
+onMounted(async () => {
   poster.value.id = Number(route.params.id);
+  await nextTick()
+  loadingBarRef.value.start()
   LoadPoster();
 })
 
