@@ -6,10 +6,11 @@
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { GlobalThemeOverrides, NIcon } from 'naive-ui'
-import Theme from '@/utils/naive-ui-theme-overrides.json'
+import { GlobalThemeOverrides, NIcon, darkTheme, lightTheme, useOsTheme } from 'naive-ui'
+import LightThemeOverrides from '@/utils/naive-ui-light-theme-overrides.json';
+import DarkThemeOverrides from '@/utils/naive-ui-dark-theme-overrides.json';
 import { useRouter, useRoute } from 'vue-router';
-import { h, ref, onMounted } from 'vue';
+import { h, ref, onMounted, watch } from 'vue';
 import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined, PagesOutlined, ForumOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
@@ -17,7 +18,14 @@ import { hitokoto,WatchNetwork } from './utils/tools';
 import http from './utils/request';
 import axios from 'axios';
 
-const themeOverrides: GlobalThemeOverrides = Theme;
+import "@/utils/globalThemeVars.css"
+
+const isDark = useOsTheme()
+watch(isDark, () => {
+  theme.value = isDark.value === "dark" ? darkTheme : lightTheme
+})
+const theme = ref<typeof darkTheme | typeof lightTheme>(isDark.value === "dark" ? darkTheme : lightTheme)
+const themeOverrides = ref<GlobalThemeOverrides>(isDark.value === "dark" ? DarkThemeOverrides : LightThemeOverrides);
 const router = useRouter();
 const route = useRoute();
 
@@ -115,10 +123,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider
+    :theme-overrides="themeOverrides"
+    :theme="theme"
+  >
+    <n-global-style />
     <GlobalComponents></GlobalComponents>
     <n-layout>
-      <n-layout-header bordered style="background-color:#FF9A57;">
+      <n-layout-header bordered style="background-color:var(--header-bg-color);">
         <n-space class="container" justify="space-between">
           <div style="height:42px;display: flex;align-items: center;padding: 4px;">
             <n-button @click="drawer_model = true" circle color="#FF9A57" text-color="#FFF"
@@ -190,9 +202,51 @@ onMounted(() => {
 </template>
 
 <style>
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Light"),
+      local("Noto Serif SC"),
+      local("Noto Serif CJK Light"),
+      local("Noto Serif CJK"),
+      local("Source Han Serif CN Light"),
+      local("Source Han Serif CN");
+  font-display: swap;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Medium"),
+      local("Noto Serif SC"),
+      local("Noto Serif CJK Medium"),
+      local("Noto Serif CJK"),
+      local("Source Han Serif CN Medium"),
+      local("Source Han Serif CN");
+  font-display: swap;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Bold"),
+      local("Noto Serif CJK Bold"),
+      local("Source Han Serif CN Bold");
+  font-display: swap;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  src: local("Noto Serif SC Heavy"),
+      local("Noto Serif CJK Heavy"),
+      local("Source Han Serif CN Heavy");
+  font-display: swap;
+  font-weight: 800;
+}
+
 #app,
 body {
-  font-family: Noto Serif SC;
+  font-family: "Noto Serif", "Noto Serif SC", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;

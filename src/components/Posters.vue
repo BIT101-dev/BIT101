@@ -94,7 +94,7 @@ watch(props, () => {
     style="margin-bottom:11px;cursor:pointer;">
 
     <div>
-      <n-ellipsis :line-clamp="2" :tooltip="false" style="color:#0087A8;font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
+      <n-ellipsis :line-clamp="2" :tooltip="false" style="color:var(--gallery-posters-title-color);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
     </div>
 
     <n-space v-if="i.claim.id != 0 || i.public == false">

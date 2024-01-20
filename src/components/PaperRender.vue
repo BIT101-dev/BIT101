@@ -21,12 +21,12 @@ a {
 
 b {
   font-weight: 900;
-  color: #00293D;
+  color: var(--paper-bold-text-color);
 }
 
 .inline-code {
   background-color: #FFF6F0;
-  color: #FF8533;
+  color: var(--primary);
   padding: 3px 4px;
   border-radius: 5px;
   margin: 0 1px;
@@ -38,11 +38,11 @@ b {
   <div v-for="i in paper.data.blocks" style="word-wrap:break-word;">
     <!-- {{i.type}} -->
     <template v-if="i.type == 'paragraph'">
-      <p style="color:#3E5C6B;" v-html="i.data.text"></p>
+      <p style="color:var(--paper-render-text-color);" v-html="i.data.text"></p>
     </template>
 
     <template v-else-if="i.type == 'header'">
-      <component :is="'h' + i.data.level" style="color:#FF8533;margin-bottom: 0px;" v-html="i.data.text"></component>
+      <component :is="'h' + i.data.level" style="color:var(--primary);margin-bottom: 0px;" v-html="i.data.text"></component>
     </template>
 
     <template v-else-if="i.type == 'image'">
@@ -54,10 +54,10 @@ b {
     </template>
 
     <template v-else-if="i.type == 'list'">
-      <ol v-if="i.data.style == 'ordered'" style="color:#3E5C6B">
+      <ol v-if="i.data.style == 'ordered'" style="color:var(--paper-render-text-color)">
         <li v-for="j in i.data.items" v-html="j"></li>
       </ol>
-      <ul v-else style="color:#3E5C6B">
+      <ul v-else style="color:var(--paper-render-text-color)">
         <li v-for="j in i.data.items" v-html="j"></li>
       </ul>
     </template>
@@ -65,10 +65,10 @@ b {
     <template v-else-if="i.type == 'quote'">
       <n-alert :show-icon="false" style="margin-top:11px;margin-bottom:11px;">
         <div style="color:#809BA8;font-size:42px;margin:-11px 0 0 -24px;">“</div>
-        <div v-html="i.data.text" style="color:#3E5C6B;margin:-42px 24px 0 24px;"
+        <div v-html="i.data.text" style="color:var(--paper-render-text-color);margin:-42px 24px 0 24px;"
           :style="'text-align:' + i.data.alignment"></div>
         <div style="color:#809BA8;text-align: right;font-size:42px;margin:-24px -20px -24px 0;">”</div>
-        <div v-html="'——' + i.data.caption" style="color:#3E5C6B;text-align:right;"></div>
+        <div v-html="'——' + i.data.caption" style="color:var(--paper-render-text-color);text-align:right;"></div>
       </n-alert>
     </template>
 

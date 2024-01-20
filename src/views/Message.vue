@@ -173,7 +173,7 @@ onDeactivated(() => {
     <n-divider></n-divider>
 
     <template v-if="messages.type">
-      <n-card v-for="i in messages.list" hoverable style="margin-bottom:11px;background-color: #F0FCFF;">
+      <n-card v-for="i in messages.list" hoverable style="margin-bottom:11px;background-color: var(--card-bg-color);">
         <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
           <MessageContent :message="i"></MessageContent>
         </n-ellipsis>

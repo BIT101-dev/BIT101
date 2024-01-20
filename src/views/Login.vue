@@ -164,7 +164,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
           未登录
         </template>
       </n-alert>
-      <h3 v-if="status" style="text-align:center;color:#3E5C6B;">
+      <h3 v-if="status" style="text-align:center;color:var(--theme-text-color);">
         人不能两次登入同一个账号<br />
         你或许可以到<router-link to="/user/0/" style="color:#FF8533;text-decoration: none;">个人中心</router-link>康康
       </h3>

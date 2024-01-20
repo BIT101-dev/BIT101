@@ -126,13 +126,13 @@ router.afterEach(async (to, from) => {
   <div class="container" v-if="poster.user">
     <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:11px;word-wrap:break-word;">{{ poster.title }}</h2>
 
-    <div style="display:flex;align-items:center;color:#3E5C6B;margin-bottom:11px;">
+    <div style="display:flex;align-items:center;color:var(--gallery-show-text-color);margin-bottom:11px;">
       <div @click="OpenLink('/user/' + poster.user.id)" @click.stop="" style="cursor:pointer;">
         <Avatar :user="poster.user" :size="36" round />
       </div>
       <span style="margin-left:4px;">
-        <div style="font-size: 16px;">{{ poster.user.nickname }}</div>
-        <div style="margin-top: -4px;font-size:14px;">{{ poster.user.identity.text }}</div>
+        <div style="font-size: 16px;color:var(--gallery-show-text-color)">{{ poster.user.nickname }}</div>
+        <div style="margin-top: -4px;font-size:14px;color:var(--gallery-show-text-color)">{{ poster.user.identity.text }}</div>
       </span>
     </div>
 
@@ -155,14 +155,14 @@ router.afterEach(async (to, from) => {
 
     <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
       <br v-if="i == ''" />
-      <div v-else style="color:#3E5C6B;margin-top:0;word-wrap:break-word;white-space:pre-wrap;">
+      <div v-else style="color:var(--gallery-show-text-color);margin-top:0;word-wrap:break-word;white-space:pre-wrap;">
         <RenderLink :value="i" />
       </div>
     </div>
     <div style="height:11px;"></div>
 
     <n-space>
-      <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: '#E3F9FF', textColor: '#FF7E29' }">{{ i
+      <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: 'var(--gallery-tag-bg-color)', textColor: 'var(--primary)' }">{{ i
       }}</n-tag>
     </n-space>
 
@@ -224,7 +224,7 @@ router.afterEach(async (to, from) => {
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="ScrollToActions()" circle :bordered="false"
-        style="background-color:#FFFA;width:50px;height: 50px;box-shadow: 0 0 11px #ccc;">
+        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: 0 0 11px var(--fab-shadow);">
         <template #icon>
           <n-icon :component="MessageOutlined" size="24" />
         </template>

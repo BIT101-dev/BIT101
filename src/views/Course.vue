@@ -81,8 +81,8 @@ function Search() {
     <n-divider></n-divider>
 
     <n-card v-for="i in course.list" @click="router.push('/course/' + i['id'])" hoverable
-      style="margin-bottom:11px;cursor:pointer;background-color: #F0FCFF;">
-      <h3 style="margin:0;color:#0087A8;">{{ i['name'] }}</h3>
+      style="margin-bottom:11px;cursor:pointer;background-color: var(--course-bg-color);">
+      <h3 style="margin:0;color:var(--card-title-color);">{{ i['name'] }}</h3>
       <n-rate :value="i['rate'] / 2" allow-half readonly />
       <div>授课教师：{{ i['teachers_name'] }}</div>
       <div style="color:#809BA8;font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评价 | {{ (i['rate'] /

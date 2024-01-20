@@ -60,6 +60,6 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:#FF8533">{{ i.text }}</a>
+    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--primary)">{{ i.text }}</a>
   </template>
 </template>

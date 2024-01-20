@@ -56,7 +56,7 @@ const billboard = computed(() => {
 h2 {
     margin: 4px 0 4px 0;
     text-decoration-line: underline;
-    text-decoration-color: #FF8533;
+    text-decoration-color: var(--primary);
 }
 </style>
 
@@ -66,7 +66,12 @@ h2 {
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[0]">
                     <n-card @click="OpenLink(i['url'])"
-                        :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
+                        :style="{
+                            'background-color': RandColor(),
+                            'cursor': i['url'] ? 'pointer' : 'auto',
+                            'color': 'rgb(51, 54, 57)'
+                        }"
+                        hoverable
                         content-style="padding:0 11px 11px 11px;">
                         <template #cover>
                             <img :src="i['img']">
@@ -81,7 +86,12 @@ h2 {
             <n-grid x-gap="11" y-gap="11" :cols="1">
                 <n-gi v-for="i in billboard[1]">
                     <n-card @click="OpenLink(i['url'])"
-                        :style="{ 'background-color': RandColor(), 'cursor': i['url'] ? 'pointer' : 'auto' }" hoverable
+                        :style="{
+                            'background-color': RandColor(),
+                            'cursor': i['url'] ? 'pointer' : 'auto',
+                            'color': 'rgb(51, 54, 57)'
+                        }"
+                        hoverable
                         content-style="padding:0 11px 11px 11px;">
                         <template #cover>
                             <img :src="i['img']">
