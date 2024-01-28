@@ -14,10 +14,15 @@ const props = defineProps({
   lazy: {
     type: Boolean,
     default: true
+  },
+  previewDisabled: {
+    type: Boolean,
+    default: false
   }
 })
 
 const showModal = (idx: number) => {
+  if (props.previewDisabled) return;
   position.value = idx
   openModal.value = true
 }

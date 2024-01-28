@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
-import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled, CloseFilled } from '@vicons/material'
+import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled, CloseFilled, SaveFilled, DownloadFilled } from '@vicons/material'
 import { useThemeVars } from 'naive-ui'
 import './ImageModal.css'
 
@@ -58,6 +58,10 @@ const topButton = reactive({
   top: "8px"
 })
 
+const bottomButton = reactive({
+  bottom: "8px"
+})
+
 const fadeIn = (from: "left" | "right") => ({
   animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.267s cubic-bezier(.22, .61, .36, 1)`
 })
@@ -73,12 +77,22 @@ watch(load, () => {
   if (load.value && !loadError.value) {
     loadingStyle.value = [{ display: "block" }]
   }
+  else {
+    loadingStyle.value = [{ display: "none" }]
+  }
 })
 
 const emits = defineEmits(["close", "prev", "next"])
 const close = () => emits("close")
 const prev = () => emits("prev")
 const next = () => emits("next")
+const download = () => {
+  if (load.value && !loadError.value) {
+    const a = document.createElement("a")
+    a.download = props.src
+    a.click()
+  }
+}
 
 let touch: TouchList
 let start = false
@@ -305,11 +319,18 @@ onBeforeRouteLeave((to, from) => {
       </template>
     </n-button>
     <n-button @click.stop="close()" circle :style="[button, rightButton, topButton]">
-        <template #icon>
-          <n-icon>
-            <CloseFilled />
-          </n-icon>
-        </template>
-      </n-button>
+      <template #icon>
+        <n-icon>
+          <CloseFilled />
+        </n-icon>
+      </template>
+    </n-button>
+    <n-button @click.stop="download()" circle :style="[button, rightButton, bottomButton]">
+      <template #icon>
+        <n-icon>
+          <DownloadFilled />
+        </n-icon>
+      </template>
+    </n-button>
   </n-element>
 </template>
