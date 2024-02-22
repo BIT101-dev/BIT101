@@ -1,4 +1,4 @@
-:root {
+html, html[theme="light"] {
   --paper-render-text-color: #3E5C6B;
   --paper-bold-text-color: #00293D;
   --gallery-show-text-color: #3E5C6B;
@@ -20,26 +20,24 @@
   --home-card-bg-color: #B4F0FF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper-render-text-color: #7EA6B9;
-    --paper-bold-text-color: #8DC7E3;
-    --gallery-show-text-color: #7EA6B9;
-    --theme-text-color: #7EA6B9;
+html[theme="dark"] {
+  --paper-render-text-color: #7EA6B9;
+  --paper-bold-text-color: #8DC7E3;
+  --gallery-show-text-color: #7EA6B9;
+  --theme-text-color: #7EA6B9;
 
-    --gallery-posters-title-color: #37B9D9;
-    --gallery-tag-bg-color: #044A5E;
-    --comment-preview-bg-color: #ffffff1a;
-    --card-title-color: #37B9D9;
+  --gallery-posters-title-color: #37B9D9;
+  --gallery-tag-bg-color: #044A5E;
+  --comment-preview-bg-color: #ffffff1a;
+  --card-title-color: #37B9D9;
 
-    --primary: #E88341;
-    --header-bg-color: #E88341;
-    --course-bg-color: #0C191C;
-    --card-bg-color: #0C191C;
+  --primary: #E88341;
+  --header-bg-color: #E88341;
+  --course-bg-color: #0C191C;
+  --card-bg-color: #0C191C;
 
-    --fab-bg-color: #333333AA;
-    --fab-shadow: 0 0 11px #000000;
+  --fab-bg-color: #333333AA;
+  --fab-shadow: 0 0 11px #000000;
 
-    --home-card-bg-color: #B4F0FF;
-  }
+  --home-card-bg-color: #B4F0FF;
 }

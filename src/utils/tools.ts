@@ -180,9 +180,13 @@ export function useDark() {
   window.$theme = ref<Palette | null>(null)
   const webViewTheme = window.$theme
 
-  return computed(() => {
-    return (webViewTheme.value ?? (osTheme.value ?? "light")) as Palette
+  const theme = computed(() => {
+    const current = (webViewTheme.value ?? (osTheme.value ?? "light")) as Palette
+    document.querySelector("html")?.setAttribute("theme", current);
+    return current
   })
+
+  return theme
 }
 
 export {

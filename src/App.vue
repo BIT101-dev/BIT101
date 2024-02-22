@@ -6,7 +6,7 @@
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { GlobalThemeOverrides, NIcon, darkTheme, lightTheme, useOsTheme } from 'naive-ui'
+import { GlobalThemeOverrides, NIcon, darkTheme, lightTheme } from 'naive-ui'
 import LightThemeOverrides from '@/utils/naive-ui-light-theme-overrides.json';
 import DarkThemeOverrides from '@/utils/naive-ui-dark-theme-overrides.json';
 import { useRouter, useRoute } from 'vue-router';
@@ -25,6 +25,7 @@ const theme = computed(() => isDark.value === "dark" ? darkTheme : lightTheme)
 const themeOverrides = computed<GlobalThemeOverrides>(() => 
   isDark.value === "dark" ? DarkThemeOverrides : LightThemeOverrides
 );
+
 const router = useRouter();
 const route = useRoute();
 
