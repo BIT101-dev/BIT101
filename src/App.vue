@@ -10,22 +10,21 @@ import { GlobalThemeOverrides, NIcon, darkTheme, lightTheme, useOsTheme } from '
 import LightThemeOverrides from '@/utils/naive-ui-light-theme-overrides.json';
 import DarkThemeOverrides from '@/utils/naive-ui-dark-theme-overrides.json';
 import { useRouter, useRoute } from 'vue-router';
-import { h, ref, onMounted, watch } from 'vue';
+import { h, ref, onMounted, computed } from 'vue';
 import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined, PagesOutlined, ForumOutlined } from '@vicons/material';
 import { QuestionCircleOutlined } from "@vicons/antd"
 import GlobalComponents from './components/GlobalComponents.vue';
-import { hitokoto,WatchNetwork } from './utils/tools';
+import { hitokoto,WatchNetwork, useDark } from './utils/tools';
 import http from './utils/request';
 import axios from 'axios';
 
 import "@/utils/globalThemeVars.css"
 
-const isDark = useOsTheme()
-watch(isDark, () => {
-  theme.value = isDark.value === "dark" ? darkTheme : lightTheme
-})
-const theme = ref<typeof darkTheme | typeof lightTheme>(isDark.value === "dark" ? darkTheme : lightTheme)
-const themeOverrides = ref<GlobalThemeOverrides>(isDark.value === "dark" ? DarkThemeOverrides : LightThemeOverrides);
+const isDark = useDark()
+const theme = computed(() => isDark.value === "dark" ? darkTheme : lightTheme)
+const themeOverrides = computed<GlobalThemeOverrides>(() => 
+  isDark.value === "dark" ? DarkThemeOverrides : LightThemeOverrides
+);
 const router = useRouter();
 const route = useRoute();
 

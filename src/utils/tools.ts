@@ -5,11 +5,12 @@
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, Ref } from 'vue'
 import http from '@/utils/request';
 import { encryptPassword } from './EncryptPassword';
 import useClipboard from 'vue-clipboard3'
 import router from '@/router';
+import { useOsTheme } from 'naive-ui';
 
 //一言
 const hitokoto = ref("")
@@ -165,6 +166,23 @@ export function setTitle(...titles: string[]): void {
     return
   }
   document.title = `${titles.join(' - ')} | BIT101`
+}
+
+type Palette = "light" | "dark";
+declare global {
+  interface Window {
+    $theme: Ref<Palette | null>
+  }
+}
+
+export function useDark() {
+  const osTheme = useOsTheme()
+  window.$theme = ref<Palette | null>(null)
+  const webViewTheme = window.$theme
+
+  return computed(() => {
+    return (webViewTheme.value ?? (osTheme.value ?? "light")) as Palette
+  })
 }
 
 export {
