@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-11-01 22:50:35
+ * @LastEditTime: 2024-02-26 16:28:18
  * @Description: 用户登陆注册页面
  * _(:з」∠)_
 -->
@@ -158,15 +158,15 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
       <n-alert :show-icon="false" :type="status ? 'success' : 'error'" title="此时此刻">
         <template v-if="status">
           已登录<br />
-          抑或你想<n-button @click="Logout" text type="primary">注销</n-button>
+          抑或你想<n-button @click="Logout" text type="primary" style="margin:4px">注销</n-button>
         </template>
         <template v-else>
           未登录
         </template>
       </n-alert>
-      <h3 v-if="status" style="text-align:center;color:var(--theme-text-color);">
+      <h3 v-if="status" style="text-align:center;">
         人不能两次登入同一个账号<br />
-        你或许可以到<router-link to="/user/0/" style="color:#FF8533;text-decoration: none;">个人中心</router-link>康康
+        你或许可以到<n-a href="/user/0/" style="text-decoration: none;">个人中心</n-a>康康
       </h3>
       <n-tabs v-else class="card-tabs" size="large" animated pane-style="box-sizing: border-box;">
         <n-tab-pane name="登录" style="padding: 4px;">
@@ -185,10 +185,10 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
 
         <n-tab-pane name="注册或重置" style="padding: 4px;">
           <n-alert title="Tips" :show-icon="false" :closable="true" type="info" style="margin-bottom: 11px;">
-            <p style="font-size: 11px;color: grey;">1. BIT101奉行「前端匿名」理念，不会主动公开任何个人信息，你在登录后可以设置供展示的头像、昵称等。
+            <p style="font-size: 11px;color: var(--text-color-3);">1. BIT101奉行「前端匿名」理念，不会主动公开任何个人信息，你在登录后可以设置供展示的头像、昵称等。
             </p>
-            <p style="font-size: 11px;color: grey;">2. 密码将被不可逆加密后传输到服务器。</p>
-            <p style="font-size: 11px;color: grey;">3. 你需要选择统一身份认证或学校邮箱以证明自己的身份。</p>
+            <p style="font-size: 11px;color: var(--text-color-3);">2. 密码将被不可逆加密后传输到服务器。</p>
+            <p style="font-size: 11px;color: var(--text-color-3);">3. 你需要选择统一身份认证或学校邮箱以证明自己的身份。</p>
           </n-alert>
 
           <n-form ref="form_ref" :rules="rules" :model="user">

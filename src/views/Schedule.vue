@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-02-13 21:52:38
- * @LastEditTime: 2024-02-21 21:46:46
+ * @LastEditTime: 2024-02-26 17:17:45
  * @Description: 课程表页面
  * _(:з」∠)_
 -->
@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import http from "@/utils/request";
 import { OpenLink, WebvpnVerify, webvpn } from "@/utils/tools";
-import { reactive, ref, onMounted, watch } from "vue";
+import { reactive, onMounted, watch } from "vue";
 
 const user = reactive({
   sid: "",
@@ -101,9 +101,9 @@ watch(
     <n-alert :show-icon="false" type="info">
       导出的是当前学期的课表（.ics格式），iOS用户直接打开链接即可添加到日历，安卓用户可使用BIT101-Android
       APP（或支持.ics格式的日历软件）,桌面端也有软件可以适配.ics格式。具体请见：
-      <router-link style="color: #888" target="_blank" to="/paper/21">
+      <n-a href="/paper/21">
         使用攻略
-      </router-link>
+      </n-a>
     </n-alert>
   </div>
 </template>

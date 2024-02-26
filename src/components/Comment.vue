@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-17 01:40:53
- * @LastEditTime: 2023-10-31 03:17:56
+ * @LastEditTime: 2024-02-26 16:54:04
  * @Description: 评论模块
  * _(:з」∠)_
 -->
@@ -243,7 +243,7 @@ onBeforeRouteLeave((to, from) => {
   <!-- 主评论列表 -->
   <template v-for="i in comments.list" :key="i.id">
     <n-divider></n-divider>
-    <div style="display: flex;align-items: top;color: var(--gallery-show-text-color);">
+    <div style="display: flex;align-items: top;">
       <div>
         <router-link :to="'/user/' + i.user.id">
           <Avatar :user="i.user" :size="36" round />
@@ -298,11 +298,12 @@ onBeforeRouteLeave((to, from) => {
         </n-space>
 
         <!-- 子评论预览 -->
-        <div v-if="i.sub.length != 0" style="background-color:var(--comment-preview-bg-color);padding:4px;border-radius: 4px;">
+        <div v-if="i.sub.length != 0" style="background-color:#CCCCCC22;padding:4px;border-radius: 4px;">
           <div v-for="j in i.sub.slice(0, 3)" :key="j.id" style="margin:4px;">
             {{ j.user.nickname }}：
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
-            <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ (j.images.length ? '【图片】' : '') + j.text
+            <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ (j.images.length ? '【图片】' : '') +
+              j.text
             }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i.comment_num }}条回复>></n-button>
@@ -310,7 +311,7 @@ onBeforeRouteLeave((to, from) => {
       </span>
     </div>
   </template>
-  <n-divider style="color:#809BA8;font-size:14px;">已加载{{ comments.list.length }}条</n-divider>
+  <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ comments.list.length }}条</n-divider>
   <n-button block @click="LoadComments(props.obj, comments)" :disabled="comments.end" :loading="comments.loading">
     {{ comments.end ? '木有更多了' : '加载更多' }}</n-button>
 
@@ -347,7 +348,7 @@ onBeforeRouteLeave((to, from) => {
   <!-- 子评论模态框 -->
   <n-modal v-model:show="sub_comments.modal" preset="card" style="width:624px">
     <n-scrollbar style="max-height:84vh">
-      <div style="display: flex;align-items: top;color:var(--gallery-show-text-color);">
+      <div style="display: flex;align-items: top;">
 
         <!-- 子评论的父评论 -->
         <div>
@@ -368,7 +369,7 @@ onBeforeRouteLeave((to, from) => {
       <!-- 子评论列表 -->
       <template v-for="i in sub_comments.list" :key="i.id">
         <n-divider style="margin:11px"></n-divider>
-        <div style="display: flex;align-items: top;color:var(--gallery-show-text-color);">
+        <div style="display: flex;align-items: top;">
           <div>
             <router-link :to="'/user/' + i.user.id">
               <Avatar :user="i.user" :size="36" round />
@@ -378,10 +379,9 @@ onBeforeRouteLeave((to, from) => {
             <div style="font-size: 16px;">{{ i.user.nickname }}</div>
             <div style="margin-top: -4px;font-size:14px;">{{ FormatTime(i.create_time) }}</div>
             <div style="white-space: pre-wrap;margin-top:4px;word-wrap:break-word;">
-              <router-link v-if="i.reply_user.id != 0" :to="'/user/' + i.reply_user.id"
-                style="text-decoration:none;color:var(--primary)">
+              <n-a v-if="i.reply_user.id != 0" :href="'/user/' + i.reply_user.id" style="text-decoration:none;">
                 @{{ i.reply_user.nickname + ' ' }}
-              </router-link>
+              </n-a>
               <RenderLink :value="i.text" />
             </div>
             <ImageViewer v-if="i.images.length > 0" :images="i.images" />
@@ -435,7 +435,7 @@ onBeforeRouteLeave((to, from) => {
           </span>
         </div>
       </template>
-      <n-divider style="color:#809BA8;font-size:14px;">已加载{{ sub_comments.list.length }}条</n-divider>
+      <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ sub_comments.list.length }}条</n-divider>
       <n-button block @click="LoadComments('comment' + sub_comments.parent.id, sub_comments)" :disabled="sub_comments.end"
         :loading="sub_comments.loading">
         {{ sub_comments.end ? '木有更多了' : '加载更多' }}</n-button>

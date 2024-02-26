@@ -1,13 +1,13 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 01:26:29
- * @LastEditTime: 2023-10-28 20:17:47
+ * @LastEditTime: 2024-02-26 17:11:18
  * @Description: 主页
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onMounted, ref, reactive } from 'vue';
+import { onMounted, ref } from 'vue';
 import Billboard from '@/components/Billboard.vue';
 import { OpenLink } from '@/utils/tools';
 

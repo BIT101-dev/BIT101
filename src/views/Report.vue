@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-28 12:27:23
- * @LastEditTime: 2023-10-30 18:17:02
+ * @LastEditTime: 2024-02-26 17:17:34
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -70,7 +70,7 @@ onMounted(() => {
 <template>
   <div class="container">
     <n-space vertical size="large">
-      <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:-6px;">{{ report.title }}</h2>
+      <n-h2 style="margin-top:0px;margin-bottom:-6px;">{{ report.title }}</n-h2>
 
       <n-space vertical size="small">
         <div>举报类别</div>

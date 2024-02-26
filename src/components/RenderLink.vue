@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-24 11:52:42
- * @LastEditTime: 2023-10-29 22:57:47
+ * @LastEditTime: 2024-02-26 17:02:09
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -60,6 +60,6 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--primary)">{{ i.text }}</a>
+    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--primary-color)">{{ i.text }}</a>
   </template>
 </template>

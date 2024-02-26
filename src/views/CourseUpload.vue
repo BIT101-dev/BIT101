@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-30 14:05:26
- * @LastEditTime: 2023-10-28 20:17:03
+ * @LastEditTime: 2024-02-26 16:47:53
  * @Description: 
  * _(:з」∠)_
 -->
@@ -106,7 +106,7 @@ onMounted(async () => {
 
 <template>
   <div class="container">
-    <h2 style="color:#00BCD4;">{{ course.name }} 共享资料上传</h2>
+    <h2 style="color:var(--text-color-1);">{{ course.name }} 共享资料上传</h2>
 
     <n-space vertical>
       <n-alert type="info" title="Tips" closable>

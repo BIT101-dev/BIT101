@@ -1,12 +1,11 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-30 11:12:16
- * @LastEditTime: 2024-02-21 21:24:43
+ * @LastEditTime: 2024-02-26 17:09:00
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import store from '@/utils/store';
-import { OpenLink } from '@/utils/tools';
 import { useRouter } from 'vue-router';
 
 const router=useRouter();

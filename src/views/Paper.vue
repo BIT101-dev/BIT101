@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 17:09:21
- * @LastEditTime: 2023-03-23 22:46:10
+ * @LastEditTime: 2024-02-26 17:00:47
  * @Description: 
  * _(:з」∠)_
 -->
@@ -77,16 +77,17 @@ function Search() {
 
     <n-divider></n-divider>
 
-    <n-card v-for="i in papers.list" @click="router.push('/paper/' + i['id'])" hoverable
-      style="margin-bottom:11px;cursor:pointer;background-color: var(--card-bg-color);">
-      <h3 style="margin:0;color:var(--card-title-color);">{{ i['title'] }}</h3>
-      <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
-        {{ i['intro'] }}
-      </n-ellipsis>
-      <div style="color:#809BA8;font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评论 |
-        {{ FormatTime(i['update_time']) }}更新</div>
-    </n-card>
-    <n-divider style="color:#809BA8;font-size:14px;">已加载{{ papers.list.length }}条</n-divider>
+    <router-link v-for="i in papers.list" :to="'/paper/' + i['id']" style="text-decoration: none;">
+      <n-card hoverable style="margin-bottom:11px;cursor:pointer;">
+        <h3 style="margin:0;color:var(--text-color-1);">{{ i['title'] }}</h3>
+        <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
+          {{ i['intro'] }}
+        </n-ellipsis>
+        <div style="color:var(--text-color-3);font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评论 |
+          {{ FormatTime(i['update_time']) }}更新</div>
+      </n-card>
+    </router-link>
+    <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ papers.list.length }}条</n-divider>
     <n-button block @click="LoadPapers()" :disabled="papers.end" :loading="papers.loading">
       {{ papers.end ? '木有更多了' : '加载更多' }}</n-button>
   </div>

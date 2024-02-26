@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-03-30 14:26:39
- * @LastEditTime: 2023-10-31 09:06:12
+ * @LastEditTime: 2024-02-26 17:15:41
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -10,8 +10,8 @@ import http from '@/utils/request';
 import { FormatTime } from '@/utils/tools';
 import { User } from '@/utils/types';
 import { ThumbUpFilled, TextsmsFilled, PersonAddFilled, NotificationsFilled } from '@vicons/material';
-import { PropType, defineComponent, h, onActivated, onDeactivated, onMounted, reactive, ref, render } from 'vue';
-import { RouterLink } from 'vue-router';
+import { NA } from 'naive-ui';
+import { PropType, defineComponent, h, onActivated, onDeactivated, reactive, ref } from 'vue';
 
 interface Message {
   id: number;
@@ -91,7 +91,7 @@ const MessageContent = defineComponent({
     return () => {
       let message = props.message;
       let l = [];
-      let user_link = message.from_user.id != 0 ? h(RouterLink, { to: "/user/" + props.message.from_user.id, style: { textDecoration: 'none', color: '#FF8533' } }, '@' + props.message.from_user.nickname) : '';
+      let user_link = message.from_user.id != 0 ? h(NA, { href: "/user/" + props.message.from_user.id, style: { textDecoration: 'none' } }, '@' + props.message.from_user.nickname) : '';
       let obj_name = GetObjName(message.obj);
       if (messages.type == 'like') {
         l.push(user_link, ' 赞了你的 ', obj_name, ' ', message.text);
@@ -177,13 +177,13 @@ onDeactivated(() => {
         <n-ellipsis :line-clamp="2" :tooltip="false" style="font-size:15px;">
           <MessageContent :message="i"></MessageContent>
         </n-ellipsis>
-        <n-space style="color:#809BA8;font-size:14px;">
+        <n-space style="color:var(--text-color-3);font-size:14px;">
           {{ FormatTime(i.update_time) }}
           <n-button @click="OpenModal(i)" text>详情></n-button>
           <n-button v-if="i.link_obj" @click="router.push(GetUrl(i.link_obj))" text>查看></n-button>
         </n-space>
       </n-card>
-      <n-divider style="color:#809BA8;font-size:14px;">已加载{{ messages.list.length }}条</n-divider>
+      <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ messages.list.length }}条</n-divider>
       <n-button block @click="LoadMessages()" :disabled="messages.end" :loading="messages.loading">
         {{ messages.end ? '木有更多了' : '加载更多' }}</n-button>
     </template>

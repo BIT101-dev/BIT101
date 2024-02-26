@@ -1,14 +1,14 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 17:39:36
- * @LastEditTime: 2023-11-01 14:03:41
+ * @LastEditTime: 2024-02-26 16:37:13
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import { onActivated, onDeactivated, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { FormatTime, setTitle, OpenLink, Share } from '@/utils/tools';
+import { FormatTime, setTitle, OpenLink, Share, opacityColor } from '@/utils/tools';
 import { MessageOutlined, EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
@@ -16,6 +16,9 @@ import Avatar from '@/components/Avatar.vue';
 import RenderLink from '@/components/RenderLink.vue';
 import { Md5 } from 'ts-md5';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
+import { useThemeVars } from 'naive-ui';
+
+const themeVars = useThemeVars();
 
 //Poster数据
 const poster = ref({} as Poster)
@@ -124,15 +127,15 @@ router.afterEach(async (to, from) => {
 
 <template>
   <div class="container" v-if="poster.user">
-    <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:11px;word-wrap:break-word;">{{ poster.title }}</h2>
+    <n-h2 style="margin-top:0px;margin-bottom:11px;word-wrap:break-word;">{{ poster.title }}</n-h2>
 
-    <div style="display:flex;align-items:center;color:var(--gallery-show-text-color);margin-bottom:11px;">
+    <div style="display:flex;align-items:center;margin-bottom:11px;">
       <div @click="OpenLink('/user/' + poster.user.id)" @click.stop="" style="cursor:pointer;">
         <Avatar :user="poster.user" :size="36" round />
       </div>
       <span style="margin-left:4px;">
-        <div style="font-size: 16px;color:var(--gallery-show-text-color)">{{ poster.user.nickname }}</div>
-        <div style="margin-top: -4px;font-size:14px;color:var(--gallery-show-text-color)">{{ poster.user.identity.text }}</div>
+        <div style="font-size: 16px;">{{ poster.user.nickname }}</div>
+        <div style="margin-top: -4px;font-size:14px;">{{ poster.user.identity.text }}</div>
       </span>
     </div>
 
@@ -155,18 +158,18 @@ router.afterEach(async (to, from) => {
 
     <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
       <br v-if="i == ''" />
-      <div v-else style="color:var(--gallery-show-text-color);margin-top:0;word-wrap:break-word;white-space:pre-wrap;">
+      <div v-else style="margin-top:0;word-wrap:break-word;white-space:pre-wrap;">
         <RenderLink :value="i" />
       </div>
     </div>
     <div style="height:11px;"></div>
 
     <n-space>
-      <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: 'var(--gallery-tag-bg-color)', textColor: 'var(--primary)' }">{{ i
+      <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: opacityColor(themeVars.infoColor,0.11), textColor: themeVars.primaryColor }">{{ i
       }}</n-tag>
     </n-space>
 
-    <p style="color:#809BA8;font-size:14px;">
+    <p style="font-size:14px;opacity: 0.66;">
       首次发布于 {{ FormatTime(poster.create_time) }}
       <br />
       最后编辑于 {{ FormatTime(poster.edit_time) }}
@@ -219,12 +222,12 @@ router.afterEach(async (to, from) => {
 
       </n-space>
     </div>
-    <n-divider style="color:#809BA8;font-size:14px;">现有{{ poster.comment_num }}条评论</n-divider>
+    <n-divider style="font-size:14px;">现有{{ poster.comment_num }}条评论</n-divider>
     <Comment :obj='"poster" + poster.id'></Comment>
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="ScrollToActions()" circle :bordered="false"
-        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: 0 0 11px var(--fab-shadow);">
+        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
         <template #icon>
           <n-icon :component="MessageOutlined" size="24" />
         </template>

@@ -1,17 +1,16 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2023-10-29 23:07:30
+ * @LastEditTime: 2024-02-26 17:16:02
  * @Description: 显示文章
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import store from '@/utils/store';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
-import { FormatTime, Clip, setTitle, Share } from '@/utils/tools';
+import { FormatTime, setTitle, Share } from '@/utils/tools';
 import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
 import Comment from '@/components/Comment.vue';
 import Avatar from '@/components/Avatar.vue';
@@ -79,10 +78,10 @@ onMounted(async () => {
 <template>
   <div class="container" v-if="paper.user.id">
     <div style="text-align:center;">
-      <h2 style="color:#00BCD4">{{ paper.title }}</h2>
+      <n-h2>{{ paper.title }}</n-h2>
     </div>
     <n-divider></n-divider>
-    <div style="display: flex;align-items: center;color:var(--paper-render-text-color);">
+    <div style="display: flex;align-items: center;">
       <router-link :to="'/user/' + paper.user.id">
         <Avatar :user="paper.user" :size="36" />
       </router-link>
@@ -114,9 +113,9 @@ onMounted(async () => {
       </n-button>
     </n-space>
 
-    <n-divider style="color:#809BA8;font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
+    <n-divider style="color:var(--text-color-3);font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
     <PaperRender :paper="paper" />
-    <n-divider style="color:#809BA8;font-size:14px;">
+    <n-divider style="color:var(--text-color-3);font-size:14px;">
       <n-button v-if="(paper.public_edit || paper.own)" @click="router.push('/paper/edit/' + paper.id)"
         icon-placement="right" text>
         <template #icon>
@@ -148,7 +147,7 @@ onMounted(async () => {
         {{ paper.like_num }}赞同
       </n-button>
     </n-space>
-    <n-divider style="color:#809BA8;font-size:14px;">现有{{ paper.comment_num }}条评论</n-divider>
+    <n-divider style="color:var(--text-color-3);font-size:14px;">现有{{ paper.comment_num }}条评论</n-divider>
     <Comment :obj='"paper" + paper.id'></Comment>
   </div>
 </template>

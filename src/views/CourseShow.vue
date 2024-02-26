@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import http from '@/utils/request';
-import { Clip, OpenLink, Share, setTitle } from '@/utils/tools';
+import { OpenLink, Share, setTitle } from '@/utils/tools';
 import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
@@ -187,25 +187,25 @@ onMounted(async () => {
 
 <template>
   <div class="container">
-    <h1 style="color:#00BCD4;margin-bottom: 0px;">{{ course.name }}</h1>
+    <h1 style="color:var(--text-color-1);margin-bottom: 0px;">{{ course.name }}</h1>
 
     <span style="display:flex;">
       <n-rate :value="course.rate" allow-half size="large" readonly />
-      <span style="margin-left:4px;color:#999;">{{ course.rate.toFixed(2) }}分（{{ course.comment_num }}人评价）</span>
+      <span style="margin-left:4px;color:var(--text-color-3);">{{ course.rate.toFixed(2) }}分（{{ course.comment_num }}人评价）</span>
     </span>
-    <div style="color:#999;font-size:12px;">课程编号：{{ course.number }}</div>
+    <div style="color:var(--text-color-3);font-size:12px;">课程编号：{{ course.number }}</div>
     <br />
     <n-space vertical>
 
 
       <n-space>
         授课教师：
-        <router-link :to="'/course/?search=' + i['number']" v-for="(i, ind) in course.teachers"
-          style="text-decoration:none;color:var(--primary)">
-          {{ i['name'] }}</router-link>
+        <n-a :href="'/course/?search=' + i['number']" v-for="(i, ind) in course.teachers"
+          style="text-decoration:none;">
+          {{ i['name'] }}</n-a>
       </n-space>
-      <router-link :to="'/course/?search=' + course.number" style="text-decoration:none;color:var(--primary)">查找其他老师讲授的该课程
-      </router-link>
+      <n-a :href="'/course/?search=' + course.number" style="text-decoration:none;">查找其他老师讲授的该课程
+      </n-a>
 
       <n-space style="margin-top:4px">
         <n-button @click="Like" icon-placement="right" color="#fb7299" :ghost="!course.like"
@@ -240,7 +240,7 @@ onMounted(async () => {
         </n-button>
       </n-space>
     </n-space>
-    <n-divider style="color:#809BA8;font-size:14px;">我的评价是</n-divider>
+    <n-divider style="color:var(--text-color-3);font-size:14px;">我的评价是</n-divider>
     <n-alert closable :show-icon="false" style="margin-bottom:11px;">
       <div style="font-size:14px;">评分请尽量客观，以授课质量为主要视角<br />可以谈谈上课风格、给分方式、作业情况、学习感想等</div>
     </n-alert>

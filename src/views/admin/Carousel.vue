@@ -1,14 +1,14 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-28 13:12:52
- * @LastEditTime: 2023-10-28 20:18:22
+ * @LastEditTime: 2024-02-26 17:09:21
  * @Description: 
  * _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import { OpenLink } from '@/utils/tools';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive } from 'vue';
 
 
 const carousel_item_template = {

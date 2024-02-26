@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-31 19:29:48
- * @LastEditTime: 2023-10-28 20:10:59
+ * @LastEditTime: 2024-02-22 21:52:54
  * @Description: 
  * _(:з」∠)_
 -->
@@ -16,8 +16,8 @@ li {
 
 <template>
   <div class="container">
-    <h2 style="color:#00BCD4;text-align:center;">关于 | About</h2>
-    <ol style="color:#6291A8;padding-left: 24px;">
+    <n-h2 style="text-align:center;">关于 | About</n-h2>
+    <ol style="padding-left: 24px;">
       <li>如果有Bug、功能建议或任何问题可以通过issue、交流QQ群
         <n-a href="https://jq.qq.com/?_wv=1027&k=OTttwrzb" target="_blank">726965926</n-a>
         或邮件<n-a href="mailto:admin@bit101.cn">admin@bit101.cn</n-a>提出

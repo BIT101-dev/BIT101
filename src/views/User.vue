@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-01 14:21:01
- * @LastEditTime: 2023-10-30 18:40:47
+ * @LastEditTime: 2024-02-26 16:33:36
  * @Description: 用户中心
  * _(:з」∠)_
 -->
@@ -224,15 +224,15 @@ watch(() => route.params.id, () => {
 
       <n-space>
         <n-tag round :bordered="false" size="small"
-          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : 'var(--primary)', textColor: '#FFF' }">
+          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : 'var(--primary-color)', textColor: '#FFF' }">
           {{ user_info.user.identity.text }}
         </n-tag>
         <n-tag @click="ShowFollowingList" round :bordered="false" size="small"
-          :color="{ color: 'var(--primary)', textColor: '#FFF' }" style="cursor:pointer">
+          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.following_num }}关注
         </n-tag>
         <n-tag @click="ShowFollowerList" round :bordered="false" size="small"
-          :color="{ color: 'var(--primary)', textColor: '#FFF' }" style="cursor:pointer">
+          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }" style="cursor:pointer">
           {{ user_info.follower_num }}粉丝
         </n-tag>
       </n-space>
@@ -240,7 +240,7 @@ watch(() => route.params.id, () => {
       <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space:pre-wrap;margin-top: 14px;">
         {{ user_info.user.motto }}
       </n-alert>
-      <p style="color:#abc;font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
+      <p style="color:var(--text-color-3);font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
       <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
       <n-button v-if="user_info.own" @click="Switch" block style="margin-top: 8px;">{{
         route.params.id == '0' ? '切换到访客视角' : '切换到个人中心' }}</n-button>
@@ -287,7 +287,7 @@ watch(() => route.params.id, () => {
             <n-divider style="margin:0px;"></n-divider>
           </template>
         </n-space>
-        <n-divider style="color:#809BA8;font-size:14px;">已加载{{ follows.list.length }}条</n-divider>
+        <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ follows.list.length }}条</n-divider>
         <n-button block @click="GetFollowList" :disabled="follows.end" :loading="follows.loading">
           {{ follows.end ? '木有更多了' : '加载更多' }}</n-button>
       </n-scrollbar>

@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
- * @LastEditTime: 2023-10-31 09:32:05
+ * @LastEditTime: 2024-02-26 17:20:06
  * @Description: 
  * _(:з」∠)_
 -->
@@ -331,12 +331,11 @@ watch(() => webvpn.cookie, () => {
 
     </n-card>
     <n-alert :show-icon="false" type="info">
-      <p style="color:#aaa;font-size: 0.9em;line-height: 1.2em;margin-top: 0;">Tips:
+      <p style="color:var(--text-color-3);font-size: 0.9em;line-height: 1.2em;margin-top: 0;">Tips:
         学分绩根据筛选出的课程加权计算，估计平均绩使用各科平均分计算得出，4分制GPA采用
-        <a style="color:#888" target="_blank"
-          href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</a>
+        <n-a href="https://jwb.bit.edu.cn/tzgg/0fd24ee94b774575ba1a9a4485f45b6c.htm">官方公式</n-a>
         计算。可手动勾选纳入计算的课程，点击课程名称可查看详情。更多说明请见：
-        <router-link style="color:#888" target="_blank" to="/paper/20">BIT101常见问题解惑</router-link>
+        <n-a href="/paper/20">BIT101常见问题解惑</n-a>
       </p>
       总学分：{{ stat.credit }}（{{ stat.num }}门）<br />
       个人学分绩 | GPA：{{ stat.score }} | {{ stat.gpa }}<br />

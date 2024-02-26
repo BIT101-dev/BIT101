@@ -1,18 +1,18 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2023-10-28 20:25:53
+ * @LastEditTime: 2024-02-26 16:36:44
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
-import router from '@/router';
 import http from '@/utils/request';
-import { Teleport, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { Poster } from '@/utils/types';
-import { FormatTime, OpenLink } from '@/utils/tools';
-import { ErrorOutlined, RefreshRound, AddRound } from '@vicons/material'
+import { onMounted, reactive, ref, watch } from 'vue';
+import { OpenLink, opacityColor } from '@/utils/tools';
+import { RefreshRound, AddRound } from '@vicons/material'
 import Posters, { PostersStatus } from '@/components/Posters.vue';
+import { useThemeVars } from 'naive-ui';
+
+const themeVars = useThemeVars();
 
 const posters = ref({
   mode: 'recommend',
@@ -75,7 +75,7 @@ onMounted(() => {
 <template>
   <div class="container">
     <div style="text-align:center;">
-      <h2 style="color:#00BCD4;margin:4px;">话廊 | Gallery</h2>
+      <n-h2 style="margin:4px;">话廊 | Gallery</n-h2>
       <n-carousel v-if="carousel_data.length" autoplay show-arrow style="border-radius:11px;margin-bottom:4px;">
         <img v-for="i in carousel_data" @click="OpenLink(i['url'])" :src="i['img']"
           style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;"
@@ -116,13 +116,13 @@ onMounted(() => {
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="Refresh()" circle :bordered="false"
-        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: var(--fab-shadow)">
+        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
         <template #icon>
           <n-icon :component="RefreshRound" size="24" />
         </template>
       </n-button>
       <n-button @click="OpenLink('/gallery/edit/0')" circle :bordered="false"
-        style="background-color:var(--fab-bg-color);width:50px;height: 50px;box-shadow: var(--fab-shadow)">
+        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
         <template #icon>
           <n-icon :component="AddRound" size="24" />
         </template>

@@ -1,17 +1,16 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 21:27:17
- * @LastEditTime: 2023-11-01 14:23:38
+ * @LastEditTime: 2024-02-26 16:36:33
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
 import store from '@/utils/store';
-import { onMounted, reactive, ref, watch, nextTick } from 'vue';
+import { onMounted, ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { setTitle } from '@/utils/tools';
-import { Image, Poster } from '@/utils/types';
-import { AddRound } from '@vicons/material';
+import { Poster } from '@/utils/types';
 import { UploadFileInfo, AutoCompleteInst } from 'naive-ui';
 
 const route = useRoute();
@@ -199,8 +198,7 @@ onMounted(async () => {
 <template>
   <div class="container">
     <n-space vertical size="large">
-      <h2 style="color:#00BCD4;margin-top:0px;margin-bottom:-6px;">🌟 {{ poster.id == 0 ? '发布 Poster' : '编辑 Poster ' }}
-      </h2>
+      <n-h2 style="margin-top:0px;margin-bottom:-6px;">🌟 {{ poster.id == 0 ? '发布 Poster' : '编辑 Poster ' }}</n-h2>
 
       <n-space vertical size="small">
         <div>标题</div>
@@ -221,7 +219,7 @@ onMounted(async () => {
 
       <n-space vertical size="small">
         <div>标签</div>
-        <div style="color:#809BA8;font-size:14px;margin-top:-6px;">请至少添加2个标签，合适的标签将有助于内容推荐。</div>
+        <div style="color:var(--text-color-3);font-size:14px;margin-top:-6px;">请至少添加2个标签，合适的标签将有助于内容推荐。</div>
         <n-dynamic-tags v-model:value="poster.tags">
           <template #input="{ submit, deactivate }">
             <n-auto-complete ref="autoCompleteInstRef" v-model:value="rawTag" size="small" :clear-after-select="true"
@@ -233,7 +231,7 @@ onMounted(async () => {
 
       <n-space vertical size="small">
         <div>声明</div>
-        <div style="color:#809BA8;font-size:14px;margin-top:-6px;">请根据社区公约选择合适的声明，否则可能会被制裁。</div>
+        <div style="color:var(--text-color-3);font-size:14px;margin-top:-6px;">请根据社区公约选择合适的声明，否则可能会被制裁。</div>
         <n-select v-model:value="poster.claim.id" :options="claims" />
       </n-space>
 

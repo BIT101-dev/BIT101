@@ -1,21 +1,17 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2023-10-30 20:35:29
+ * @LastEditTime: 2024-02-26 16:39:22
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
-import router from '@/router';
 import http from '@/utils/request';
 import { PropType, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
 import { Poster } from '@/utils/types';
 import { FormatTime, OpenLink } from '@/utils/tools';
 import { ErrorOutlined } from '@vicons/material'
 import Avatar from '@/components/Avatar.vue';
-import store from '@/utils/store';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
-import ImageBox from "@/components/ImageViewer/ImageBox.vue";
 
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
@@ -90,51 +86,51 @@ watch(props, () => {
 </script>
 
 <template>
-  <n-card v-for="i in posters.list" @click="router.push('/gallery/' + i['id'])" hoverable
-    style="margin-bottom:11px;cursor:pointer;">
-
-    <div>
-      <n-ellipsis :line-clamp="2" :tooltip="false" style="color:var(--gallery-posters-title-color);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
-    </div>
-
-    <n-space v-if="i.claim.id != 0 || i.public == false">
-      <n-tag v-if="i.public == false" round :bordered="false" type="warning" size="small">
-        仅自己可见
-        <template #icon>
-          <n-icon :component="ErrorOutlined" />
-        </template>
-      </n-tag>
-      <n-tag v-if="i.claim.id != 0" round :bordered="false" type="error" size="small">
-        {{ i.claim.text }}
-        <template #icon>
-          <n-icon :component="ErrorOutlined" />
-        </template>
-      </n-tag>
-      <br />
-    </n-space>
-
-    <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0,2333) }}</n-ellipsis>
-
-    <ImageViewer v-if="i.images.length" :images="i.images" />
-
-    <div style="color:#809BA8;font-size:14px;margin-top: 11px;display:flex;align-items:center;">
-      <div @click="OpenLink('/user/' + i.user.id)" @click.stop=""
-        style="display:flex;align-items: center;flex:1;">
-        <Avatar :user="i.user" :size="24" round />
-
-        <div style="width:2em;flex:1;">
-          <n-ellipsis style="margin-left:2px;">{{ i.user.nickname }}</n-ellipsis>
-        </div>
+  <router-link v-for="i in posters.list"  :to="'/gallery/' + i['id']" style="text-decoration: none;">
+    <n-card hoverable style="margin-bottom:11px;">
+      <div>
+        <n-ellipsis :line-clamp="2" :tooltip="false" style="color:var(--text-color-1);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
       </div>
-      <span>
-        {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.create_time) }}
-      </span>
-    </div>
-  </n-card>
+
+      <n-space v-if="i.claim.id != 0 || i.public == false">
+        <n-tag v-if="i.public == false" round :bordered="false" type="warning" size="small">
+          仅自己可见
+          <template #icon>
+            <n-icon :component="ErrorOutlined" />
+          </template>
+        </n-tag>
+        <n-tag v-if="i.claim.id != 0" round :bordered="false" type="error" size="small">
+          {{ i.claim.text }}
+          <template #icon>
+            <n-icon :component="ErrorOutlined" />
+          </template>
+        </n-tag>
+        <br />
+      </n-space>
+
+      <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0,2333) }}</n-ellipsis>
+
+      <ImageViewer v-if="i.images.length" :images="i.images" />
+
+      <div style="color:var(--text-color-3);font-size:14px;margin-top: 11px;display:flex;align-items:center;">
+        <div @click="OpenLink('/user/' + i.user.id)" @click.stop=""
+          style="display:flex;align-items: center;flex:1;">
+          <Avatar :user="i.user" :size="24" round />
+
+          <div style="width:2em;flex:1;">
+            <n-ellipsis style="margin-left:2px;">{{ i.user.nickname }}</n-ellipsis>
+          </div>
+        </div>
+        <span style="color:var(--text-color-3);">
+          {{ i.like_num }}赞 | {{ i.comment_num }}评 | {{ FormatTime(i.create_time) }}
+        </span>
+      </div>
+    </n-card>
+  </router-link>
 
   <div ref="load_more_observer"></div>
 
-  <n-divider style="color:#809BA8;font-size:14px;">已加载{{ posters.list.length }}条</n-divider>
+  <n-divider style="font-size:14px;">已加载{{ posters.list.length }}条</n-divider>
 
   <n-button block @click="LoadPosters()" :disabled="posters.end || posters.loading" :loading="posters.loading">
     {{ posters.end ? '去做点更有意思的事情吧' : '加载更多' }}

@@ -1,11 +1,11 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2023-11-01 23:20:50
+ * @LastEditTime: 2024-02-26 17:09:59
  * @Description: 
  * _(:з」∠)_
  */
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { setTitle } from '@/utils/tools'
 
 const router = createRouter({
