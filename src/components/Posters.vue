@@ -113,8 +113,13 @@ watch(props, () => {
       <ImageViewer v-if="i.images.length" :images="i.images" />
 
       <div style="color:var(--text-color-3);font-size:14px;margin-top: 11px;display:flex;align-items:center;">
-        <div @click="OpenLink('/user/' + i.user.id)" @click.stop=""
-          style="display:flex;align-items: center;flex:1;">
+        <div
+          @click="(e: MouseEvent) => {
+            e.preventDefault()
+            OpenLink('/user/' + i.user.id)
+          }"
+          style="display:flex;align-items: center;flex:1;"
+        >
           <Avatar :user="i.user" :size="24" round />
 
           <div style="width:2em;flex:1;">

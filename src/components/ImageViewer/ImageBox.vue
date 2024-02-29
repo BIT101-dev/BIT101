@@ -45,7 +45,10 @@ const picStyle = reactive({
 </script>
 
 <template>
-  <n-element :style="containerStyle" @click="open()">
+  <n-element :style="containerStyle" @click.stop="(e: MouseEvent) => {
+      e.preventDefault()
+      open()
+    }">
     <!-- @vue-ignore-error -->
     <img :src="props.src" :style="picStyle" :lazy="props.lazy" onerror="this.style.display = 'none'"/>
   </n-element>
