@@ -28,6 +28,7 @@ const containerStyle = reactive({
   top: "0px",
   bottom: "0px",
   display: "flex",
+  "align-self": "unset",
   "align-items": "center",
   "justify-content": "center",
   overflow: "hidden"
