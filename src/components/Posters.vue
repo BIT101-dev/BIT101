@@ -12,7 +12,6 @@ import { FormatTime, OpenLink } from '@/utils/tools';
 import { ErrorOutlined } from '@vicons/material'
 import Avatar from '@/components/Avatar.vue';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
-import { useRouter } from "vue-router"
 
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
@@ -84,15 +83,11 @@ watch(props, () => {
   posters.refresh_time++;
   LoadPosters();
 })
-
-const router = useRouter()
-const open = (i: Poster) => {
-  router.push(`/gallery/${i.id}`)
-}
 </script>
 
 <template>
-    <n-card v-for="i in posters.list" hoverable style="margin-bottom:11px;" @click="open(i)">
+  <router-link v-for="i in posters.list"  :to="'/gallery/' + i['id']" style="text-decoration: none;">
+    <n-card hoverable style="margin-bottom:11px;">
       <div>
         <n-ellipsis :line-clamp="2" :tooltip="false" style="color:var(--text-color-1);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
       </div>
@@ -131,6 +126,7 @@ const open = (i: Poster) => {
         </span>
       </div>
     </n-card>
+  </router-link>
 
   <div ref="load_more_observer"></div>
 
