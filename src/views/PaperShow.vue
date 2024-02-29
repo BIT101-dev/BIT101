@@ -11,7 +11,10 @@ import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PaperRender from '@/components/PaperRender.vue';
 import { FormatTime, setTitle, Share } from '@/utils/tools';
-import { EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
+import EditOutlined from '@vicons/material/EditOutlined'
+import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
+import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import ShareOutlined from '@vicons/material/ShareOutlined'
 import Comment from '@/components/Comment.vue';
 import Avatar from '@/components/Avatar.vue';
 import { User } from '@/utils/types';

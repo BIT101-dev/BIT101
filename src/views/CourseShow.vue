@@ -3,7 +3,9 @@ import http from '@/utils/request';
 import { OpenLink, Share, setTitle } from '@/utils/tools';
 import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { ThumbUpOutlined, ThumbUpFilled, ShareOutlined } from '@vicons/material';
+import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
+import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import ShareOutlined from '@vicons/material/ShareOutlined'
 import Comment from '@/components/Comment.vue';
 import router from '@/router';
 

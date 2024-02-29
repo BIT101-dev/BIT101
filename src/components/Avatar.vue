@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import store from '@/utils/store';
-import { VerifiedFilled } from '@vicons/material';
+import VerifiedFilled from '@vicons/material/VerifiedFilled';
 import { User } from '@/utils/types';
 import { PropType } from 'vue';
 

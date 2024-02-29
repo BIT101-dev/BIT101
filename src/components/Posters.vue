@@ -9,7 +9,7 @@ import http from '@/utils/request';
 import { PropType, onMounted, reactive, ref, watch } from 'vue';
 import { Poster } from '@/utils/types';
 import { FormatTime, OpenLink } from '@/utils/tools';
-import { ErrorOutlined } from '@vicons/material'
+import ErrorOutlined from '@vicons/material/ErrorOutlined'
 import Avatar from '@/components/Avatar.vue';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
 

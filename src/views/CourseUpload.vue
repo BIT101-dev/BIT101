@@ -9,7 +9,7 @@
 import { reactive, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { UploadCustomRequestOptions, UploadInst } from 'naive-ui'
-import { UploadRound } from '@vicons/material'
+import UploadRound from '@vicons/material/UploadRound'
 import http from '@/utils/request'
 import { OpenLink, setTitle } from '@/utils/tools'
 import axios from 'axios'

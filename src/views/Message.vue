@@ -9,7 +9,10 @@ import router from '@/router';
 import http from '@/utils/request';
 import { FormatTime } from '@/utils/tools';
 import { User } from '@/utils/types';
-import { ThumbUpFilled, TextsmsFilled, PersonAddFilled, NotificationsFilled } from '@vicons/material';
+import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import TextsmsFilled from '@vicons/material/TextsmsFilled'
+import PersonAddFilled from '@vicons/material/PersonAddFilled'
+import NotificationsFilled from '@vicons/material/NotificationsFilled'
 import { NA } from 'naive-ui';
 import { PropType, defineComponent, h, onActivated, onDeactivated, reactive, ref } from 'vue';
 

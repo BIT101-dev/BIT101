@@ -9,7 +9,14 @@ import http from '@/utils/request';
 import { onActivated, onDeactivated, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FormatTime, setTitle, OpenLink, Share, opacityColor } from '@/utils/tools';
-import { MessageOutlined, EditOutlined, ThumbUpOutlined, ThumbUpFilled, ShareOutlined, ErrorOutlined, DeleteOutlined, FeedbackOutlined } from '@vicons/material';
+import MessageOutlined from '@vicons/material/MessageOutlined'
+import EditOutlined from '@vicons/material/EditOutlined'
+import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
+import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import ShareOutlined from '@vicons/material/ShareOutlined'
+import ErrorOutlined from '@vicons/material/ErrorOutlined'
+import DeleteOutlined from '@vicons/material/DeleteOutlined'
+import FeedbackOutlined from '@vicons/material/FeedbackOutlined'
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';

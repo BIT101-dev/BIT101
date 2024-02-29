@@ -8,10 +8,15 @@
 <script setup lang="ts">
 import http from '@/utils/request';
 import { h, onMounted, reactive, ref } from 'vue';
-import { MessageOutlined } from '@vicons/material';
+import MessageOutlined from '@vicons/material/MessageOutlined'
+import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
+import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import DeleteOutlined from '@vicons/material/DeleteOutlined'
+import ReplyOutlined from '@vicons/material/ReplyOutlined'
+import FeedbackOutlined from '@vicons/material/FeedbackOutlined'
+import MoreVertOutlined from '@vicons/material/MoreVertOutlined'
 import store from '@/utils/store';
 import { FormatTime } from '@/utils/tools';
-import { ThumbUpOutlined, ThumbUpFilled, DeleteOutlined, ReplyOutlined, FeedbackOutlined, MoreVertOutlined } from '@vicons/material';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Comment, User } from '@/utils/types';
 import RenderLink from './RenderLink.vue';
