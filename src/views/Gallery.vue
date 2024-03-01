@@ -8,7 +8,8 @@
 import http from '@/utils/request';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { OpenLink, opacityColor } from '@/utils/tools';
-import { RefreshRound, AddRound } from '@vicons/material'
+import RefreshRound from '@vicons/material/RefreshRound'
+import AddRound from '@vicons/material/AddRound'
 import Posters, { PostersStatus } from '@/components/Posters.vue';
 import { useThemeVars } from 'naive-ui';
 

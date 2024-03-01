@@ -11,7 +11,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { setTitle } from '@/utils/tools';
 import { Claim, Image, Poster } from '@/utils/types';
-import { AddRound } from '@vicons/material';
+import AddRound from '@vicons/material/AddRound';
 import { UploadFileInfo } from 'naive-ui';
 
 const route = useRoute();

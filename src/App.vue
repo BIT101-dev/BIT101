@@ -11,8 +11,23 @@ import LightThemeOverrides from '@/utils/naive-ui-light-theme-overrides.json';
 import DarkThemeOverrides from '@/utils/naive-ui-dark-theme-overrides.json';
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref, onMounted, computed } from 'vue';
-import { MenuRound, HomeOutlined, FingerprintOutlined, PersonOutlined, SchoolOutlined, ArticleOutlined, RefreshOutlined, BookOutlined, ArrowBackOutlined, CalendarMonthOutlined, MailOutlined, MapOutlined, ForumOutlined, BrightnessAutoOutlined, LightModeOutlined, DarkModeOutlined } from '@vicons/material';
-import { QuestionCircleOutlined } from "@vicons/antd"
+import MenuRound from '@vicons/material/MenuRound'
+import HomeOutlined from '@vicons/material/HomeOutlined'
+import FingerprintOutlined from '@vicons/material/FingerprintOutlined'
+import PersonOutlined from '@vicons/material/PersonOutlined'
+import SchoolOutlined from '@vicons/material/SchoolOutlined'
+import ArticleOutlined from '@vicons/material/ArticleOutlined'
+import RefreshOutlined from '@vicons/material/RefreshOutlined'
+import BookOutlined from '@vicons/material/BookOutlined'
+import ArrowBackOutlined from '@vicons/material/ArrowBackOutlined'
+import CalendarMonthOutlined from '@vicons/material/CalendarMonthOutlined'
+import MailOutlined from '@vicons/material/MailOutlined'
+import MapOutlined from '@vicons/material/MapOutlined'
+import ForumOutlined from '@vicons/material/ForumOutlined'
+import BrightnessAutoOutlined from '@vicons/material/BrightnessAutoOutlined'
+import LightModeOutlined from '@vicons/material/LightModeOutlined'
+import DarkModeOutlined from '@vicons/material/DarkModeOutlined'
+import QuestionCircleOutlined from "@vicons/antd/QuestionCircleOutlined"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto, WatchNetwork } from './utils/tools';
 import http from './utils/request';

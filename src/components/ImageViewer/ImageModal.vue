@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
-import { ArrowForwardFilled, ArrowBackFilled, BrokenImageFilled, CloseFilled, SaveFilled, DownloadFilled } from '@vicons/material'
+import ArrowForwardFilled from '@vicons/material/ArrowForwardFilled'
+import ArrowBackFilled from '@vicons/material/ArrowBackFilled'
+import BrokenImageFilled from '@vicons/material/BrokenImageFilled'
+import CloseFilled from '@vicons/material/CloseFilled'
+import DownloadFilled from '@vicons/material/DownloadFilled'
 import { useThemeVars } from 'naive-ui'
 import './ImageModal.css'
 
