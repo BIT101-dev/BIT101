@@ -68,7 +68,7 @@ const bottomButton = reactive({
 })
 
 const fadeIn = (from: "left" | "right") => ({
-  animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.2000s cubic-bezier(.22, .61, .36, 1)`
+  animation: `fadeIn${from === "left" ? "Left" : "Right"} 2000ms cubic-bezier(.22, .61, .36, 1)`
 })
 
 const picStyle = ref<{[k: string]: string}[]>([baseStyle])
