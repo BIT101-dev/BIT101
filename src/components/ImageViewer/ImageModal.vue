@@ -68,7 +68,7 @@ const bottomButton = reactive({
 })
 
 const fadeIn = (from: "left" | "right") => ({
-  animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.267s cubic-bezier(.22, .61, .36, 1)`
+  animation: `fadeIn${from === "left" ? "Left" : "Right"} 0.2000s cubic-bezier(.22, .61, .36, 1)`
 })
 
 const picStyle = ref<{[k: string]: string}[]>([baseStyle])
@@ -276,7 +276,7 @@ watch(props, () => {
       swipeStyle.value = [fadeIn("left")]
     }
     prevIdx = props.idx
-    setTimeout(() => swipeStyle.value = [], 267)
+    setTimeout(() => swipeStyle.value = [], 2000)
   }
 })
 
