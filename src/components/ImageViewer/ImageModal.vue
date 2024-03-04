@@ -68,7 +68,7 @@ const bottomButton = reactive({
 })
 
 const fadeIn = (from: "left" | "right") => ({
-  animation: `fadeIn${from === "left" ? "Left" : "Right"} 2000ms cubic-bezier(.22, .61, .36, 1)`
+  animation: `fadeIn${from === "left" ? "Left" : "Right"} 2000s cubic-bezier(.22, .61, .36, 1)`
 })
 
 const picStyle = ref<{[k: string]: string}[]>([baseStyle])
@@ -146,20 +146,20 @@ const touchEventHandler = (e: TouchEvent) => {
 
 const switchPic = (clientX: number, startX: number, distance: number = 50) => {
   if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) {
-    next()
     start = false
 
     // 重置加载状态
     load.value = false
     loadError.value = false
+    next()
   }
   if (clientX - startX > distance && props.idx !== 0 && start) {
-    prev()
     start = false
 
     // 重置加载状态
     load.value = false
     loadError.value = false
+    prev()
   }
 }
 
