@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, reactive, defineEmits, ref, watch, nextTick } from 'vue';
+import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
 import ArrowForwardFilled from '@vicons/material/ArrowForwardFilled'
 import ArrowBackFilled from '@vicons/material/ArrowBackFilled'
@@ -89,8 +89,8 @@ watch(load, () => {
 
 const emits = defineEmits(["close", "prev", "next"])
 const close = () => emits("close")
-const prev = async () => { await nextTick(); emits("prev") }
-const next = async () => { await nextTick(); emits("next") }
+const prev = () => emits("prev")
+const next = () => emits("next")
 const download = () => {
   if (load.value && !loadError.value) {
     const a = document.createElement("a")
