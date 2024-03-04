@@ -147,7 +147,8 @@ const touchEventHandler = (e: TouchEvent) => {
 const switchPic = (clientX: number, startX: number, distance: number = 50) => {
   if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) {
     start = false
-
+    swipeStyle.value = [fadeIn("right")]
+    setTimeout(() => swipeStyle.value = [], 267)
     // 重置加载状态
     load.value = false
     loadError.value = false
@@ -155,7 +156,8 @@ const switchPic = (clientX: number, startX: number, distance: number = 50) => {
   }
   if (clientX - startX > distance && props.idx !== 0 && start) {
     start = false
-
+    swipeStyle.value = [fadeIn("left")]
+    setTimeout(() => swipeStyle.value = [], 267)
     // 重置加载状态
     load.value = false
     loadError.value = false
@@ -263,21 +265,6 @@ const transformStyle = reactive({
   "position": "relative",
   "top": reactiveOffsetY,
   "left": reactiveOffsetX
-})
-
-// 监听有没有图片变化
-let prevIdx: number = props.idx
-watch(props, () => {
-  if (prevIdx !== props.idx) {
-    if (props.idx > prevIdx) {
-      swipeStyle.value = [fadeIn("right")]
-    }
-    if (props.idx < prevIdx) {
-      swipeStyle.value = [fadeIn("left")]
-    }
-    prevIdx = props.idx
-    setTimeout(() => swipeStyle.value = [], 267)
-  }
 })
 
 onBeforeRouteLeave((to, from) => {
