@@ -161,7 +161,7 @@ router.afterEach(async (to, from) => {
       </n-tag>
     </n-space>
 
-    <ImageViewer v-if="poster.images.length" :images="poster.images" />
+    <ImageViewer v-if="poster.images.length" :images="poster.images" :shrink="false"/>
 
     <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
       <br v-if="i == ''" />
