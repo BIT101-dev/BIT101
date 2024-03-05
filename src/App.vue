@@ -284,7 +284,7 @@ onMounted(() => {
 
 #app,
 body {
-  font-family: "Noto Serif", "Noto Serif SC", sans-serif;
+  font-family: "Noto Serif", "Noto Serif SC", serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
