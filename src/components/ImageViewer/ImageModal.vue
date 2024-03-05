@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, reactive, defineEmits, ref, watch, nextTick, StyleValue, onUpdated } from 'vue';
+import { defineProps, reactive, defineEmits, ref, watch, StyleValue, onUpdated } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
 import ArrowForwardFilled from '@vicons/material/ArrowForwardFilled'
 import ArrowBackFilled from '@vicons/material/ArrowBackFilled'
@@ -86,11 +86,20 @@ const emits = defineEmits(["close", "prev", "next"])
 const close = () => emits("close")
 const prev = () => emits("prev")
 const next = () => emits("next")
-const download = () => {
+const download = async () => {
   if (load.value && !loadError.value) {
-    const a = document.createElement("a")
-    a.download = props.src
-    a.click()
+    window.$message.info("开始下载啦!")
+    try {
+      const pic = await (await fetch(props.src)).blob()
+      const a = document.createElement("a")
+      a.href = window.URL.createObjectURL(pic)
+      a.download = props.src.match(/[^\/]*\.[^\/]{1,6}$/)![0]
+      a.click()
+      window.$message.success("下载成功\\^v^/")
+    }
+    catch {
+      window.$message.error("下载出错qwq")
+    }
   }
 }
 
