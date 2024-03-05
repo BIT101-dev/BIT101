@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, reactive, defineEmits, ref, watch } from 'vue';
+import { defineProps, reactive, defineEmits, ref, watch, nextTick, StyleValue, onUpdated } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router'
 import ArrowForwardFilled from '@vicons/material/ArrowForwardFilled'
 import ArrowBackFilled from '@vicons/material/ArrowBackFilled'
@@ -67,12 +67,7 @@ const bottomButton = reactive({
   bottom: "8px"
 })
 
-const fadeIn = (from: "left" | "right") => ({
-  animation: `fadeIn${from === "left" ? "Left" : "Right"} 267ms cubic-bezier(.22, .61, .36, 1)`
-})
-
 const picStyle = ref<{[k: string]: string}[]>([baseStyle])
-const swipeStyle = ref<{[k: string]: string}[]>([])
 
 const load = ref(false)
 const loadError = ref(false)
@@ -144,25 +139,12 @@ const touchEventHandler = (e: TouchEvent) => {
   }
 }
 
-const switchPic = (clientX: number, startX: number, distance: number = 50) => {
-  if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) {
-    start = false
-    swipeStyle.value = [fadeIn("right")]
-    setTimeout(() => swipeStyle.value = [], 267)
-    // 重置加载状态
-    load.value = false
-    loadError.value = false
+const animation = ref<"slide-fade-left" | "slide-fade-right">("slide-fade-right")
+const switchPic = async (clientX: number, startX: number, distance: number = 50) => {
+  if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) 
     next()
-  }
-  if (clientX - startX > distance && props.idx !== 0 && start) {
-    start = false
-    swipeStyle.value = [fadeIn("left")]
-    setTimeout(() => swipeStyle.value = [], 267)
-    // 重置加载状态
-    load.value = false
-    loadError.value = false
+  if (clientX - startX > distance && props.idx !== 0 && start)
     prev()
-  }
 }
 
 let offsetX = 0, offsetY = 0
@@ -265,35 +247,47 @@ const transformStyle = reactive({
   "position": "relative",
   "top": reactiveOffsetY,
   "left": reactiveOffsetX
-})
+}) as StyleValue
 
 onBeforeRouteLeave((to, from) => {
   close()
   return false
 })
+
+const prevIdx = ref(0)
+onUpdated(() => {
+  // 重置加载状态
+  start = false
+  load.value = false
+  loadError.value = false
+
+  // 动画
+  animation.value = props.idx < prevIdx.value ? "slide-fade-left" : "slide-fade-right"
+  prevIdx.value = props.idx
+})
 </script>
 
 <template>
-  <n-element :style="containerStyle" @click="() => close()"
-    @mousedown.stop="dragStart" @mousemove.stop="dragEventHandler" @mouseup.stop="dragEndHandler"
-    @touchstart.stop="touchStart" @touchmove.stop="touchEventHandler" @touchend.stop="touchEndHandler"
-    @wheel.stop="wheelEventHandler">
-    <div @click.stop :style="swipeStyle" style="max-height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center;">
-      <!-- @vue-ignore-error -->
-      <img :src="props.src" :style="[picStyle, transformStyle, loadingStyle]" draggable="false"
-        @error="() => { loadError = true; load = true }"
-        @load="() => load = true" />
+  <n-element :style="containerStyle" @click="() => close()" @mousedown.stop="dragStart"
+    @mousemove.stop="dragEventHandler" @mouseup.stop="dragEndHandler" @touchstart.stop="touchStart"
+    @touchmove.stop="touchEventHandler" @touchend.stop="touchEndHandler" @wheel.stop="wheelEventHandler">
+    <div style="max-height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center;">
+      <Transition :name="animation" mode="out-in">
+        <!-- @vue-ignore-error -->
+        <img :key="props.idx" :src="props.src" :style="[picStyle, transformStyle, loadingStyle]" draggable="false"
+          @error="() => { loadError = true; load = true }" @load="() => load = true" />
+      </Transition>
       <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
         <template #icon>
           <n-icon>
-            <BrokenImageFilled style="color: #ffffff"/>
+            <BrokenImageFilled style="color: #ffffff" />
           </n-icon>
         </template>
         <template #extra>
           <n-button style="color: #ffffff">再试试</n-button>
         </template>
       </n-empty>
-      <n-spin v-if="!load"/>
+      <n-spin v-if="!load" />
     </div>
     <n-button @click.stop="prev()" circle v-if="props.amount > 1 && props.idx !== 0" :style="[button, leftButton]">
       <template #icon>
