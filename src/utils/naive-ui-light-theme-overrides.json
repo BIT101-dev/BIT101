@@ -4,7 +4,7 @@
     "primaryColorHover": "#FFAB73FF",
     "primaryColorSuppl": "#FFAB73FF",
     "primaryColorPressed": "#EB8E50FF",
-    "fontFamily": "Source Han Serif CN, Source Han Serif SC, Source Han Serif, Noto Serif CJK, Noto Serif SC, Noto Serif, sans-serif",
+    "fontFamily": "Source Han Serif CN, Source Han Serif SC, Source Han Serif, Noto Serif CJK, Noto Serif SC, Noto Serif, serif",
     "fontWeight": "500",
     "fontWeightStrong": "700",
     "borderRadius": "4px",
@@ -19,7 +19,7 @@
     "fontSize": "16px"
   },
   "Badge": {
-    "fontFamily": "Source Han Serif CN, Source Han Serif SC, Source Han Serif, Noto Serif CJK, Noto Serif SC, Noto Serif, sans-serif"
+    "fontFamily": "Source Han Serif CN, Source Han Serif SC, Source Han Serif, Noto Serif CJK, Noto Serif SC, Noto Serif, serif"
   },
   "Divider": {
     "textColor": "#809BA8FF"
