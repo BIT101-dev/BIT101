@@ -284,7 +284,7 @@ onUpdated(() => {
       <Transition :name="animation" mode="out-in">
         <!-- @vue-ignore-error -->
         <img :key="props.idx" :src="props.src" :style="[picStyle, transformStyle, loadingStyle]" draggable="false"
-          @error="() => { loadError = true; load = true }" @load="() => load = true" />
+          @error="() => { loadError = true; load = true }" @load="() => load = true" @click.stop/>
       </Transition>
       <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
         <template #icon>
