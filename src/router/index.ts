@@ -139,9 +139,18 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(({ path }) => {
-  // 此处只是尽快响应，设置大类标题。
-  // 之后各组件可以再覆盖。
+router.beforeEach((to) => {
+  // 兼容旧hash模式的链接
+  // 例：/#/paper/show/15 👉 /paper/15
+  if (to.path === '/' && to.hash.startsWith('#/')) {
+    let path = to.hash.slice('#'.length)
+    path = path.replace(/^\/(paper|course)\/show\//, '/$1/')
+    return path
+  }
+
+
+  // 设置大类标题
+  // 此处只是尽快响应，之后各组件可以再覆盖。
 
   const titleMap: Record<string, string> = {
     home: '主页',
@@ -157,7 +166,7 @@ router.beforeEach(({ path }) => {
     gallery: '话廊',
     report: '举报',
   }
-  const top = path.split('/').filter(piece => piece.length > 0)[0] ?? ''
+  const top = to.path.split('/').filter(piece => piece.length > 0)[0] ?? ''
   const title = titleMap[top] ?? top
   if (title) setTitle(title)
 })
