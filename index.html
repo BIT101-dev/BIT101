@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2024-12-08 00:27:02
+ * @LastEditTime: 2024-12-16 02:38:10
  * @Description: 
  * _(:з」∠)_
 -->
@@ -15,34 +15,40 @@
   <meta name="description" content="BIT101校园社区">
   <link rel="apple-touch-icon" href="/pwa-512x512.png" />
   <meta name="theme-color" content="#FF9A57">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <!--引入思源字体-->
-  <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,500,700,900&display=swap" crossorigin as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,500,700,900&display=swap"
+    crossorigin as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1X4GFL2WXR"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag() {dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-1X4GFL2WXR');
+  // User ID
+  let id = '';
+  let store = window.localStorage.getItem('store');
+  if (store && JSON.parse(store).fake_cookie) {
+    let fakeCookie = JSON.parse(store).fake_cookie;
+    let base64Url = fakeCookie.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    let payload = JSON.parse(jsonPayload);
+    id = payload.id;
+  }
+  gtag('config', 'G-1X4GFL2WXR', {'user_id': id});
+
 </script>
 
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
 </body>
-
-<script>
-  var _hmt = _hmt || [];
-  (function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?de1af35c78c09fec38632742181a9808";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-  })();
-</script>
 
 </html>

@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2023-02-16 23:39:02
+ * @LastEditTime: 2024-12-15 14:45:43
  * @Description: 
  * _(:з」∠)_
  */
@@ -12,12 +12,3 @@ import router from './router/index'
 const app = createApp(App);
 app.use(router)
 app.mount('#app')
-
-router.afterEach((to, from) => {
-    /* 告诉增加一个PV */
-    try {
-        const window_=window as any;
-        window_._hmt = window_._hmt || [];
-        window_._hmt.push(['_trackPageview', '/#'+to.fullPath]);
-    } catch (e) { console.log(e); }
-});
