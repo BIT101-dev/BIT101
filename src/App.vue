@@ -64,58 +64,63 @@ const drawer_model = ref(false);
 function renderIcon(icon: any) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
-const menu_options = [
-  {
+const menu_options = computed(() => {
+  const home = {
     label: "回家",
     key: '/home/',
     icon: renderIcon(HomeOutlined)
-  },
-  {
+  }
+  const login = {
     label: "登录",
     key: '/login/',
     icon: renderIcon(FingerprintOutlined)
-  },
-  {
+  }
+  const my = {
     label: "我的",
     key: '/user/0/',
     icon: renderIcon(PersonOutlined)
-  },
-  {
+  }
+  const gallery = {
     label: "话廊",
     key: '/gallery/',
     icon: renderIcon(ForumOutlined)
-  },
-  {
+  }
+  const paper = {
     label: "文章",
     key: '/paper/',
     icon: renderIcon(ArticleOutlined)
-  },
-  {
+  }
+  const course = {
     label: "课程",
     key: '/course/',
     icon: renderIcon(BookOutlined)
-  },
-  {
+  }
+  const score = {
     label: "成绩",
     key: '/score/',
     icon: renderIcon(SchoolOutlined)
-  },
-  {
+  }
+  const schedule = {
     label: "课表",
     key: '/schedule/',
     icon: renderIcon(CalendarMonthOutlined)
-  },
-  {
+  }
+  const map = {
     label: "地图",
     key: '/map/',
     icon: renderIcon(MapOutlined)
-  },
-  {
+  }
+  const about = {
     label: "关于",
     key: '/about/',
     icon: renderIcon(QuestionCircleOutlined)
   }
-]
+
+  if (store.fake_cookie)
+    return [home, login, my, gallery, paper, course, score, schedule, map, about];
+  return [home, login, my, about];
+});
+
 function MenuHandler(key: string) {
   drawer_model.value = false;
   router.push(key);
