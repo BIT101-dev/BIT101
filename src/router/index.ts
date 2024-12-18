@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2024-02-26 17:09:59
+ * @LastEditTime: 2024-12-18 05:34:00
  * @Description: 
  * _(:з」∠)_
  */
@@ -56,18 +56,20 @@ const router = createRouter({
     {
       path: '/course/:id',
       name: 'course_show',
-      component: () => import('@/views/CourseShow.vue')
+      component: () => import('@/views/CourseShow.vue'),
+      meta: { login: true }
     },
     {
       path: '/course',
       name: 'course',
-      component: () => import('@/views/Course.vue')
+      component: () => import('@/views/Course.vue'),
+      meta: { login: true }
     },
     {
       path: '/course/upload/:id',
       name: 'course_upload',
       component: () => import('@/views/CourseUpload.vue'),
-      meta: { keepAlive: false }
+      meta: { keepAlive: false , login: true }
     },
     {
       path: '/about/',
