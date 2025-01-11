@@ -121,8 +121,91 @@ function OpenModal(message: Message) {
   modal.show = true;
 }
 
-onActivated(() => {
+const canActivatePush = ref(false);
+const pushActivate = ref(false);
+const pushSubscription = ref<PushSubscription | null>(null)
+const pushLoading = ref(false);
+
+const handlePushSwitchChange = async () => {
+  if (!pushActivate.value) {
+    pushLoading.value = true;
+    try {
+      await enablePush();
+      pushActivate.value = true;
+    }
+    finally {
+      pushLoading.value = false;
+    }
+  }
+  else {
+    pushLoading.value = true;
+    try {
+      await disablePush();
+      pushActivate.value = false;
+    }
+    finally {
+      pushLoading.value = false;
+    }
+  }
+}
+
+const enablePush = async () => {
+  if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+    await Notification.requestPermission();
+  }
+  if (Notification.permission === 'granted') {
+    try {
+      const swReg = await navigator.serviceWorker.ready;
+      const req = await http.get<{ about: string, publicKey: string }>('/messages/push');
+      if (!req.data.publicKey) throw new Error('No publicKey');
+      const { about, publicKey } = req.data;
+      const sub = await swReg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: publicKey
+      })
+      await http.post('/messages/push', sub);
+    }
+    catch {
+      pushActivate.value = false;
+    }
+  }
+}
+
+const disablePush = async () => {
+  try {
+    pushLoading.value = true;
+    if (pushSubscription.value) {
+      await pushSubscription.value.unsubscribe();
+      await http.delete('/messages/push', { data: pushSubscription.value });
+      pushActivate.value = false;
+    }
+  }
+  catch {
+    pushActivate.value = true;
+  }
+  pushLoading.value = false;
+}
+
+
+const ifCanActivate = async () => {
+  if (!('serviceWorker' in navigator)) canActivatePush.value = false;
+  if (!('Notification' in window)) canActivatePush.value = false;
+  if (!('PushManager' in window)) canActivatePush.value = false;
+  try {
+    const swReg = await navigator.serviceWorker.ready
+    canActivatePush.value = true;
+    const sub = await swReg.pushManager.getSubscription()
+    if (sub) pushSubscription.value = sub
+    pushActivate.value = !!sub;
+  }
+  catch {
+    canActivatePush.value = false;
+  }
+}
+
+onActivated(async () => {
   LoadUnreadNums();
+  await ifCanActivate();
 })
 
 onDeactivated(() => {
@@ -189,7 +272,21 @@ onDeactivated(() => {
       <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ messages.list.length }}条</n-divider>
       <n-button block @click="LoadMessages()" :disabled="messages.end" :loading="messages.loading">
         {{ messages.end ? '木有更多了' : '加载更多' }}</n-button>
+      <n-divider></n-divider>
     </template>
+
+    <n-card v-if="canActivatePush" title="消息推送设置">
+      <n-form-item label="推送服务" label-placement="left">
+        <n-switch :value="pushActivate" @update:value="handlePushSwitchChange"
+          :loading="pushLoading" :rubber-band="false" />
+      </n-form-item>
+      <n-collapse-transition :show="!pushActivate">
+        <n-alert :show-icon="false">
+          开启推送服务后，浏览器将会进行消息推送, 包括点赞、评论、关注、系统通知等. 
+          但是由于网络问题, 推送可能比较玄乎 ()
+        </n-alert>
+      </n-collapse-transition>
+    </n-card>
 
     <n-modal v-model:show="modal.show" preset="card" title="消息详情" style="width:600px;">
       <n-scrollbar style="max-height:75vh;">

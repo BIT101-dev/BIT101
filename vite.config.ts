@@ -20,10 +20,29 @@ export default defineConfig({
       resolvers: [NaiveUiResolver()],
     }),
     VitePWA({
+      srcDir: 'src',
+      filename: 'sw.ts',
       registerType: "autoUpdate",
+      strategies: 'injectManifest',
       workbox: {
         clientsClaim: true,
         skipWaiting: true,
+        runtimeCaching: [
+          {
+            urlPattern: /(.*?)\.(js|css|ts)/, // js /css /ts静态资源缓存
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'js-css-cache',
+            },
+          },
+          {
+            urlPattern: /(.*?)\.(png|jpe?g|svg|gif|bmp|psd|tiff|tga|eps|avif)/, // 图片缓存
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+            },
+          },
+        ],
       },
       includeAssets: ["favicon.ico", "pwa-192x192.png", "pwa-512x512.png"],
       manifest: {
@@ -61,6 +80,10 @@ export default defineConfig({
           },
         ],
       },
+      devOptions: {
+        enabled: true,
+        type: "module"
+      }
     }),
   ],
   resolve: {
