@@ -36,6 +36,7 @@ function CustomSorter(k: string) {
 const columns = [
   {
     type: 'selection',
+    fixed: 'left',
   },
   {
     title: '课程名称',
@@ -271,6 +272,25 @@ function GetList() {
     })
 }
 
+function downloadCsv() {
+  let csv = "课程名称,成绩,平均分,学分,本人成绩在班级中占,本人成绩在专业中占,开课学期,课程性质\n";
+  for (let i of data.value) {
+    csv += `${i["课程名称"]},${i["成绩"]},${i["平均分"]},${i["学分"]},${i["本人成绩在班级中占"]},${i["本人成绩在专业中占"]},${i["开课学期"]},${i["课程性质"]}\n`;
+  }
+  
+  // 为了 Excel 的兼容性，添加 BOM
+  const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  let blob = new Blob([bom, csv], { type: 'text/csv;charset=utf-8' });
+  let url = window.URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  a.href = url;
+  a.download = `Scores-BIT101-${(new Date()).toISOString()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
 // 课程详情
 const modal = ref(false);
 const modal_data = ref({});
@@ -327,6 +347,9 @@ watch(() => webvpn.cookie, () => {
         <n-select v-model:value="course_type.filter" multiple :options="course_type.list" max-tag-count="responsive" />
         <n-select v-model:value="course_time.filter" multiple :options="course_time.list" max-tag-count="responsive" />
         <n-button block @click="Filter" :disabled="loading">筛选</n-button>
+        <n-button block @click="downloadCsv" :disabled="loading || stat.num == 0">
+          导出为 CSV
+        </n-button>
       </n-space>
 
     </n-card>
