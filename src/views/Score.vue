@@ -332,7 +332,7 @@ watch(() => webvpn.cookie, () => {
       <n-space vertical v-if="!webvpn.cookie">
         <n-input :input-props="{id:'sid'}" v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input :input-props="{id:'password'}" v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
-        <n-button id="submit" @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
+        <n-button id="submit" attr-type="submit" @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
           block :loading="webvpn.loading">
           查询
         </n-button>
