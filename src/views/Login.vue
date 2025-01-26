@@ -172,14 +172,14 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
         <n-tab-pane name="登录" style="padding: 4px;">
           <n-form ref="form_ref" :rules="rules" :model="user">
             <n-form-item path="sid" label="学号">
-              <n-input v-model:value="user.sid" placeholder="请输入BIT学号" />
+              <n-input v-model:value="user.sid" placeholder="请输入BIT学号" autofocus />
             </n-form-item>
 
             <n-form-item path="password" label="密码">
               <n-input v-model:value="user.password" type="password" show-password-on="click" placeholder="告诉我你的秘密" />
             </n-form-item>
 
-            <n-button @click="Login" block>登录</n-button>
+            <n-button @click="Login" block attr-type="submit">登录</n-button>
           </n-form>
         </n-tab-pane>
 
