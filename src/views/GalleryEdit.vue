@@ -9,15 +9,19 @@ import http from '@/utils/request';
 import store from '@/utils/store';
 import { onMounted, ref, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { setTitle } from '@/utils/tools';
+import { FormatTime, setTitle } from '@/utils/tools';
 import { Poster } from '@/utils/types';
-import { UploadFileInfo, AutoCompleteInst } from 'naive-ui';
+import { UploadFileInfo, AutoCompleteInst, useMessage } from 'naive-ui';
 
 const route = useRoute();
 const router = useRouter();
 
 // 初始化数据
-const poster = ref({
+const draftData = store.last_draft[router.currentRoute.value.fullPath]
+console.debug(draftData)
+const hasDraft = ref(!!draftData);
+
+const BLANK_POSTER = JSON.stringify({
   id: 0,
   title: "",
   text: "",
@@ -30,6 +34,7 @@ const poster = ref({
   plugins: "[]",
   tags: [] as string[],
 } as Poster)
+const poster = ref<Poster>(JSON.parse(BLANK_POSTER))
 
 // 上传图片
 const fileList = ref<UploadFileInfo[]>([])
@@ -183,12 +188,61 @@ function PostPoster() {
   }
 }
 
+const draft_use_modal = ref(false);
+let ConfirmUseDraft: (res: boolean) => void;
+const OnUseDraft = () => {
+  draft_use_modal.value = true;
+  return new Promise<null>((resolve, reject) => {
+    ConfirmUseDraft = (res) => {
+      draft_use_modal.value = false;
+      if (res) resolve(null)
+      else reject()
+    }
+  })
+}
+
+const original = ref<Poster>();
+const DiscardDraft = () => {
+  delete store.last_draft[router.currentRoute.value.fullPath];
+  if (original.value) {
+    poster.value = original.value;
+  }
+  else {
+    poster.value = JSON.parse(BLANK_POSTER);
+  }
+  hasDraft.value = false;
+}
+
+watch(() => poster.value, () => {
+  if (JSON.stringify(poster.value) === BLANK_POSTER) return;
+  store.last_draft[router.currentRoute.value.fullPath] = {
+    poster: JSON.stringify(poster.value),
+    timestamp: Date.now()
+  };
+}, { deep: true })
+
 onMounted(async () => {
   LoadClaims();
   poster.value.id = Number(route.params.id);
-  if (poster.value.id == 0) setTitle('发布', '话廊');
+  const isCreate = poster.value.id == 0;
+  if (isCreate) {
+    setTitle('发布', '话廊');
+    if (hasDraft.value) {
+      poster.value = JSON.parse(draftData.poster);
+      window.$message.success(`已恢复 ${FormatTime(draftData.timestamp / 1000)} 的草稿 OvO`);
+    }
+  }
   else {
     await LoadPoster()
+    if (hasDraft.value) {
+      original.value = poster.value;
+      OnUseDraft().then(() => {
+        poster.value = JSON.parse(draftData.poster);
+        window.$message.success(`已恢复 ${FormatTime(draftData.timestamp / 1000)} 的草稿 OvO`);
+      }).catch(() => {
+        DiscardDraft()
+      })
+    }
     setTitle('编辑', '话廊');
   }
 })
@@ -223,8 +277,9 @@ onMounted(async () => {
         <n-dynamic-tags v-model:value="poster.tags">
           <template #input="{ submit, deactivate }">
             <n-auto-complete ref="autoCompleteInstRef" v-model:value="rawTag" size="small" :clear-after-select="true"
-              :options="tags" @select="($event: any) => { submit($event); deactivate() }" @blur="() => { deactivate(); rawTag = ''; }" placeholder="选一个吧，或者输入你想要的" :get-show="() => true"
-              :status="rawTagLengthLimit"/>
+              :options="tags" @select="($event: any) => { submit($event); deactivate() }"
+              @blur="() => { deactivate(); rawTag = ''; }" placeholder="选一个吧，或者输入你想要的" :get-show="() => true"
+              :status="rawTagLengthLimit" />
           </template>
         </n-dynamic-tags>
       </n-space>
@@ -241,6 +296,12 @@ onMounted(async () => {
       </n-space>
 
       <n-space justify="end">
+        <n-popconfirm v-if="hasDraft" @positive-click="DiscardDraft" positive-text="确定" negative-text="取消">
+          <template #trigger>
+            <n-button type="error" ghost>放弃草稿</n-button>
+          </template>
+          汝真放弃耶？放弃的草稿无法恢复。
+        </n-popconfirm>
         <n-popconfirm @positive-click="PostPoster" :show-icon="false" positive-text="确定" negative-text="取消">
           <template #trigger>
             <n-button :disabled="posting" type="success" ghost>张贴Poster</n-button>
@@ -253,5 +314,10 @@ onMounted(async () => {
 
     <n-modal v-model:show="image_remove_modal" preset="dialog" title="汝真断舍离耶？" positive-text="确认" negative-text="取消"
       @positive-click="ConfirmRemoveImage(true)" @negative-click="ConfirmRemoveImage(false)" />
+
+    <n-modal v-if="hasDraft" v-model:show="draft_use_modal" preset="dialog" title="要对 话廊 使用 草稿 吗？"
+      :content="`现有一个 ${FormatTime(draftData.timestamp / 1000)} 的草稿, 放弃后无法恢复`"
+      positive-text="使用" negative-text="放弃" :closable="false" :closeOnEsc="false" :maskClosable="false"
+      @positive-click="ConfirmUseDraft(true)" @negative-click="ConfirmUseDraft(false)" />
   </div>
 </template>
