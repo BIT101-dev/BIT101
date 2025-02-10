@@ -24,7 +24,7 @@ interface Node {
 const list = reactive([] as Node[])
 
 onMounted(() => {
-  let rex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+  let rex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=\p{Unified_Ideograph}]*)/gu;
   let matches = [...props.value.matchAll(rex)];
   let last = 0;
   if (matches.length) {
@@ -60,6 +60,6 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--primary-color)">{{ i.text }}</a>
+    <n-a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--n-text-color)">{{ i.text }}</n-a>
   </template>
 </template>
