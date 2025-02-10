@@ -7,7 +7,7 @@
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { h, onMounted, reactive, ref } from 'vue';
+import { h, onMounted, reactive, ref, watch } from 'vue';
 import MessageOutlined from '@vicons/material/MessageOutlined'
 import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
 import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
@@ -28,7 +28,13 @@ const props = defineProps(['obj', 'rate'])
 const router = useRouter()
 
 // 发表评论
-const now_comment = reactive({
+const now_comment = reactive<{
+  text: string,
+  anonymous: boolean,
+  loading: boolean,
+  with_image: boolean,
+  rate: number,
+}>(store.last_draft[router.currentRoute.value.fullPath] ?? {
   text: '',
   anonymous: false,
   loading: false,
@@ -206,6 +212,19 @@ const dropdown = reactive({
       }
     },
   ]
+})
+
+watch(now_comment, () => {
+  if (now_comment.text.length) {
+    store.last_draft[router.currentRoute.value.fullPath] = {
+      ...now_comment,
+      timestamp: Date.now()
+    }
+  }
+  else {
+    if (store.last_draft[router.currentRoute.value.fullPath])
+      delete store.last_draft[router.currentRoute.value.fullPath];
+  }
 })
 
 onMounted(() => {
