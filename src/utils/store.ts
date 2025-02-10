@@ -23,6 +23,7 @@ const store = reactive({
   fake_cookie: x.fake_cookie || "",
   theme_mode: x.theme_mode || "auto", // auto dark light
   grade_query: x.grade_query || {},
+  last_draft: x.last_draft ?? {},
 })
 
 watch(store, () => {
