@@ -179,13 +179,13 @@ function OpenSubComments(parent: any) {
 
 const like_loading = reactive({} as Map<number, boolean>);
 function Like(i: Comment) {
-  like_loading[i.id] = true;
+  like_loading.set(i.id, true);
   http.post("/reaction/like", { 'obj': 'comment' + i.id })
     .then(res => {
       i.like = res.data.like;
       i.like_num = res.data.like_num;
-      like_loading[i.id] = false;
-    }).catch(() => { like_loading[i.id] = false; })
+      like_loading.set(i.id, false);
+    }).catch(() => { like_loading.set(i.id, false); })
 }
 
 function Delete(i: any, cmts: any) {
@@ -282,7 +282,8 @@ onBeforeRouteLeave((to, from) => {
         </div>
         <ImageViewer v-if="i.images.length > 0" :images="i.images" />
         <n-space :align="'center'">
-          <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]" :disabled="like_loading[i.id]">
+          <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading.get(i.id)"
+            :disabled="like_loading.get(i.id)">
             <template #icon>
               <n-icon>
                 <ThumbUpFilled v-if="i.like" />
@@ -328,7 +329,7 @@ onBeforeRouteLeave((to, from) => {
             <span v-if="j.reply_user.id != 0">@{{ j.reply_user.nickname + ' ' }}</span>
             <span style="white-space:pre-wrap;margin-top:4px;word-wrap:break-word;">{{ (j.images.length ? '【图片】' : '') +
               j.text
-            }}</span>
+              }}</span>
           </div>
           <n-button @click="OpenSubComments(i)" text>共{{ i.comment_num }}条回复>></n-button>
         </div>
@@ -411,8 +412,8 @@ onBeforeRouteLeave((to, from) => {
             <ImageViewer v-if="i.images.length > 0" :images="i.images" />
 
             <n-space :align="'center'">
-              <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading[i.id]"
-                :disabled="like_loading[i.id]">
+              <n-button @click="Like(i)" color="#fb7299" text :loading="like_loading.get(i.id)"
+                :disabled="like_loading.get(i.id)">
                 <template #icon>
                   <n-icon>
                     <ThumbUpFilled v-if="i.like" />
@@ -460,8 +461,8 @@ onBeforeRouteLeave((to, from) => {
         </div>
       </template>
       <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ sub_comments.list.length }}条</n-divider>
-      <n-button block @click="LoadComments('comment' + sub_comments.parent.id, sub_comments)" :disabled="sub_comments.end"
-        :loading="sub_comments.loading">
+      <n-button block @click="LoadComments('comment' + sub_comments.parent.id, sub_comments)"
+        :disabled="sub_comments.end" :loading="sub_comments.loading">
         {{ sub_comments.end ? '木有更多了' : '加载更多' }}</n-button>
     </n-scrollbar>
   </n-modal>
