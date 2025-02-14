@@ -4,7 +4,8 @@
     <n-input v-model:value="now_comment.text" type="textarea" placeholder="沉默不是金" :autosize="{ minRows: 3 }"
       maxlength="23333" show-count />
     <n-upload v-show="now_comment.with_image" list-type="image-card" :action="upload_url" :headers="upload_head"
-      @finish="UploadHandler" @error="UploadErrorHandler" v-model:file-list="fileList" :on-remove="OnImageRemove" />
+      @finish="UploadHandler" @error="UploadErrorHandler" v-model:file-list="fileList"
+      :on-remove="OnImageRemove" :max="1"/>
     <n-space justify="space-between">
       <n-space>
         <n-button @click="now_comment.with_image = !now_comment.with_image" ghost>
