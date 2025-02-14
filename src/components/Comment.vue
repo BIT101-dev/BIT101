@@ -86,6 +86,7 @@ onMounted(() => {
 
 onBeforeRouteLeave((to, from) => {
   sub_comment_list.modal = false;
+  sub_comment.modal = false;
 })
 </script>
 
