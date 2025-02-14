@@ -79,3 +79,12 @@ export interface Comment {
     sub: Comment[]; // 子评论
 }
 
+export interface CommentList {
+    order: 'default' | 'old',
+    page: number,
+    end: boolean,
+    list: Comment[],
+    loading: boolean,
+    parent?: Comment,
+    modal?: boolean
+}
