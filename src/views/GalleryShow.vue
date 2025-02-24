@@ -161,7 +161,7 @@ router.afterEach(async (to, from) => {
       </n-tag>
     </n-space>
 
-    <ImageViewer v-if="poster.images.length" :images="poster.images" :shrink="false"/>
+    <ImageViewer v-if="poster.images.length" :images="poster.images" :shrink="false" />
 
     <div v-for="i in ParseText(poster.text)" :key="Md5.hashStr(i)" style="margin-bottom:4px;">
       <br v-if="i == ''" />
@@ -172,8 +172,9 @@ router.afterEach(async (to, from) => {
     <div style="height:11px;"></div>
 
     <n-space>
-      <n-tag v-for="i in poster.tags" :bordered="false" round :color="{ color: opacityColor(themeVars.infoColor,0.11), textColor: themeVars.primaryColor }">{{ i
-      }}</n-tag>
+      <n-tag v-for="i in poster.tags" :bordered="false" round
+        :color="{ color: opacityColor(themeVars.infoColor, 0.11), textColor: themeVars.primaryColor }">{{ i
+        }}</n-tag>
     </n-space>
 
     <p style="font-size:14px;opacity: 0.66;">
@@ -183,8 +184,8 @@ router.afterEach(async (to, from) => {
     </p>
 
     <!-- 套一个div 让ref类型是HTMLDivElement 方便用ScrollIntoView() -->
-    <div ref="actions">
-      <n-space style="margin-top:4px" justify="end">
+    <div ref="actions" style="display: flex; justify-content: space-between;">
+      <n-space style="margin-top:4px">
         <n-button v-if="poster.own" @click="OpenLink('/gallery/edit/' + poster.id)" icon-placement="right" ghost>
           <template #icon>
             <n-icon :component="EditOutlined" />
@@ -195,7 +196,7 @@ router.afterEach(async (to, from) => {
         <n-popconfirm v-if="poster.own" @positive-click="DeletePoster" :show-icon="false" positive-text="确定"
           negative-text="取消">
           <template #trigger>
-            <n-button icon-placement="right" ghost>
+            <n-button icon-placement="right" ghost type="error">
               <template #icon>
                 <n-icon :component="DeleteOutlined" />
               </template>
@@ -204,14 +205,14 @@ router.afterEach(async (to, from) => {
           </template>
           汝真断舍离耶？
         </n-popconfirm>
-
         <n-button @click="router.push('/report/poster' + poster.id)" icon-placement="right" ghost>
           <template #icon>
             <n-icon :component="FeedbackOutlined" />
           </template>
           举报
         </n-button>
-
+      </n-space>
+      <n-space style="margin-top:4px">
         <n-button @click="SharePoster" icon-placement="right" ghost>
           <template #icon>
             <n-icon :component="ShareOutlined" />
@@ -234,7 +235,7 @@ router.afterEach(async (to, from) => {
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="ScrollToActions()" circle :bordered="false"
-        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
+        :style="{ 'background-color': opacityColor(themeVars.baseColor, 0.84), 'width': '50px', 'height': '50px', 'box-shadow': '0 0 11px #CCCCCCCC' }">
         <template #icon>
           <n-icon :component="MessageOutlined" size="24" />
         </template>
