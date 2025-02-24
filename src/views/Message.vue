@@ -97,9 +97,9 @@ const MessageContent = defineComponent({
       let user_link = message.from_user.id != 0 ? h(NA, { href: "/user/" + props.message.from_user.id, style: { textDecoration: 'none' } }, '@' + props.message.from_user.nickname) : '';
       let obj_name = GetObjName(message.obj);
       if (messages.type == 'like') {
-        l.push(user_link, ' 赞了你的 ', obj_name, ' ', message.text);
+        l.push(user_link, ' 赞了你 (插眼) 的 ', obj_name, ' ', message.text);
       } else if (messages.type == 'comment') {
-        l.push(user_link, ' 评论了你的 ', obj_name, ' ', message.text);
+        l.push(user_link, ' 评论了你 (插眼) 的 ', obj_name, ' ', message.text);
       } else if (messages.type == 'follow') {
         l.push(user_link, ' 关注了你');
       } else if (messages.type == 'system') {
