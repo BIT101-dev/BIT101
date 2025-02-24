@@ -20,6 +20,8 @@ export interface Poster {
     images: Image[]; // 图片列表
     like: boolean; // 是否赞过
     like_num: number; // 点赞数量
+    bookmark: number;
+    bookmark_num: number;
     own: boolean; // 是否可编辑
     plugins: string; // 插件列表
     public: boolean; // 是否公开

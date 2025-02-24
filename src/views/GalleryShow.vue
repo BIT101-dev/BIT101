@@ -6,7 +6,7 @@
 -->
 <script setup lang="ts">
 import http from '@/utils/request';
-import { onActivated, onDeactivated, onMounted, ref } from 'vue';
+import { computed, onActivated, onDeactivated, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FormatTime, setTitle, OpenLink, Share, opacityColor } from '@/utils/tools';
 import MessageOutlined from '@vicons/material/MessageOutlined'
@@ -17,6 +17,8 @@ import ShareOutlined from '@vicons/material/ShareOutlined'
 import ErrorOutlined from '@vicons/material/ErrorOutlined'
 import DeleteOutlined from '@vicons/material/DeleteOutlined'
 import FeedbackOutlined from '@vicons/material/FeedbackOutlined'
+import NotificationsActiveOutlined from '@vicons/material/NotificationsActiveOutlined'
+import NotificationsActiveFilled from '@vicons/material/NotificationsActiveFilled'
 import Comment from '@/components/Comment.vue';
 import { Poster } from '@/utils/types';
 import Avatar from '@/components/Avatar.vue';
@@ -93,6 +95,30 @@ function ScrollToActions() {
     behavior: "smooth",
     block: "center"
   })
+}
+
+const isBookmarked = computed(() => {
+  return poster.value.own || poster.value.bookmark > 0
+})
+
+const toggleBookmark = async (bookmarkType = 1) => {
+  if (isBookmarked.value) {
+    await http.delete("/bookmarks", {
+      data: { obj: 'poster' + poster.value.id }
+    })
+    poster.value.bookmark_num--;
+    poster.value.bookmark = -1;
+  } else {
+    const bookmark = {
+      obj: 'poster' + poster.value.id,
+      type: bookmarkType,
+      content: poster.value.title
+    }
+
+    await http.put("/bookmarks", bookmark)
+    poster.value.bookmark_num++;
+    poster.value.bookmark = bookmarkType;
+  }
 }
 
 const router = useRouter();
@@ -184,8 +210,8 @@ router.afterEach(async (to, from) => {
     </p>
 
     <!-- 套一个div 让ref类型是HTMLDivElement 方便用ScrollIntoView() -->
-    <div ref="actions" style="display: flex; justify-content: space-between;">
-      <n-space style="margin-top:4px">
+    <div ref="actions" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px">
+      <n-space style="margin-top:4px" justify="start">
         <n-button v-if="poster.own" @click="OpenLink('/gallery/edit/' + poster.id)" icon-placement="right" ghost>
           <template #icon>
             <n-icon :component="EditOutlined" />
@@ -212,13 +238,30 @@ router.afterEach(async (to, from) => {
           举报
         </n-button>
       </n-space>
-      <n-space style="margin-top:4px">
+      <n-space style="margin-top:4px" justify="end">
         <n-button @click="SharePoster" icon-placement="right" ghost>
           <template #icon>
             <n-icon :component="ShareOutlined" />
           </template>
           分享
         </n-button>
+
+        <n-popover :disabled="!poster.own">
+          你可是作者哦QaQ
+          <template #trigger>
+            <n-popconfirm @positive-click="() => toggleBookmark()" positive-text="确定" negative-text="取消" :show-icon="false">
+              <template #trigger>
+                <n-button icon-placement="right" :ghost="!isBookmarked" :disabled="poster.own" color="#fb7299">
+                  <template #icon>
+                    <n-icon :component="isBookmarked ? NotificationsActiveFilled : NotificationsActiveOutlined" />
+                  </template>
+                  {{ poster.bookmark_num }}插眼
+                </n-button>
+              </template>
+              {{ `将${isBookmarked ? "不" : ""}会收到后续更新的通知` }}
+            </n-popconfirm>
+          </template>
+        </n-popover>
 
         <n-button @click="Like" icon-placement="right" color="#fb7299" :ghost="!poster.like" :loading="like_loading"
           :disabled="like_loading">
