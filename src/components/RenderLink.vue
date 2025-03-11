@@ -60,6 +60,9 @@ onMounted(() => {
     <template v-if="i.type == 'text'">
       {{ i.text }}
     </template>
-    <n-a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'" style="text-decoration:none;color:var(--n-text-color)">{{ i.text }}</n-a>
+    <n-a v-if="i.type == 'link'" :href="i.text" :target="i.text.startsWith(origin)?'_self':'_blank'"
+      style="text-decoration:none;color:var(--n-text-color);overflow-wrap: anywhere;">
+      {{ i.text }}
+    </n-a>
   </template>
 </template>
