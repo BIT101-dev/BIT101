@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 01:19:14
- * @LastEditTime: 2024-12-18 05:34:00
+ * @LastEditTime: 2025-03-19 02:35:21
  * @Description: 
  * _(:з」∠)_
  */
@@ -69,7 +69,7 @@ const router = createRouter({
       path: '/course/upload/:id',
       name: 'course_upload',
       component: () => import('@/views/CourseUpload.vue'),
-      meta: { keepAlive: false , login: true }
+      meta: { keepAlive: false, login: true }
     },
     {
       path: '/about/',
@@ -87,6 +87,12 @@ const router = createRouter({
       path: '/message/',
       name: 'message',
       component: () => import('@/views/Message.vue'),
+      meta: { login: true }
+    },
+    {
+      path: '/subscription/',
+      name: 'subscription',
+      component: () => import('@/views/Subscription.vue'),
       meta: { login: true }
     },
     {

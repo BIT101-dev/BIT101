@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2024-02-26 16:36:44
+ * @LastEditTime: 2025-03-18 18:47:40
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -45,7 +45,7 @@ function Load(force = false) {
   } else if (gallery.tab == "search") {
     posters.value.mode = "search";
     posters.value.search = gallery.search;
-    posters.value.order = gallery.order == "new" ? "new" : "similar";
+    posters.value.order = gallery.order == "like" ? "like" : gallery.order == "comment" ? "comment" : "new";
   }
   if (force) posters.value = JSON.parse(JSON.stringify(posters.value));
 }
@@ -100,13 +100,15 @@ onMounted(() => {
       <n-tab-pane name="search" tab="搜索">
         <n-space vertical style="margin-bottom: 11px;">
           <n-input-group>
-            <n-input v-model:value="gallery.search" @keyup.enter="Refresh" placeholder="请输入关键词" maxlength="42"></n-input>
+            <n-input v-model:value="gallery.search" @keyup.enter="Refresh" placeholder="请输入关键词"
+              maxlength="42"></n-input>
             <n-button type="default" @click="Refresh">搜索</n-button>
           </n-input-group>
           <n-radio-group v-model:value="gallery.order">
             <n-space>
               <n-radio value="new">最新</n-radio>
-              <n-radio value="similar">相关</n-radio>
+              <n-radio value="like">最多赞</n-radio>
+              <n-radio value="comment">最多评</n-radio>
             </n-space>
           </n-radio-group>
         </n-space>
@@ -117,13 +119,13 @@ onMounted(() => {
 
     <n-space vertical style="position:fixed;right:4.2vw;bottom:4.2vw;">
       <n-button @click="Refresh()" circle :bordered="false"
-        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
+        :style="{ 'background-color': opacityColor(themeVars.baseColor, 0.84), 'width': '50px', 'height': '50px', 'box-shadow': '0 0 11px #CCCCCCCC' }">
         <template #icon>
           <n-icon :component="RefreshRound" size="24" />
         </template>
       </n-button>
       <n-button @click="OpenLink('/gallery/edit/0')" circle :bordered="false"
-        :style="{'background-color': opacityColor(themeVars.baseColor,0.84),'width':'50px','height':'50px','box-shadow': '0 0 11px #CCCCCCCC'}">
+        :style="{ 'background-color': opacityColor(themeVars.baseColor, 0.84), 'width': '50px', 'height': '50px', 'box-shadow': '0 0 11px #CCCCCCCC' }">
         <template #icon>
           <n-icon :component="AddRound" size="24" />
         </template>

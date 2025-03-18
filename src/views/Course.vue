@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-29 21:21:21
- * @LastEditTime: 2024-02-26 17:10:46
+ * @LastEditTime: 2025-03-19 02:14:39
  * @Description: 
  * _(:з」∠)_
 -->
@@ -65,9 +65,9 @@ function Search() {
             <n-radio-group v-model:value="course.order" name="排序方式">
               <n-space>
                 <n-radio value="new">最新</n-radio>
-                <n-radio value="comment">评价数</n-radio>
-                <n-radio value="rate">评分</n-radio>
-                <n-radio value="search">相关</n-radio>
+                <n-radio value="rate">最高分</n-radio>
+                <n-radio value="like">最多赞</n-radio>
+                <n-radio value="comment">最多评</n-radio>
               </n-space>
             </n-radio-group>
             <n-button @click="Search" ghost block>检索</n-button>
@@ -85,8 +85,9 @@ function Search() {
         <h3 style="margin:0;color:var(--text-color-1);">{{ i['name'] }}</h3>
         <n-rate :value="i['rate'] / 2" allow-half readonly />
         <div>授课教师：{{ i['teachers_name'] }}</div>
-        <div style="color:var(--text-color-3);font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评价 | {{ (i['rate'] /
-          2).toFixed(2)
+        <div style="color:var(--text-color-3);font-size:14px;">{{ i['like_num'] }}赞 | {{ i['comment_num'] }}评价 | {{
+          (i['rate'] /
+            2).toFixed(2)
         }}分</div>
       </n-card>
     </router-link>

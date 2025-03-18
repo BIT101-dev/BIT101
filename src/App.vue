@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2024-02-26 17:10:29
+ * @LastEditTime: 2025-03-19 02:33:48
  * @Description: 
  * _(:з」∠)_
 -->
@@ -28,6 +28,7 @@ import BrightnessAutoOutlined from '@vicons/material/BrightnessAutoOutlined'
 import LightModeOutlined from '@vicons/material/LightModeOutlined'
 import DarkModeOutlined from '@vicons/material/DarkModeOutlined'
 import QuestionCircleOutlined from "@vicons/antd/QuestionCircleOutlined"
+import BookmarkBorderOutlined from "@vicons/material/BookmarkBorderOutlined"
 import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto, WatchNetwork } from './utils/tools';
 import http from './utils/request';
@@ -95,6 +96,11 @@ const menu_options = computed(() => {
     key: '/course/',
     icon: renderIcon(BookOutlined)
   }
+  const subscription = {
+    label: "订阅",
+    key: '/subscription/',
+    icon: renderIcon(BookmarkBorderOutlined)
+  }
   const score = {
     label: "成绩",
     key: '/score/',
@@ -117,7 +123,7 @@ const menu_options = computed(() => {
   }
 
   if (store.fake_cookie)
-    return [home, login, my, gallery, paper, course, score, schedule, map, about];
+    return [home, login, my, gallery, paper, course, subscription, score, schedule, map, about];
   return [home, login, my, about];
 });
 

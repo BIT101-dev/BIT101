@@ -10,6 +10,8 @@ declare module 'vue' {
     Avatar: typeof import('./src/components/Avatar.vue')['default']
     Billboard: typeof import('./src/components/Billboard.vue')['default']
     Comment: typeof import('./src/components/Comment.vue')['default']
+    CommentEdit: typeof import('./src/components/CommentEdit.vue')['default']
+    CommentList: typeof import('./src/components/CommentList.vue')['default']
     GlobalComponents: typeof import('./src/components/GlobalComponents.vue')['default']
     ImageBox: typeof import('./src/components/ImageViewer/ImageBox.vue')['default']
     ImageModal: typeof import('./src/components/ImageViewer/ImageModal.vue')['default']
@@ -78,5 +80,6 @@ declare module 'vue' {
     RenderLink: typeof import('./src/components/RenderLink.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Subscription: typeof import('./src/components/Subscription.vue')['default']
   }
 }

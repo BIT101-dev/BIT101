@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-27 17:09:21
- * @LastEditTime: 2024-02-26 17:00:47
+ * @LastEditTime: 2025-03-18 18:55:58
  * @Description: 
  * _(:з」∠)_
 -->
@@ -65,8 +65,8 @@ function Search() {
               <n-space>
                 排序方式
                 <n-radio value="new"> 最新</n-radio>
-                <n-radio value="rand"> 随机</n-radio>
-                <n-radio value="like"> 赞数</n-radio>
+                <n-radio value="like"> 最多赞</n-radio>
+                <n-radio value="comment"> 最多评</n-radio>
               </n-space>
             </n-radio-group>
             <n-button @click="Search" ghost block>检索</n-button>

@@ -67,7 +67,7 @@ const bottomButton = reactive({
   bottom: "8px"
 })
 
-const picStyle = ref<{[k: string]: string}[]>([baseStyle])
+const picStyle = ref<{ [k: string]: string }[]>([baseStyle])
 
 const load = ref(false)
 const loadError = ref(false)
@@ -90,7 +90,7 @@ const download = async () => {
   if (load.value && !loadError.value) {
     window.$message.info("开始下载啦!")
     try {
-      const pic = await (await fetch(props.src)).blob()
+      const pic = await (await fetch(props.src, { mode: 'no-cors' })).blob()
       const a = document.createElement("a")
       a.href = window.URL.createObjectURL(pic)
       a.download = props.src.match(/[^\/]*\.[^\/]{1,6}$/)![0]
@@ -127,7 +127,7 @@ const touchEventHandler = (e: TouchEvent) => {
     let clientX = e.touches[0].clientX
     let clientY = e.touches[0].clientY
 
-    let { clientX: startX , clientY: startY } = touch[0]
+    let { clientX: startX, clientY: startY } = touch[0]
 
     if (!scale) {
       // 未缩放, 切换
@@ -140,7 +140,7 @@ const touchEventHandler = (e: TouchEvent) => {
       movePic(clientX, clientY, startX, startY)
     }
   }
-  
+
   if (e.touches.length === 2) {
     // 这次缩放了 不能平移
     thisTimeScaled = true
@@ -150,7 +150,7 @@ const touchEventHandler = (e: TouchEvent) => {
 
 const animation = ref<"slide-fade-left" | "slide-fade-right">("slide-fade-right")
 const switchPic = async (clientX: number, startX: number, distance: number = 50) => {
-  if (clientX - startX < -distance && props.idx + 1 !== props.amount && start) 
+  if (clientX - startX < -distance && props.idx + 1 !== props.amount && start)
     next()
   if (clientX - startX > distance && props.idx !== 0 && start)
     prev()
@@ -199,7 +199,7 @@ const operationCleanUp = () => {
     displayRatio = ratio
     displayOffsetX = offsetX
     displayOffsetY = offsetY
-    
+
     if (displayRatio === 100) {
       scale = false
       transform.value = ""
@@ -284,7 +284,7 @@ onUpdated(() => {
       <Transition :name="animation" mode="out-in">
         <!-- @vue-ignore-error -->
         <img :key="props.idx" :src="props.src" :style="[picStyle, transformStyle, loadingStyle]" draggable="false"
-          @error="() => { loadError = true; load = true }" @load="() => load = true" @click.stop/>
+          @error="() => { loadError = true; load = true }" @load="() => load = true" @click.stop />
       </Transition>
       <n-empty v-if="loadError" description="加载不出来了啦" style="--n-text-color: #ffffff">
         <template #icon>

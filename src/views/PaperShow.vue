@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2022-07-10 23:03:43
- * @LastEditTime: 2024-02-26 17:16:02
+ * @LastEditTime: 2025-03-19 01:40:23
  * @Description: 显示文章
  * _(:з」∠)_
 -->
@@ -14,10 +14,13 @@ import { FormatTime, setTitle, Share } from '@/utils/tools';
 import EditOutlined from '@vicons/material/EditOutlined'
 import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
 import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
+import BookmarkFilled from '@vicons/material/BookmarkFilled'
+import BookmarkOutlined from '@vicons/material/BookmarkOutlined'
 import ShareOutlined from '@vicons/material/ShareOutlined'
 import Comment from '@/components/Comment.vue';
 import Avatar from '@/components/Avatar.vue';
-import { User } from '@/utils/types';
+import { SubscriptionLevel, User } from '@/utils/types';
+import Subscription from '@/components/Subscription.vue';
 
 //文章数据
 const paper = reactive({
@@ -34,6 +37,8 @@ const paper = reactive({
   comment_num: 0,
   public_edit: true,
   own: false,
+  subscription: SubscriptionLevel.None,
+  subscription_loading: false,
 })
 
 //加载文章
@@ -51,6 +56,7 @@ function LoadPaper() {
       paper.user = res.data.update_user;
       paper.public_edit = res.data.public_edit;
       paper.own = res.data.own;
+      paper.subscription = res.data.subscription;
     })
 }
 
@@ -106,6 +112,7 @@ onMounted(async () => {
         </template>
         {{ paper.like_num }}赞同
       </n-button>
+
       <n-button @click="SharePaper" icon-placement="right" ghost>
         <template #icon>
           <n-icon>
@@ -114,6 +121,7 @@ onMounted(async () => {
         </template>
         分享
       </n-button>
+
     </n-space>
 
     <n-divider style="color:var(--text-color-3);font-size:14px;">首次编辑于{{ paper.create_time }}</n-divider>
@@ -139,6 +147,9 @@ onMounted(async () => {
         </template>
         分享
       </n-button>
+
+      <Subscription :obj="'paper' + paper.id" :level="paper.subscription" />
+
       <n-button @click="Like" icon-placement="right" color="#fb7299" :ghost="!paper.like" :loading="paper.like_loading"
         :disabled="paper.like_loading">
         <template #icon>
@@ -149,6 +160,7 @@ onMounted(async () => {
         </template>
         {{ paper.like_num }}赞同
       </n-button>
+
     </n-space>
     <n-divider style="color:var(--text-color-3);font-size:14px;">现有{{ paper.comment_num }}条评论</n-divider>
     <Comment :obj='"paper" + paper.id'></Comment>

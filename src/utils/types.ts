@@ -1,9 +1,16 @@
 /*
  * @Author: flwfdd
  * @Date: 2023-10-17 13:28:48
- * @LastEditTime: 2023-10-30 18:39:34
+ * @LastEditTime: 2025-03-19 01:21:23
  * @Description: _(:з」∠)_
  */
+
+export enum SubscriptionLevel {
+    None = 0,
+    Silent = 1,
+    Update = 2,
+    Comment = 3,
+}
 
 
 // 帖子
@@ -28,6 +35,7 @@ export interface Poster {
     title: string; // 标题
     update_time: string; // 更新时间
     user: User; // 发布用户
+    subscription: SubscriptionLevel; // 订阅状态
 }
 
 // 声明

@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2024-02-23 00:18:11
+ * @LastEditTime: 2025-03-19 02:39:34
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -14,7 +14,7 @@ import router from "@/router";
 //一言
 const hitokoto = ref("");
 function UpHitokoto() {
-  http.get("https://v1.hitokoto.cn/").then((res) => {
+  http.get("https://international.v1.hitokoto.cn/").then((res) => {
     hitokoto.value = res.data.hitokoto + "  ——" + res.data.from;
   });
 }
@@ -199,4 +199,21 @@ export function opacityColor(color: string, opacity: number): string {
   return color;
 }
 
-export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip };
+
+function GetObjName(obj: string) {
+  if (obj.startsWith("like")) return "赞";
+  if (obj.startsWith("poster")) return "帖子";
+  if (obj.startsWith("comment")) return "评论";
+  if (obj.startsWith("course")) return "课程";
+  if (obj.startsWith("paper")) return "文章";
+  return "";
+}
+
+function GetObjUrl(obj: string) {
+  if (obj.startsWith("paper")) return "/paper/" + obj.substring(5);
+  if (obj.startsWith("course")) return "/course/" + obj.substring(6);
+  if (obj.startsWith("poster")) return "/gallery/" + obj.substring(6);
+  return "";
+}
+
+export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl };

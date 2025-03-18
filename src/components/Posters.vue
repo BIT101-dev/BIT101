@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2024-02-26 16:39:22
+ * @LastEditTime: 2025-03-18 18:45:39
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -16,7 +16,7 @@ import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
   search: string;
-  order: 'similar' | 'new';
+  order: 'new' | 'like' | 'comment';
   uid: number;
 }
 
@@ -86,10 +86,11 @@ watch(props, () => {
 </script>
 
 <template>
-  <router-link v-for="i in posters.list"  :to="'/gallery/' + i['id']" style="text-decoration: none;">
+  <router-link v-for="i in posters.list" :to="'/gallery/' + i['id']" style="text-decoration: none;">
     <n-card hoverable style="margin-bottom:11px;">
       <div>
-        <n-ellipsis :line-clamp="2" :tooltip="false" style="color:var(--text-color-1);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
+        <n-ellipsis :line-clamp="2" :tooltip="false"
+          style="color:var(--text-color-1);font-size:18px;font-weight:bold;margin:0;">{{ i.title }}</n-ellipsis>
       </div>
 
       <n-space v-if="i.claim.id != 0 || i.public == false">
@@ -108,18 +109,15 @@ watch(props, () => {
         <br />
       </n-space>
 
-      <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0,2333) }}</n-ellipsis>
+      <n-ellipsis :line-clamp="2" :tooltip="false">{{ i.text.substring(0, 2333) }}</n-ellipsis>
 
       <ImageViewer v-if="i.images.length" :images="i.images" />
 
       <div style="color:var(--text-color-3);font-size:14px;margin-top: 11px;display:flex;align-items:center;">
-        <div
-          @click="(e: MouseEvent) => {
-            e.preventDefault()
-            OpenLink('/user/' + i.user.id)
-          }"
-          style="display:flex;align-items: center;flex:1;"
-        >
+        <div @click="(e: MouseEvent) => {
+          e.preventDefault()
+          OpenLink('/user/' + i.user.id)
+        }" style="display:flex;align-items: center;flex:1;">
           <Avatar :user="i.user" :size="24" round />
 
           <div style="width:2em;flex:1;">

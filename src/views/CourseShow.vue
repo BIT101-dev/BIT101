@@ -7,6 +7,7 @@ import ThumbUpOutlined from '@vicons/material/ThumbUpOutlined'
 import ThumbUpFilled from '@vicons/material/ThumbUpFilled'
 import ShareOutlined from '@vicons/material/ShareOutlined'
 import Comment from '@/components/Comment.vue';
+import Subscription from '@/components/Subscription.vue';
 import router from '@/router';
 
 // 引入 ECharts
@@ -20,6 +21,7 @@ import {
   GridComponent
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
+import { SubscriptionLevel } from '@/utils/types';
 
 use([
   TooltipComponent,
@@ -43,6 +45,7 @@ const course = reactive({
   teachers: [] as any[],
   like: false,
   like_loading: false,
+  subscription: SubscriptionLevel.None,
 })
 
 // 课程历史
@@ -157,7 +160,7 @@ function Like() {
 
 function ShareCourse() {
   let teachers_names = course.teachers.map(t => t.name);
-  let title='BIT101课程｜'+`${course.name}（${teachers_names.join(' ')}）`;
+  let title = 'BIT101课程｜' + `${course.name}（${teachers_names.join(' ')}）`;
   Share(title, title, window.location.href);
 }
 
@@ -171,6 +174,7 @@ function LoadCourse() {
     course.rate_sum = data.rate_sum;
     course.rate = data.rate / 2;
     course.like = data.like;
+    course.subscription = data.subscription;
     let names = data.teachers_name.split(',');
     let numbers = data.teachers_number.split(',');
     for (let i in names) course.teachers.push({ 'name': names[i], 'number': numbers[i] })
@@ -193,7 +197,8 @@ onMounted(async () => {
 
     <span style="display:flex;">
       <n-rate :value="course.rate" allow-half size="large" readonly />
-      <span style="margin-left:4px;color:var(--text-color-3);">{{ course.rate.toFixed(2) }}分（{{ course.comment_num }}人评价）</span>
+      <span style="margin-left:4px;color:var(--text-color-3);">{{ course.rate.toFixed(2) }}分（{{ course.comment_num
+        }}人评价）</span>
     </span>
     <div style="color:var(--text-color-3);font-size:12px;">课程编号：{{ course.number }}</div>
     <br />
@@ -202,8 +207,7 @@ onMounted(async () => {
 
       <n-space>
         授课教师：
-        <n-a :href="'/course/?search=' + i['number']" v-for="(i, ind) in course.teachers"
-          style="text-decoration:none;">
+        <n-a :href="'/course/?search=' + i['number']" v-for="(i, ind) in course.teachers" style="text-decoration:none;">
           {{ i['name'] }}</n-a>
       </n-space>
       <n-a :href="'/course/?search=' + course.number" style="text-decoration:none;">查找其他老师讲授的该课程
@@ -220,6 +224,7 @@ onMounted(async () => {
           </template>
           {{ course.like_num }}人点赞
         </n-button>
+        <Subscription :obj="'course' + course.id" :level="course.subscription" />
         <n-button @click="ShareCourse" icon-placement="right" ghost>
           <template #icon>
             <n-icon>
@@ -254,9 +259,9 @@ onMounted(async () => {
       <div v-else>
         <v-chart :option="option" style="height: 42vh;" autoresize />
         <p style="font-size: small;">
-          注：数据仅供参考，不区分教学班。<br/>
+          注：数据仅供参考，不区分教学班。<br />
           「如果一个人把政策评分作为自己的至高追求，那么他就是这个政策的牺牲品。」
-          <div style="text-align: right;">——《上海交通大学生存手册》</div>
+        <div style="text-align: right;">——《上海交通大学生存手册》</div>
         </p>
       </div>
     </n-modal>
