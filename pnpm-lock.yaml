@@ -26,6 +26,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.6.0
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       echarts:
         specifier: ^5.4.3
         version: 5.4.3
@@ -69,6 +72,9 @@ importers:
       '@editorjs/raw':
         specifier: ^2.4.0
         version: 2.4.0
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@types/node':
         specifier: ^20.8.9
         version: 20.8.9
@@ -948,6 +954,9 @@ packages:
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
 
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+
   '@types/estree@0.0.39':
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
 
@@ -1173,6 +1182,9 @@ packages:
 
   core-js-compat@3.33.1:
     resolution: {integrity: sha512-6pYKNOgD/j/bkC5xS5IIg6bncid3rfrI42oBH1SQJbsmYPKF7rhzcFzYCcxYMmNQQ0rCEB8WqpW7QHndOggaeQ==}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
@@ -3048,6 +3060,8 @@ snapshots:
       magic-string: 0.25.9
       string.prototype.matchall: 4.0.10
 
+  '@types/crypto-js@4.2.2': {}
+
   '@types/estree@0.0.39': {}
 
   '@types/estree@1.0.3': {}
@@ -3320,6 +3334,8 @@ snapshots:
   core-js-compat@3.33.1:
     dependencies:
       browserslist: 4.22.1
+
+  crypto-js@4.2.0: {}
 
   crypto-random-string@2.0.0: {}
 

@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 00:01:07
- * @LastEditTime: 2025-03-19 02:39:34
+ * @LastEditTime: 2025-05-12 21:00:02
  * @Description: 一些全局使用的函数
  * _(:з」∠)_
  */
@@ -79,11 +79,14 @@ function WebvpnVerify(sid: string, password: string) {
     .then((res) => {
       webvpn.data = res.data;
       webvpn.data.password = encryptPassword(webvpn.password, webvpn.data.salt);
-      if (webvpn.data.captcha) {
-        webvpn.data.captcha = webvpn.data.captcha;
-        webvpn.data.captcha_text = "";
-        webvpn.model = true;
-      } else WebvpnVerify2();
+      // TODO: real captcha
+      // if (webvpn.data.captcha) {
+      //   webvpn.data.captcha = webvpn.data.captcha;
+      //   webvpn.data.captcha_text = "";
+      //   webvpn.model = true;
+      // } else WebvpnVerify2();
+      webvpn.data.captcha_text = encryptPassword("{}", webvpn.data.salt);
+      WebvpnVerify2();
     });
 }
 
@@ -93,6 +96,7 @@ function WebvpnVerify2() {
   http
     .post("/user/webvpn_verify", {
       sid: webvpn.sid,
+      salt: webvpn.data.salt,
       password: webvpn.data.password,
       execution: webvpn.data.execution,
       cookie: webvpn.data.cookie,
