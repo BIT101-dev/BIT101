@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-20 13:25:20
- * @LastEditTime: 2025-03-18 18:45:39
+ * @LastEditTime: 2025-06-04 01:55:01
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -18,6 +18,7 @@ export interface PostersStatus {
   search: string;
   order: 'new' | 'like' | 'comment';
   uid: number;
+  hide_bot: boolean; // 是否隐藏机器人发布的内容
 }
 
 const props = defineProps({
@@ -45,7 +46,8 @@ function LoadPosters() {
       page: posters.page,
       search: props.value.search,
       order: props.value.order,
-      uid: props.value.uid
+      uid: props.value.uid,
+      hide_bot: props.value.mode == 'search' && props.value.hide_bot,
     }
   }).then(res => {
     // 状态更新后可能之前的请求还没完成 得加上时间戳保证更新的是最新的

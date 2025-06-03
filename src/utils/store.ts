@@ -1,7 +1,7 @@
 /*
  * @Author: flwfdd
  * @Date: 2022-05-28 09:18:09
- * @LastEditTime: 2024-12-15 14:44:39
+ * @LastEditTime: 2025-06-04 02:14:51
  * @Description: 全局状态管理
  * _(:з」∠)_
  */
@@ -24,6 +24,7 @@ const store = reactive({
   theme_mode: x.theme_mode || "auto", // auto dark light
   grade_query: x.grade_query || {},
   last_draft: x.last_draft ?? {},
+  hide_bot: x.hide_bot ?? false,
 })
 
 watch(store, () => {

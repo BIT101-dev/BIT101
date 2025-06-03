@@ -1,7 +1,7 @@
 <!--
  * @Author: flwfdd
  * @Date: 2023-10-17 08:17:11
- * @LastEditTime: 2025-03-18 18:47:40
+ * @LastEditTime: 2025-06-04 01:51:53
  * @Description: _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -12,6 +12,7 @@ import RefreshRound from '@vicons/material/RefreshRound'
 import AddRound from '@vicons/material/AddRound'
 import Posters, { PostersStatus } from '@/components/Posters.vue';
 import { useThemeVars } from 'naive-ui';
+import store from '@/utils/store';
 
 const themeVars = useThemeVars();
 
@@ -19,7 +20,8 @@ const posters = ref({
   mode: 'recommend',
   search: "",
   order: "new",
-  uid: -1
+  uid: -1,
+  hide_bot: store.hide_bot, // 是否隐藏机器人发布的内容
 } as PostersStatus
 );
 
@@ -49,6 +51,11 @@ function Load(force = false) {
   }
   if (force) posters.value = JSON.parse(JSON.stringify(posters.value));
 }
+
+// 隐藏机器人设置持久化
+watch(() => posters.value.hide_bot, (val) => {
+  store.hide_bot = val;
+});
 
 // 轮播图
 const carousel_data = ref([])
@@ -89,6 +96,10 @@ onMounted(() => {
       </n-tab-pane>
 
       <n-tab-pane name="new" tab="最新">
+        <n-space style="margin-bottom: 11px;" justify="end">
+          <span style="font-size: 14px;">隐藏机器人</span>
+          <n-switch size="small" v-model:value="posters.hide_bot" />
+        </n-space>
       </n-tab-pane>
 
       <n-tab-pane name="recommend" tab="推荐">
