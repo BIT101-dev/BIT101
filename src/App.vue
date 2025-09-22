@@ -30,7 +30,7 @@ import DarkModeOutlined from '@vicons/material/DarkModeOutlined'
 import QuestionCircleOutlined from "@vicons/antd/QuestionCircleOutlined"
 import BookmarkBorderOutlined from "@vicons/material/BookmarkBorderOutlined"
 import GlobalComponents from './components/GlobalComponents.vue';
-import { hitokoto, WatchNetwork } from './utils/tools';
+import { hitokoto, WatchNetwork, useMobileLayout } from './utils/tools';
 import http from './utils/request';
 import axios from 'axios';
 
@@ -172,7 +172,7 @@ onMounted(() => {
         <n-layout-header bordered style="background-color:var(--primary-color)">
           <n-space class="container" justify="space-between">
             <div style="height:42px;display: flex;align-items: center;padding: 4px;">
-              <n-button @click="drawer_model = true" circle type="primary" text-color="#FFF"
+              <n-button v-if="useMobileLayout()" @click="drawer_model = true" circle type="primary" text-color="#FFF"
                 style="font-size: 33px;margin-top:3px;" size="large">
                 <n-icon>
                   <MenuRound />
@@ -224,25 +224,39 @@ onMounted(() => {
           </n-drawer-content>
         </n-drawer>
 
-        <n-layout-content justify="center" style="margin: 11px;min-height: 89vh;">
-          <router-view v-slot="{ Component }">
-            <keep-alive :max="42">
-              <component :is="Component" v-if="route.meta.keepAlive != false" :key="route.fullPath" />
-            </keep-alive>
-            <component :is="Component" v-if="route.meta.keepAlive == false" />
-          </router-view>
-        </n-layout-content>
+        <n-layout has-sider class="container" style="margin-top: 0.5rem;">
+
+          <n-layout-sider v-if="!useMobileLayout()" style="background-color: #fff0; width: min-content">
+            <n-card style="margin-top: 11px;">
+              <n-menu
+                :options="menu_options"
+                @update:value="MenuHandler"
+                :indent="24"
+              />
+            </n-card>
+          </n-layout-sider>
+
+          <!-- <n-layout-content justify="center" style="margin: 11px;min-height: 89vh;"> -->
+          <n-layout-content style="margin: 11px;min-height: 89vh;width: min-content;">
+            <router-view v-slot="{ Component }">
+              <keep-alive :max="42">
+                <component :is="Component" v-if="route.meta.keepAlive != false" :key="route.fullPath" />
+              </keep-alive>
+              <component :is="Component" v-if="route.meta.keepAlive == false" />
+            </router-view>
+          </n-layout-content>
+        </n-layout>
 
 
         <n-layout-footer style="text-align:center;min-height: 11vh;">
-          <h4 style="margin: auto;font-size: 14px;">{{ hitokoto }}</h4>
+          <h4 style="margin: auto;font-size: 14px; padding-top: 0.8rem;">{{ hitokoto }}</h4>
           <div><n-button @click="ToTop" text size="large">👆回到顶部👆</n-button></div>
           <div>
             <n-a href="https://github.com/BIT101-dev" target="_blank">GitHub</n-a>
             ｜
             <n-a href="https://bit101-project.feishu.cn/wiki/OY1Xw6y27iNZqgkSDCkc5Cfdnjc" target="_blank">加入BIT101</n-a>
           </div>
-          <div style="font-size: 14px;">Powered⚡ by BIT101 Project Team with 💖.</div>
+          <div style="font-size: 14px;">Powered⚡by BIT101 Project Team with 💖.</div>
 
         </n-layout-footer>
       </n-layout>
@@ -302,7 +316,8 @@ body {
 }
 
 .container {
-  max-width: 666px;
+  max-width: 60rem;
+  /* max-width: 666px; */
   margin: auto;
 }
 

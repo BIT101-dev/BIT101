@@ -220,4 +220,13 @@ function GetObjUrl(obj: string) {
   return "";
 }
 
-export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl };
+function useMobileLayout() {
+  let w = window.screen.width;
+  let h = window.screen.height;
+
+  if (w < 768 || h < 768) return true;
+  return false
+  
+}
+
+export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl, useMobileLayout };

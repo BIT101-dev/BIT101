@@ -9,7 +9,7 @@
 import http from '@/utils/request';
 import { onMounted, ref } from 'vue';
 import Billboard from '@/components/Billboard.vue';
-import { OpenLink } from '@/utils/tools';
+import { OpenLink, useMobileLayout } from '@/utils/tools';
 
 const carousel_data = ref([])
 function LoadCarousel() {
@@ -51,7 +51,7 @@ h2 {
           :style="{ 'cursor': i['url'] ? 'pointer' : 'auto' }">
       </n-carousel>
 
-      <n-alert closable :show-icon="false">
+      <n-alert closable :show-icon="false" v-if="useMobileLayout()">
         <div style="font-size:14px;">Tips:点击左上角的≡可以打开菜单哟！</div>
       </n-alert>
 
