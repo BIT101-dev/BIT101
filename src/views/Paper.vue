@@ -54,7 +54,7 @@ function Search() {
 <template>
   <div class="container">
     <n-card title="文章 | Paper">
-      <n-button @click="router.push('/paper/edit/0')" type="success" ghost style="margin-bottom:4px;margin-top: -11px;"
+      <n-button @click="router.push('/paper/edit/0')" type="primary" ghost style="margin-bottom:4px;margin-top: -11px;"
         block>新建 Paper</n-button>
       <n-collapse default-expanded-names="search">
         <n-collapse-item title="Paper检索" name="search">
