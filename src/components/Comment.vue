@@ -8,14 +8,14 @@
 <script setup lang="ts">
 import http from '@/utils/request';
 import { h, onMounted, reactive } from 'vue';
-import { FormatTime } from '@/utils/tools';
+import { FormatTime, GetBlockedUserIds } from '@/utils/tools';
 import { onBeforeRouteLeave } from 'vue-router';
 import { Comment, CommentList as ICommentList, User } from '@/utils/types';
 import RenderLink from './RenderLink.vue';
 import ImageViewer from "@/components/ImageViewer/ImageViewer.vue"
 import CommentList from './CommentList.vue';
 import CommentEdit from './CommentEdit.vue';
-
+import store from '@/utils/store';
 
 const props = defineProps(['obj', 'rate'])
 
@@ -61,6 +61,7 @@ function LoadComments(obj: string, cmts: any) {
       page: cmts.page,
     }
   }).then(res => {
+    FilterComments(res.data);
     if (res.data.length == 0) cmts.end = true;
     else {
       cmts.list = cmts.list.concat(res.data);
@@ -70,6 +71,16 @@ function LoadComments(obj: string, cmts: any) {
   }).catch(() => { cmts.loading = false; })
 }
 
+function FilterComments(data: Comment[]) {
+  for (let i = data.length - 1; i >= 0; i--) {
+    if (data[i].sub && data[i].sub.length > 0) {
+      FilterComments(data[i].sub);
+    }
+    if ((data[i].user.id && GetBlockedUserIds().includes(data[i].user.id)) || (store.block_policy=="strict" && data[i].reply_user && GetBlockedUserIds().includes(data[i].reply_user.id))) {
+      data.splice(i, 1);
+    }
+  }
+}
 
 function OpenSubComments(parent: any) {
   sub_comment_list.parent = parent;

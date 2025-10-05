@@ -8,10 +8,11 @@
 import http from '@/utils/request';
 import { PropType, onMounted, reactive, ref, watch } from 'vue';
 import { Poster } from '@/utils/types';
-import { FormatTime, OpenLink } from '@/utils/tools';
+import { FormatTime, OpenLink, GetBlockedUserIds } from '@/utils/tools';
 import ErrorOutlined from '@vicons/material/ErrorOutlined'
 import Avatar from '@/components/Avatar.vue';
 import ImageViewer from '@/components/ImageViewer/ImageViewer.vue';
+import store from '@/utils/store';
 
 export interface PostersStatus {
   mode: 'recommend' | 'search' | 'follow' | 'hot';
@@ -52,6 +53,8 @@ function LoadPosters() {
   }).then(res => {
     // 状态更新后可能之前的请求还没完成 得加上时间戳保证更新的是最新的
     if (refresh_time != posters.refresh_time) return;
+    // 屏蔽用户过滤
+    FilterPosters(res.data);
     if (res.data.length == 0) posters.end = true;
     else {
       posters.list = posters.list.concat(res.data);
@@ -59,6 +62,15 @@ function LoadPosters() {
     }
     posters.loading = false;
   }).catch(() => { posters.loading = false; })
+}
+
+function FilterPosters(data: Poster[]) {
+  for (let i = data.length - 1; i >= 0; i--) {
+    if (GetBlockedUserIds().includes(data[i].user.id)) {
+      console.log("已屏蔽用户发布的内容", data[i]);
+      data.splice(i, 1);
+    }
+  }
 }
 
 const load_more_observer = ref(null as any);

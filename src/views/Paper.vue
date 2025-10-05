@@ -10,6 +10,7 @@ import router from '@/router';
 import http from '@/utils/request';
 import { FormatTime } from '@/utils/tools';
 import { onMounted, reactive } from 'vue';
+import store from '@/utils/store';
 
 const papers = reactive({
   search: "",

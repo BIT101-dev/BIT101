@@ -24,6 +24,8 @@ const store = reactive({
   theme_mode: x.theme_mode || "auto", // auto dark light
   grade_query: x.grade_query || {},
   last_draft: x.last_draft ?? {},
+  blocked_users: x.blocked_users || [],
+  block_policy: x.block_policy || "normal", // normal: 屏蔽画廊、一二级评论、paper strict: normal + 回复该用户的评论
   hide_bot: x.hide_bot ?? false,
 })
 

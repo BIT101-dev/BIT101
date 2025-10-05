@@ -6,15 +6,34 @@
  * _(:з」∠)_
 -->
 <script setup lang="ts">
-import { FormatTime, OpenLink, hitokoto, setTitle } from '@/utils/tools';
-import http from '@/utils/request';
-import { onActivated, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
-import { onBeforeRouteLeave, onBeforeRouteUpdate, routerKey, useRoute } from 'vue-router';
-import store from '@/utils/store';
-import { UploadFileInfo } from 'naive-ui';
-import { User } from '@/utils/types';
-import Avatar from '@/components/Avatar.vue';
-import { PostersStatus } from '@/components/Posters.vue';
+import {
+  FormatTime,
+  OpenLink,
+  hitokoto,
+  setTitle,
+  GetBlockedUserIds,
+} from "@/utils/tools";
+import http from "@/utils/request";
+import {
+  computed,
+  onActivated,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
+import {
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+  routerKey,
+  useRoute,
+} from "vue-router";
+import store from "@/utils/store";
+import { UploadFileInfo } from "naive-ui";
+import { User } from "@/utils/types";
+import Avatar from "@/components/Avatar.vue";
+import { PostersStatus } from "@/components/Posters.vue";
 
 const route = useRoute();
 
@@ -24,16 +43,26 @@ interface UserInfo {
   follower: boolean; // 是否关注我
   following_num: number; // 关注数量
   follower_num: number; // 粉丝数量
+  blocked: boolean; // 是否被屏蔽
   own: boolean; // 是否是自己
 }
 
+type BlockedUser = Pick<User, "id" | "nickname" | "avatar"> & {
+  identity?: User["identity"] | null;
+};
+
 const user_info = ref({} as UserInfo);
 function GetInfo(uid: any) {
-  http.get("/user/info/" + uid)
-    .then(res => {
-      user_info.value = res.data;
-      if (user_info.value.user.id) setTitle(user_info.value.user.nickname, "用户");
-    })
+  http.get("/user/info/" + uid).then((res) => {
+    user_info.value = res.data;
+    if (user_info.value.user.id)
+      setTitle(user_info.value.user.nickname, "用户");
+    user_info.value.blocked = GetBlockedUserIds().includes(
+      user_info.value.user.id
+    )
+      ? true
+      : false; // 是否被屏蔽
+  });
 }
 
 // 编辑信息
@@ -42,24 +71,44 @@ const edit_info = reactive({
   avatar_mid: "",
   avatar_url: "",
   nickname: "",
-  motto: ""
-})
+  motto: "",
+});
 
 // 上传头像用
 const upload_url = store.api_url + "/upload/image";
 const upload_head = {
-  'fake-cookie': store.fake_cookie
-}
+  "fake-cookie": store.fake_cookie,
+};
 
-function UploadHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
-  let res = (event.target as XMLHttpRequest);
+const blocked_manager = reactive({
+  modal: false,
+});
+
+const blocked_users_json = computed(() =>
+  JSON.stringify(store.blocked_users, null, 2)
+);
+
+function UploadHandler({
+  file,
+  event,
+}: {
+  file: UploadFileInfo;
+  event: ProgressEvent;
+}) {
+  let res = event.target as XMLHttpRequest;
   let data = JSON.parse(res.response);
   edit_info.avatar_mid = data.mid;
   edit_info.avatar_url = data.low_url;
   window.$message.success("上传成功OvO");
 }
 
-function UploadErrorHandler({ file, event }: { file: UploadFileInfo, event: ProgressEvent }) {
+function UploadErrorHandler({
+  file,
+  event,
+}: {
+  file: UploadFileInfo;
+  event: ProgressEvent;
+}) {
   let res = JSON.parse((event.target as XMLHttpRequest).response);
   if (res && res.msg) {
     window.$message.error(res.msg);
@@ -74,14 +123,16 @@ function OpenEditInfo() {
 }
 
 function EditInfo() {
-  http.put("/user/info", {
-    avatar_mid: edit_info.avatar_mid,
-    nickname: edit_info.nickname,
-    motto: edit_info.motto
-  }).then(() => {
-    GetInfo(route.params.id);
-    edit_info.modal = false;
-  })
+  http
+    .put("/user/info", {
+      avatar_mid: edit_info.avatar_mid,
+      nickname: edit_info.nickname,
+      motto: edit_info.motto,
+    })
+    .then(() => {
+      GetInfo(route.params.id);
+      edit_info.modal = false;
+    });
 }
 
 // 关注和取关操作
@@ -89,14 +140,21 @@ const follow_loading = ref(false);
 function Follow() {
   if (follow_loading.value) return;
   follow_loading.value = true;
-  http.post("/user/follow/" + user_info.value.user.id).then(res => {
-    user_info.value.following = res.data.following;
-    user_info.value.follower = res.data.follower;
-    user_info.value.following_num = res.data.following_num;
-    user_info.value.follower_num = res.data.follower_num;
-    window.$message.success(res.data.following ? "关注成功OvO" : "取关成功OvO");
-    follow_loading.value = false;
-  }).catch(() => { follow_loading.value = false; })
+  http
+    .post("/user/follow/" + user_info.value.user.id)
+    .then((res) => {
+      user_info.value.following = res.data.following;
+      user_info.value.follower = res.data.follower;
+      user_info.value.following_num = res.data.following_num;
+      user_info.value.follower_num = res.data.follower_num;
+      window.$message.success(
+        res.data.following ? "关注成功OvO" : "取关成功OvO"
+      );
+      follow_loading.value = false;
+    })
+    .catch(() => {
+      follow_loading.value = false;
+    });
 }
 
 const follows = reactive({
@@ -106,26 +164,31 @@ const follows = reactive({
   loading: false,
   end: false,
   page: 0,
-  list: [] as User[]
+  list: [] as User[],
 });
 
 function GetFollowList() {
   if (follows.loading) return;
   follows.loading = true;
-  http.get("/user/" + follows.type, {
-    params: {
-      page: follows.page
-    }
-  }).then(res => {
-    if (res.data.length == 0) follows.end = true;
-    follows.list = follows.list.concat(res.data);
-    follows.page++;
-    follows.loading = false;
-  }).catch(() => { follows.loading = false; })
+  http
+    .get("/user/" + follows.type, {
+      params: {
+        page: follows.page,
+      },
+    })
+    .then((res) => {
+      if (res.data.length == 0) follows.end = true;
+      follows.list = follows.list.concat(res.data);
+      follows.page++;
+      follows.loading = false;
+    })
+    .catch(() => {
+      follows.loading = false;
+    });
 }
 
 function ShowFollowingList() {
-  if (route.params.id != '0') {
+  if (route.params.id != "0") {
     window.$message.error("只能查看自己的关注列表Orz");
     return;
   }
@@ -140,7 +203,7 @@ function ShowFollowingList() {
 
 const follower_list = ref([] as User[]);
 function ShowFollowerList() {
-  if (route.params.id != '0') {
+  if (route.params.id != "0") {
     window.$message.error("只能查看自己的粉丝列表Orz");
     return;
   }
@@ -153,24 +216,65 @@ function ShowFollowerList() {
   follows.modal = true;
 }
 
+// 屏蔽和解除屏蔽
+function Block() {
+  if (user_info.value.own) {
+    window.$message.error("为什么要屏蔽自己Orz");
+    return;
+  }
+  if (user_info.value.blocked) {
+    window.$message.error("该用户已被屏蔽OvO");
+    return;
+  } else {
+    store.blocked_users.push({
+      id: user_info.value.user.id,
+      nickname: user_info.value.user.nickname,
+      avatar: user_info.value.user.avatar,
+      identity: user_info.value.user.identity ?? null,
+    } as BlockedUser);
+    user_info.value.blocked = true;
+    window.$message.success("已屏蔽该用户OvO");
+  }
+}
+function Unblock(uid?: number, silent = false) {
+  const targetId = uid ?? user_info.value.user?.id;
+  const ids = GetBlockedUserIds();
+  if (!targetId || !ids.includes(targetId)) {
+    if (!silent) window.$message.error("该用户未被屏蔽OvO");
+    return false;
+  }
+  const index = store.blocked_users.findIndex(
+    (x: BlockedUser) => x.id === targetId
+  );
+  store.blocked_users.splice(index, 1);
+  if (user_info.value.user && user_info.value.user.id === targetId) {
+    user_info.value.blocked = false;
+  }
+  if (!silent) {
+    window.$message.success("已解除屏蔽OvO");
+  }
+  return true;
+}
+
+function OpenBlockedManager() {
+  blocked_manager.modal = true;
+}
+
 // 帖子
 const posters = ref({
-  mode: 'search',
+  mode: "search",
   search: "",
   order: "new",
-  uid: -1
-} as PostersStatus
-);
-
+  uid: -1,
+} as PostersStatus);
 
 // 切换视角
 function Switch() {
-  if (route.params.id == '0') {
-    OpenLink('/user/' + user_info.value.user.id);
+  if (route.params.id == "0") {
+    OpenLink("/user/" + user_info.value.user.id);
     window.$message.success("已切换到访客视角OvO");
-  }
-  else {
-    OpenLink('/user/0');
+  } else {
+    OpenLink("/user/0");
     window.$message.success("已切换到个人中心OvO");
   }
 }
@@ -178,72 +282,158 @@ function Switch() {
 onMounted(() => {
   GetInfo(route.params.id);
   posters.value.uid = Number(route.params.id);
-})
-
+});
 
 // 监听路由变化 重新加载数据
 const last_uid = ref(route.params.id);
-watch(() => route.params.id, () => {
-  if (!route.path.startsWith("/user/")) return;
-  if (last_uid.value == route.params.id && route.params.id != '0') return;
-  last_uid.value = route.params.id;
-  GetInfo(route.params.id);
-  posters.value.uid = Number(route.params.id);
-})
-
+watch(
+  () => route.params.id,
+  () => {
+    if (!route.path.startsWith("/user/")) return;
+    if (last_uid.value == route.params.id && route.params.id != "0") return;
+    last_uid.value = route.params.id;
+    GetInfo(route.params.id);
+    posters.value.uid = Number(route.params.id);
+  }
+);
 </script>
 
 <template>
   <div class="container">
     <n-card title="你好鸭ヾ(´▽｀))" v-if="user_info.user">
-      <div style="display: flex;justify-content: space-between;align-items: center;">
-        <div style="display: flex;align-items: center;">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div style="display: flex; align-items: center">
           <div>
             <Avatar :user="user_info.user" round :size="42" preview />
           </div>
-          <span style="margin-left: 4px;">
-            <div style="font-size: 17px;">{{ user_info.user.nickname }}</div>
-            <div style="margin-top: -4px;">uid:{{ user_info.user.id }}</div>
+          <span style="margin-left: 4px">
+            <div style="font-size: 17px">{{ user_info.user.nickname }}</div>
+            <div style="margin-top: -4px">uid:{{ user_info.user.id }}</div>
           </span>
         </div>
-
-        <n-popconfirm v-if="user_info.following" @positive-click="Follow" :show-icon="false" positive-text="确定"
-          negative-text="取消">
-          <template #trigger>
-            <n-button :loading="follow_loading" :disabled="follow_loading">
-              {{ user_info.following ? (user_info.follower ? '已互粉' : '已关注') : '关注' }}
-            </n-button>
-          </template>
-          汝真取关耶？
-        </n-popconfirm>
-        <n-button v-else @click="Follow" :loading="follow_loading" :disabled="follow_loading">
-          {{ user_info.following ? (user_info.follower ? '已互粉' : '已关注') : '关注' }}
-        </n-button>
+        <div>
+          <n-popconfirm
+            v-if="user_info.following"
+            @positive-click="Follow"
+            :show-icon="false"
+            positive-text="确定"
+            negative-text="取消"
+          >
+            <template #trigger>
+              <n-button :loading="follow_loading" :disabled="follow_loading">
+                {{
+                  user_info.following
+                    ? user_info.follower
+                      ? "已互粉"
+                      : "已关注"
+                    : "关注"
+                }}
+              </n-button>
+            </template>
+            汝真取关耶？
+          </n-popconfirm>
+          <n-button
+            v-else
+            @click="Follow"
+            :loading="follow_loading"
+            :disabled="follow_loading"
+          >
+            {{
+              user_info.following
+                ? user_info.follower
+                  ? "已互粉"
+                  : "已关注"
+                : "关注"
+            }}
+          </n-button>
+          <n-popconfirm
+            v-if="!user_info.blocked"
+            @positive-click="Block"
+            :show-icon="false"
+            positive-text="确定"
+            negative-text="取消"
+          >
+            <template #trigger>
+              <n-button>屏蔽</n-button>
+            </template>
+            真的要屏蔽嘛?
+          </n-popconfirm>
+          <n-button v-else @click="Unblock()">解除屏蔽</n-button>
+        </div>
       </div>
 
-
       <n-space>
-        <n-tag round :bordered="false" size="small"
-          :color="{ color: user_info.user.identity.color ? user_info.user.identity.color : 'var(--primary-color)', textColor: '#FFF' }">
+        <n-tag
+          round
+          :bordered="false"
+          size="small"
+          :color="{
+            color: user_info.user.identity.color
+              ? user_info.user.identity.color
+              : 'var(--primary-color)',
+            textColor: '#FFF',
+          }"
+        >
           {{ user_info.user.identity.text }}
         </n-tag>
-        <n-tag @click="ShowFollowingList" round :bordered="false" size="small"
-          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }" style="cursor:pointer">
+        <n-tag
+          @click="ShowFollowingList"
+          round
+          :bordered="false"
+          size="small"
+          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }"
+          style="cursor: pointer"
+        >
           {{ user_info.following_num }}关注
         </n-tag>
-        <n-tag @click="ShowFollowerList" round :bordered="false" size="small"
-          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }" style="cursor:pointer">
+        <n-tag
+          @click="ShowFollowerList"
+          round
+          :bordered="false"
+          size="small"
+          :color="{ color: 'var(--primary-color)', textColor: '#FFF' }"
+          style="cursor: pointer"
+        >
           {{ user_info.follower_num }}粉丝
         </n-tag>
       </n-space>
 
-      <n-alert title="格言/简介" type="info" :show-icon="false" style="white-space:pre-wrap;margin-top: 14px;">
+      <n-alert
+        title="格言/简介"
+        type="info"
+        :show-icon="false"
+        style="white-space: pre-wrap; margin-top: 14px"
+      >
         {{ user_info.user.motto }}
       </n-alert>
-      <p style="color:var(--text-color-3);font-size:14px;">于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101</p>
-      <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block>编辑信息</n-button>
-      <n-button v-if="user_info.own" @click="Switch" block style="margin-top: 8px;">{{
-        route.params.id == '0' ? '切换到访客视角' : '切换到个人中心' }}</n-button>
+      <p style="color: var(--text-color-3); font-size: 14px">
+        于 {{ FormatTime(user_info.user.create_time) }} 来到BIT101
+      </p>
+      <n-button v-if="route.params.id == '0'" @click="OpenEditInfo" block
+        >编辑信息</n-button
+      >
+      <n-button
+        v-if="route.params.id == '0' && user_info.own"
+        block
+        style="margin-top: 8px"
+        @click="OpenBlockedManager"
+        >屏蔽用户管理</n-button
+      >
+      <n-button
+        v-if="user_info.own"
+        @click="Switch"
+        block
+        style="margin-top: 8px"
+        >{{
+          route.params.id == "0" ? "切换到访客视角" : "切换到个人中心"
+        }}</n-button
+      >
     </n-card>
 
     <br />
@@ -253,43 +443,128 @@ watch(() => route.params.id, () => {
     <n-modal :show="edit_info.modal">
       <n-card style="width: 600px" title="编辑信息">
         <n-avatar size="large" round :src="edit_info.avatar_url" />
-        <n-upload :action="upload_url" :headers="upload_head" @finish="UploadHandler" @error="UploadErrorHandler"
-          :max="1">
+        <n-upload
+          :action="upload_url"
+          :headers="upload_head"
+          @finish="UploadHandler"
+          @error="UploadErrorHandler"
+          :max="1"
+        >
           <n-button block>上传头像</n-button>
         </n-upload>
 
-        <p style="margin-bottom: 0;">昵称</p>
+        <p style="margin-bottom: 0">昵称</p>
         <n-input v-model:value="edit_info.nickname" maxlength="24"></n-input>
 
-        <p style="margin-bottom: 0;">格言/简介</p>
-        <n-input v-model:value="edit_info.motto" type="textarea" maxlength="23333" show-count></n-input>
+        <p style="margin-bottom: 0">格言/简介</p>
+        <n-input
+          v-model:value="edit_info.motto"
+          type="textarea"
+          maxlength="23333"
+          show-count
+        ></n-input>
 
         <template #footer>
           <n-space>
             <n-button @click="EditInfo" type="success" ghost>提交</n-button>
-            <n-button @click="edit_info.modal = false" type="error" ghost>取消</n-button>
+            <n-button @click="edit_info.modal = false" type="error" ghost
+              >取消</n-button
+            >
           </n-space>
         </template>
       </n-card>
     </n-modal>
 
-    <n-modal v-model:show="follows.modal" preset="card" :title="follows.title" style="width:600px;">
-      <n-scrollbar style="max-height:75vh">
+    <n-modal
+      v-model:show="blocked_manager.modal"
+      preset="card"
+      title="屏蔽用户管理"
+      style="width: 640px"
+    >
+      <n-space vertical>
+        <n-alert type="info" :show-icon="false">
+          屏蔽数据目前保留在浏览器本地
+        </n-alert>
+        <n-divider style="color: var(--text-color-3); font-size: 14px"
+          >共屏蔽{{ store.blocked_users.length }}人</n-divider
+        >
+        <n-empty
+          v-if="store.blocked_users.length === 0"
+          description="暂无屏蔽用户"
+        />
+        <template v-else>
+          <n-space vertical>
+            <template v-for="user in store.blocked_users" :key="user.id">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <div
+                  style="display: flex; align-items: center; cursor: pointer"
+                  @click="OpenLink('/user/' + user.id)"
+                >
+                  <Avatar :user="user" :size="36" />
+                  <div style="margin-left: 8px">
+                    <div style="font-size: 16px">{{ user.nickname }}</div>
+                    <div style="margin-top: -2px; font-size: 14px">
+                      uid:{{ user.id }}
+                    </div>
+                  </div>
+                </div>
+                <n-button tertiary type="error" @click="Unblock(user.id)"
+                  >解除屏蔽</n-button
+                >
+              </div>
+              <n-divider style="margin: 4px 0" />
+            </template>
+          </n-space>
+        </template>
+      </n-space>
+    </n-modal>
+
+    <n-modal
+      v-model:show="follows.modal"
+      preset="card"
+      :title="follows.title"
+      style="width: 600px"
+    >
+      <n-scrollbar style="max-height: 75vh">
         <n-space vertical>
           <template v-for="user in follows.list">
-            <div style="display:flex;align-items:center;cursor:pointer" @click="follows.modal=false;OpenLink('/user/' + user.id);">
+            <div
+              style="display: flex; align-items: center; cursor: pointer"
+              @click="
+                follows.modal = false;
+                OpenLink('/user/' + user.id);
+              "
+            >
               <Avatar :user="user" :size="36" />
-              <div style="margin-left: 4px;">
-                <div style="font-size: 16px;margin-top:-4px;">{{ user.nickname }}</div>
-                <div style="margin-top: -4px;font-size:14px;">uid:{{ user.id }}</div>
+              <div style="margin-left: 4px">
+                <div style="font-size: 16px; margin-top: -4px">
+                  {{ user.nickname }}
+                </div>
+                <div style="margin-top: -4px; font-size: 14px">
+                  uid:{{ user.id }}
+                </div>
               </div>
             </div>
-            <n-divider style="margin:0px;"></n-divider>
+            <n-divider style="margin: 0px"></n-divider>
           </template>
         </n-space>
-        <n-divider style="color:var(--text-color-3);font-size:14px;">已加载{{ follows.list.length }}条</n-divider>
-        <n-button block @click="GetFollowList" :disabled="follows.end" :loading="follows.loading">
-          {{ follows.end ? '木有更多了' : '加载更多' }}</n-button>
+        <n-divider style="color: var(--text-color-3); font-size: 14px"
+          >已加载{{ follows.list.length }}条</n-divider
+        >
+        <n-button
+          block
+          @click="GetFollowList"
+          :disabled="follows.end"
+          :loading="follows.loading"
+        >
+          {{ follows.end ? "木有更多了" : "加载更多" }}</n-button
+        >
       </n-scrollbar>
     </n-modal>
   </div>
