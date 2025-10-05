@@ -10,6 +10,7 @@ import http from "@/utils/request";
 import { encryptPassword } from "./EncryptPassword";
 import useClipboard from "vue-clipboard3";
 import router from "@/router";
+import store from "./store";  
 
 //一言
 const hitokoto = ref("");
@@ -220,4 +221,9 @@ function GetObjUrl(obj: string) {
   return "";
 }
 
-export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl };
+// 获取屏蔽用户id列表
+function GetBlockedUserIds(): number[] {
+  return store.blocked_users.map((x) => x.id);
+}
+
+export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl, GetBlockedUserIds };

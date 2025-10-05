@@ -22,7 +22,7 @@ const course = reactive({
   msg: ""
 })
 
-const is_removed = {};
+const is_removed:{ [key: string]: boolean } = {};
 function customRequest({
   file,
   onFinish,
