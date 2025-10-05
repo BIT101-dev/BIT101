@@ -352,6 +352,7 @@ watch(
                 : "关注"
             }}
           </n-button>
+          <span style="margin: 0 8px"></span>
           <n-popconfirm
             v-if="!user_info.blocked"
             @positive-click="Block"
