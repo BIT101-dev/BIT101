@@ -50,68 +50,67 @@ function FormatTime(t: number | Date | string) {
 
 //Webvpn模块
 const webvpn = reactive({
-  model: false,
-  loading: false,
   sid: "",
   password: "",
-  verify_token: "", //用于注册
-  verify_code: "", //用于注册
-  cookie: "",
-  data: {
-    execution: "",
-    cookie: "",
-    salt: "",
-    captcha: "",
-    captcha_text: "",
-    password: "",
-  },
+  jwb_cookie: "",
+  jxzxehall_cookie: "",
+  loading: false
 });
 
-//webvpn验证初始化
-function WebvpnVerify(sid: string, password: string) {
+function GetWebVPNJWBCookie(sid: string, password: string) {
   webvpn.loading = true;
-  webvpn.sid = sid;
-  webvpn.password = password;
-  http
-    .post("/user/webvpn_verify_init", {
-      sid: webvpn.sid,
+  return http
+    .post("https://bit-login.teclab.org.cn/api/jwb/cookies", {
+      username: sid,
+      password: password,
     })
     .then((res) => {
-      webvpn.data = res.data;
-      webvpn.data.password = encryptPassword(webvpn.password, webvpn.data.salt);
-      // TODO: real captcha
-      // if (webvpn.data.captcha) {
-      //   webvpn.data.captcha = webvpn.data.captcha;
-      //   webvpn.data.captcha_text = "";
-      //   webvpn.model = true;
-      // } else WebvpnVerify2();
-      webvpn.data.captcha_text = encryptPassword("{}", webvpn.data.salt);
-      WebvpnVerify2();
+      const responseData = res.data || res;
+      webvpn.jwb_cookie = responseData.cookie_str;
+      webvpn.loading = false;
+      if (webvpn.jwb_cookie) {
+        window.$message?.success("获取教务部 Cookies 成功OvO");
+      } else {
+        window.$message?.error(`获取教务部 Cookies 失败: 空的返回值`);
+      }
+      return webvpn.jwb_cookie;
+    })
+    .catch((err) => {
+      webvpn.loading = false;
+      const errorMsg = err.response?.data?.detail || err.message || "未知错误";
+      window.$message?.error(`获取教务部 Cookies 失败: ${errorMsg}`);
+      console.error(err);
+      return Promise.reject(err);
     });
 }
 
-//webvpn验证后续步骤
-function WebvpnVerify2() {
-  webvpn.model = false;
-  http
-    .post("/user/webvpn_verify", {
-      sid: webvpn.sid,
-      salt: webvpn.data.salt,
-      password: webvpn.data.password,
-      execution: webvpn.data.execution,
-      cookie: webvpn.data.cookie,
-      captcha: webvpn.data.captcha_text,
+function GetWebVPNJXZXEHALLCookie(sid: string, password: string) {
+  webvpn.loading = true;
+  return http
+    .post("https://bit-login.teclab.org.cn/api/jxzxehall/cookies", {
+      username: sid,
+      password: password,
     })
     .then((res) => {
-      webvpn.verify_code = res.data.code;
-      webvpn.verify_token = res.data.token;
-      webvpn.cookie = webvpn.data.cookie;
+      const responseData = res.data || res;
+      webvpn.jxzxehall_cookie = responseData.cookie_str;
       webvpn.loading = false;
+      if (webvpn.jxzxehall_cookie) {
+        window.$message?.success("获取教学中心 Cookies 成功OvO");
+      } else {
+        window.$message?.error(`获取教学中心 Cookies 失败: 空的返回值`);
+      }
+      return webvpn.jxzxehall_cookie;
     })
-    .catch(() => {
+    .catch((err) => {
       webvpn.loading = false;
+      const errorMsg = err.response?.data?.detail || err.message || "未知错误";
+      window.$message?.error(`获取教学中心 Cookies 失败: ${errorMsg}`);
+      console.error(err);
+      return Promise.reject(err);
     });
 }
+
 
 //复制
 const { toClipboard } = useClipboard();
@@ -220,4 +219,4 @@ function GetObjUrl(obj: string) {
   return "";
 }
 
-export { hitokoto, FormatTime, webvpn, WebvpnVerify, WebvpnVerify2, Clip, GetObjName, GetObjUrl };
+export { hitokoto, FormatTime, webvpn, GetWebVPNJWBCookie, GetWebVPNJXZXEHALLCookie, Clip, GetObjName, GetObjUrl };

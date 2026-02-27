@@ -11,7 +11,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5"
 import store from '@/utils/store';
-import { webvpn, WebvpnVerify } from '@/utils/tools'
+import { GetWebVPNJWBCookie, webvpn } from '@/utils/tools'
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
@@ -225,7 +225,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
                     placeholder="学校统一身份认证密码" />
                 </n-form-item-gi>
                 <n-gi span="4">
-                  <n-button @click="WebvpnVerify(user.sid, user.webvpn_password)"
+                  <n-button @click="GetWebVPNJWBCookie(user.sid, user.webvpn_password)"
                     :disabled="!user.webvpn_password || !user.sid" :loading="webvpn.loading" block>验证</n-button>
                 </n-gi>
               </n-grid>

@@ -29,7 +29,6 @@ import LightModeOutlined from '@vicons/material/LightModeOutlined'
 import DarkModeOutlined from '@vicons/material/DarkModeOutlined'
 import QuestionCircleOutlined from "@vicons/antd/QuestionCircleOutlined"
 import BookmarkBorderOutlined from "@vicons/material/BookmarkBorderOutlined"
-import GlobalComponents from './components/GlobalComponents.vue';
 import { hitokoto, WatchNetwork } from './utils/tools';
 import http from './utils/request';
 import axios from 'axios';

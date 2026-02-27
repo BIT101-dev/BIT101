@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import router from '@/router';
 import http from '@/utils/request';
-import { WebvpnVerify, webvpn } from '@/utils/tools';
+import { GetWebVPNJWBCookie, WebvpnVerify, webvpn } from '@/utils/tools';
 import store from '@/utils/store';
 import { DataTableRowKey } from 'naive-ui';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
@@ -213,7 +213,7 @@ function Filter() {
 
 
 function GetList() {
-  if (!webvpn.cookie) return;
+  if (!webvpn.jwb_cookie) return;
   loading.value = true;
   http
     .get("/score", {
@@ -221,7 +221,7 @@ function GetList() {
         detail: detail.value ? true : '',
       },
       headers: {
-        "webvpn-cookie": webvpn.cookie,
+        "webvpn-cookie": webvpn.jwb_cookie,
       },
     })
     .then((res) => {
@@ -304,7 +304,7 @@ function GetReport() {
   report.loading = true;
   http.get('/score/report', {
     headers: {
-      "webvpn-cookie": webvpn.cookie,
+      "webvpn-cookie": webvpn.jwb_cookie,
     },
   })
     .then((res) => {
@@ -320,7 +320,7 @@ onMounted(() => {
   GetList();
 })
 
-watch(() => webvpn.cookie, () => {
+watch(() => webvpn.jwb_cookie, () => {
   GetList();
 })
 
@@ -329,10 +329,10 @@ watch(() => webvpn.cookie, () => {
 <template>
   <div class="container">
     <n-card title="成寄查询">
-      <n-space vertical v-if="!webvpn.cookie">
+      <n-space vertical v-if="!webvpn.jwb_cookie">
         <n-input :input-props="{id:'sid'}" v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input :input-props="{id:'password'}" v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
-        <n-button id="submit" attr-type="submit" @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
+        <n-button id="submit" attr-type="submit" @click="GetWebVPNJWBCookie(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
           block :loading="webvpn.loading">
           查询
         </n-button>
