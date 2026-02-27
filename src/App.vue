@@ -11,6 +11,7 @@ import LightThemeOverrides from '@/utils/naive-ui-light-theme-overrides.json';
 import DarkThemeOverrides from '@/utils/naive-ui-dark-theme-overrides.json';
 import { useRouter, useRoute } from 'vue-router';
 import { h, ref, onMounted, computed } from 'vue';
+import GlobalComponents from './components/GlobalComponents.vue';
 import MenuRound from '@vicons/material/MenuRound'
 import HomeOutlined from '@vicons/material/HomeOutlined'
 import FingerprintOutlined from '@vicons/material/FingerprintOutlined'
