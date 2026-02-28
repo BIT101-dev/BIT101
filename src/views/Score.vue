@@ -215,13 +215,13 @@ function Filter() {
 }
 
 
-function GetList(username:string,password:string,detail=false) {
+function GetList(username:string,password:string,_detail=false) {
   loading.value = true;
   http
     .post("https://bit-login.teclab.org.cn/api/jwb/bit101/score", {
         username: username,
         password: password,
-        detail: detail
+        detail: _detail
     })
     .then((res) => {
       store.grade_query.sid = user.sid;
@@ -268,8 +268,11 @@ function GetList(username:string,password:string,detail=false) {
         course_time.filter = course_time.filter.filter((s: string) => course_time_tmp.indexOf(s) != -1);
       
       Filter();
+      detail.value = _detail;
 
       state.base_loaded = true;
+    }).catch(() => {
+      loading.value = false;
     })
 }
 
@@ -377,3 +380,5 @@ function GetReport(username,password) {
     </n-modal>
   </div>
 </template>
+
+
