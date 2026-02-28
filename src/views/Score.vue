@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import router from '@/router';
 import http from '@/utils/request';
-import { WebvpnVerify, webvpn } from '@/utils/tools';
+import { GetWebVPNJWBCookie, WebvpnVerify, webvpn } from '@/utils/tools';
 import store from '@/utils/store';
 import { DataTableRowKey } from 'naive-ui';
 import { RowData } from 'naive-ui/es/data-table/src/interface';
@@ -103,6 +103,9 @@ const data = ref([] as any);
 const loading = ref(false);
 const detail = ref(false);
 const search = ref("");
+const state = reactive({
+  base_loaded: false
+});
 const course_type = reactive({
   list: [] as any,
   filter: store.grade_query.course_type_filter,
@@ -212,17 +215,13 @@ function Filter() {
 }
 
 
-function GetList() {
-  if (!webvpn.cookie) return;
+function GetList(username:string,password:string,detail=false) {
   loading.value = true;
   http
-    .get("/score", {
-      params: {
-        detail: detail.value ? true : '',
-      },
-      headers: {
-        "webvpn-cookie": webvpn.cookie,
-      },
+    .post("https://bit-login.teclab.org.cn/api/jwb/bit101/score", {
+        username: username,
+        password: password,
+        detail: detail
     })
     .then((res) => {
       store.grade_query.sid = user.sid;
@@ -269,6 +268,8 @@ function GetList() {
         course_time.filter = course_time.filter.filter((s: string) => course_time_tmp.indexOf(s) != -1);
       
       Filter();
+
+      state.base_loaded = true;
     })
 }
 
@@ -298,17 +299,16 @@ const modal_data = ref({});
 const report = reactive({
   loading: false,
   modal: false,
-  list: [],
+  url: ""
 })
-function GetReport() {
+function GetReport(username,password) {
   report.loading = true;
-  http.get('/score/report', {
-    headers: {
-      "webvpn-cookie": webvpn.cookie,
-    },
+  http.post('https://bit-login.teclab.org.cn/api/jwb/cjd/img', {
+      username: username,
+      password: password,
   })
     .then((res) => {
-      report.list = res.data.data;
+      report.url = res.data.data.url;
       report.loading = false;
       report.modal = true;
     }).catch(() => {
@@ -316,32 +316,26 @@ function GetReport() {
     })
 }
 
-onMounted(() => {
-  GetList();
-})
 
-watch(() => webvpn.cookie, () => {
-  GetList();
-})
 
 </script>
 
 <template>
   <div class="container">
     <n-card title="成寄查询">
-      <n-space vertical v-if="!webvpn.cookie">
+      <n-space vertical v-if="!state.base_loaded">
         <n-input :input-props="{id:'sid'}" v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input :input-props="{id:'password'}" v-model:value="user.password" type="password" show-password-on="click" placeholder="学校统一身份认证密码" />
-        <n-button id="submit" attr-type="submit" @click="WebvpnVerify(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
+        <n-button id="submit" attr-type="submit" @click="GetList(user.sid, user.password)" :disabled="!user.sid || !user.password || webvpn.loading"
           block :loading="webvpn.loading">
           查询
         </n-button>
       </n-space>
       <n-space vertical v-else>
-        <n-button v-show="!detail" @click="detail = true, GetList()" :disabled="loading || detail" block>
+        <n-button v-show="!detail" @click="GetList(user.sid, user.password, true)" :disabled="loading || detail" block>
           查询详细信息
         </n-button>
-        <n-button @click="GetReport()" :disabled="loading || report.loading" :loading="report.loading" block>
+        <n-button @click="GetReport(user.sid, user.password)" :disabled="loading || report.loading" :loading="report.loading" block>
           获取可信成绩单
         </n-button>
         <n-select v-model:value="course_type.filter" multiple :options="course_type.list" max-tag-count="responsive" />
@@ -378,7 +372,7 @@ watch(() => webvpn.cookie, () => {
 
     <n-modal v-model:show="report.modal" preset="card" style="text-align:center;max-width: 666px;">
       <n-scrollbar style="max-height:88vh;">
-        <n-image v-for="i in report.list" :src="i" :img-props="{ 'style': 'width:100%;' }"></n-image>
+        <n-image :src="report.url" :img-props="{ 'style': 'width:100%;' }"></n-image>
       </n-scrollbar>
     </n-modal>
   </div>

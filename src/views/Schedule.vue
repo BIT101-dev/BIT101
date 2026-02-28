@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import http from "@/utils/request";
-import { OpenLink, WebvpnVerify, webvpn } from "@/utils/tools";
+import { OpenLink, webvpn, GetWebVPNJWBCookie } from "@/utils/tools";
 import { reactive, onMounted, watch } from "vue";
 
 const user = reactive({
@@ -23,17 +23,13 @@ const schedule = reactive({
   msg: "",
 });
 
-function GetSchedule() {
-  if (!webvpn.cookie) return;
+function GetSchedule(username,password) {
   schedule.loading = true;
   http
-    .get("/courses/schedule", {
-      params: {
-        term: schedule.term,
-      },
-      headers: {
-        "webvpn-cookie": webvpn.cookie,
-      },
+    .post("https://bit-login.teclab.org.cn/api/jxzxehall/schedule_ics", {
+        username: username,
+        password: password,
+        kksj: schedule.term
     })
     .then((res) => {
       schedule.url = res.data.url;
@@ -45,22 +41,13 @@ function GetSchedule() {
     });
 }
 
-onMounted(() => {
-  GetSchedule();
-});
 
-watch(
-  () => webvpn.cookie,
-  () => {
-    GetSchedule();
-  }
-);
 </script>
 
 <template>
   <div class="container">
     <n-card title="课程表">
-      <n-space vertical v-if="!webvpn.cookie">
+      <n-space vertical v-if="!webvpn.jwb_cookie">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input
           v-model:value="user.password"
@@ -79,20 +66,20 @@ watch(
         </n-collapse>
 
         <n-button
-          @click="WebvpnVerify(user.sid, user.password)"
-          :disabled="!user.sid || !user.password || webvpn.loading"
+          @click="GetSchedule(user.sid, user.password)"
+          :disabled="!user.sid || !user.password"
           block
-          :loading="webvpn.loading"
+          :loading="schedule.loading"
         >
           查询
         </n-button>
       </n-space>
 
-      <div v-if="schedule.loading" style="text-align: center">
+      <!-- <div v-if="schedule.loading" style="text-align: center">
         <n-spin size="large">
           <template #description> 正在获取课程表 </template>
         </n-spin>
-      </div>
+      </div> -->
       <div v-if="schedule.url">
         <p style="margin-top: 0">{{ schedule.msg }}</p>
         <n-button @click="OpenLink(schedule.url)" block> 打开课程表 </n-button>
