@@ -39,7 +39,8 @@ http.interceptors.response.use(
       // 自动跳转
       const route = router.currentRoute.value;
       if (route.name != "login") {
-        window.$message.error(err.response.data.msg || "请先登录awa");
+        var msg = err.response.data.msg || err.response.data.detail || "请先登录awa";
+        window.$message.error(msg);
       } else if (err.response.data.msg) {
         window.$message.error(err.response.data.msg);
       }
