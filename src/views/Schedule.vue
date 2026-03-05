@@ -10,6 +10,8 @@
 import http from "@/utils/request";
 import { OpenLink, webvpn, GetWebVPNJWBCookie } from "@/utils/tools";
 import { reactive, onMounted, watch } from "vue";
+import store from "@/utils/store";
+import BitLoginSetting from "@/components/BitLoginSetting.vue";
 
 const user = reactive({
   sid: "",
@@ -23,13 +25,13 @@ const schedule = reactive({
   msg: "",
 });
 
-function GetSchedule(username,password) {
+function GetSchedule(username, password) {
   schedule.loading = true;
   http
-    .post("https://bit-login.teclab.org.cn/api/jxzxehall/schedule_ics", {
-        username: username,
-        password: password,
-        kksj: schedule.term
+    .post(`${store.bit_login_url}/api/jxzxehall/schedule_ics`, {
+      username: username,
+      password: password,
+      kksj: schedule.term,
     })
     .then((res) => {
       schedule.url = res.data.url;
@@ -40,13 +42,14 @@ function GetSchedule(username,password) {
       schedule.loading = false;
     });
 }
-
-
 </script>
 
 <template>
   <div class="container">
     <n-card title="课程表">
+      <template #header-extra>
+        <BitLoginSetting />
+      </template>
       <n-space vertical v-if="!webvpn.jwb_cookie">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input
@@ -88,9 +91,7 @@ function GetSchedule(username,password) {
     <n-alert :show-icon="false" type="info">
       导出的是当前学期的课表（.ics格式），iOS用户直接打开链接即可添加到日历，安卓用户可使用BIT101-Android
       APP（或支持.ics格式的日历软件）,桌面端也有软件可以适配.ics格式。具体请见：
-      <n-a href="/paper/21">
-        使用攻略
-      </n-a>
+      <n-a href="/paper/21"> 使用攻略 </n-a>
     </n-alert>
   </div>
 </template>

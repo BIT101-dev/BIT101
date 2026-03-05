@@ -10,6 +10,7 @@ import http from "@/utils/request";
 import { encryptPassword } from "./EncryptPassword";
 import useClipboard from "vue-clipboard3";
 import router from "@/router";
+import store from "@/utils/store";
 
 //一言
 const hitokoto = ref("");
@@ -60,7 +61,7 @@ const webvpn = reactive({
 function GetWebVPNJWBCookie(sid: string, password: string) {
   webvpn.loading = true;
   return http
-    .post("https://bit-login.teclab.org.cn/api/jwb/cookies", {
+    .post(`${store.bit_login_url}/api/jwb/cookies`, {
       username: sid,
       password: password,
     })
@@ -87,7 +88,7 @@ function GetWebVPNJWBCookie(sid: string, password: string) {
 function GetWebVPNJXZXEHALLCookie(sid: string, password: string) {
   webvpn.loading = true;
   return http
-    .post("https://bit-login.teclab.org.cn/api/jxzxehall/cookies", {
+    .post(`${store.bit_login_url}/api/jxzxehall/cookies`, {
       username: sid,
       password: password,
     })
