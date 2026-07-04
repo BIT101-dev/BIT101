@@ -29,7 +29,7 @@ li {
       <li>也请分享给更多人哦_(:з」∠)_</li>
       <li>这个网站完完全全是用爱发电的</li>
       <li>祝你天天开心万事如意！</li>
-      <li>Bang15便士</li>
+      <li><span style="text-decoration: line-through;">Bang15便士</span>(自2026年起已被废弃)</li>
     </ol>
   </div>
 </template>
