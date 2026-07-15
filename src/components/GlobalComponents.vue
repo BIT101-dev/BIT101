@@ -7,7 +7,7 @@
 -->
 <script setup lang="ts">
 import MessageContent from './MessageContent.vue';
-// import {webvpn} from '@/utils/tools'
+import BitLoginSmsModal from './BitLoginSmsModal.vue';
 
 
 </script>
@@ -16,14 +16,5 @@ import MessageContent from './MessageContent.vue';
   <n-message-provider>
     <MessageContent />
   </n-message-provider>
-  <!-- <n-modal v-model:show="webvpn.model" :mask-closable="false"> -->
-    <!-- <n-card title="人 工 智 能 识 别" style="width: 224px;text-align: center;">
-      <p style="margin-top:0px;">越人工 越智能</p>
-      <n-image :src="webvpn.data.captcha" />
-      <n-input v-model:value="webvpn.data.captcha_text" placeholder="不会看不出来吧"></n-input>
-      <template #footer>
-        <n-button @click="WebvpnVerify2" :disabled="!webvpn.data.captcha_text">确认</n-button>
-      </template>
-    </n-card> -->
-  <!-- </n-modal> -->
+  <BitLoginSmsModal />
 </template>

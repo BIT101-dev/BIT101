@@ -7,8 +7,7 @@
 -->
 <script setup lang="ts">
 import router from "@/router";
-import http from "@/utils/request";
-import { GetWebVPNJWBCookie, webvpn } from "@/utils/tools";
+import { bitLoginRequest, bitLoginState } from "@/utils/bit-login";
 import store from "@/utils/store";
 import BitLoginSetting from "@/components/BitLoginSetting.vue";
 import { DataTableRowKey } from "naive-ui";
@@ -221,12 +220,12 @@ function Filter() {
 
 function GetList(username: string, password: string, _detail = false) {
   loading.value = true;
-  http
-    .post(`${store.bit_login_url}/api/jwb/bit101/score`, {
-      username: username,
-      password: password,
-      detail: _detail,
-    })
+  bitLoginRequest<{ data: any[][] }>(
+    { username, password },
+    ["jwb"],
+    "/api/jwb/bit101/score",
+    { detail: _detail }
+  )
     .then((res) => {
       store.grade_query.sid = user.sid;
       loading.value = false;
@@ -315,11 +314,11 @@ const report = reactive({
 });
 function GetReport(username, password) {
   report.loading = true;
-  http
-    .post(`${store.bit_login_url}/api/jwb/cjd/img`, {
-      username: username,
-      password: password,
-    })
+  bitLoginRequest<{ data: { url: string } }>(
+    { username, password },
+    ["jwb_cjd"],
+    "/api/jwb/cjd/img"
+  )
     .then((res) => {
       report.url = res.data.data.url;
       report.loading = false;
@@ -355,9 +354,9 @@ function GetReport(username, password) {
           id="submit"
           attr-type="submit"
           @click="GetList(user.sid, user.password)"
-          :disabled="!user.sid || !user.password || webvpn.loading"
+          :disabled="!user.sid || !user.password || bitLoginState.loading"
           block
-          :loading="webvpn.loading"
+          :loading="loading || bitLoginState.loading"
         >
           查询
         </n-button>

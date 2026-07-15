@@ -11,7 +11,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5"
 import store from '@/utils/store';
-import { GetWebVPNJWBCookie, webvpn } from '@/utils/tools'
+import { authenticateBitLogin, bitLoginState } from '@/utils/bit-login';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
@@ -107,11 +107,19 @@ function MailVerify() {
     })
 }
 
-watch(() => webvpn.verify_code, () => {
-  user.verify_code = webvpn.verify_code;
-  user.verify_token = webvpn.verify_token;
-  window.$message.info("验证成功后请点击「注册」");
-})
+async function VerifyIdentity() {
+  try {
+    const auth = await authenticateBitLogin(
+      { username: user.sid, password: user.webvpn_password },
+      ["jwb"]
+    );
+    user.verify_code = user.sid;
+    user.verify_token = auth.accessToken;
+    window.$message.success("验证成功，请点击「注册」");
+  } catch (error: any) {
+    window.$message.error(error?.response?.data?.detail || error?.message || "统一身份认证失败");
+  }
+}
 
 function Login() {
   form_ref.value?.validate((err) => {
@@ -225,8 +233,8 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
                     placeholder="学校统一身份认证密码" />
                 </n-form-item-gi>
                 <n-gi span="4">
-                  <n-button @click="GetWebVPNJWBCookie(user.sid, user.webvpn_password)"
-                    :disabled="!user.webvpn_password || !user.sid" :loading="webvpn.loading" block>验证</n-button>
+                  <n-button @click="VerifyIdentity"
+                    :disabled="!user.webvpn_password || !user.sid" :loading="bitLoginState.loading" block>验证</n-button>
                 </n-gi>
               </n-grid>
             </template>
@@ -252,5 +260,4 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
     <br />
   </div>
 </template>
-
 
