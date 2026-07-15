@@ -331,7 +331,7 @@ function GetReport(username, password) {
 </script>
 
 <template>
-  <div class="container">
+  <n-space vertical>
     <n-card title="成寄查询">
       <template #header-extra>
         <BitLoginSetting />
@@ -470,5 +470,5 @@ function GetReport(username, password) {
         ></n-image>
       </n-scrollbar>
     </n-modal>
-  </div>
+  </n-space>
 </template>
