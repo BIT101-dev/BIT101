@@ -10,6 +10,7 @@ declare module 'vue' {
     Avatar: typeof import('./src/components/Avatar.vue')['default']
     Billboard: typeof import('./src/components/Billboard.vue')['default']
     BitLoginSetting: typeof import('./src/components/BitLoginSetting.vue')['default']
+    BitLoginSmsModal: typeof import('./src/components/BitLoginSmsModal.vue')['default']
     Comment: typeof import('./src/components/Comment.vue')['default']
     CommentEdit: typeof import('./src/components/CommentEdit.vue')['default']
     CommentList: typeof import('./src/components/CommentList.vue')['default']

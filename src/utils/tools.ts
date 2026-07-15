@@ -7,10 +7,9 @@
  */
 import { ref, reactive } from "vue";
 import http from "@/utils/request";
-import { encryptPassword } from "./EncryptPassword";
 import useClipboard from "vue-clipboard3";
 import router from "@/router";
-import store from "@/utils/store";
+import { authenticateBitLogin, bitLoginRequest } from "@/utils/bit-login";
 
 //一言
 const hitokoto = ref("");
@@ -53,63 +52,44 @@ function FormatTime(t: number | Date | string) {
 const webvpn = reactive({
   sid: "",
   password: "",
+  verify_token: "",
+  verify_code: "",
   jwb_cookie: "",
   jxzxehall_cookie: "",
-  loading: false
+  loading: false,
 });
 
-function GetWebVPNJWBCookie(sid: string, password: string) {
+async function GetWebVPNJWBCookie(sid: string, password: string) {
   webvpn.loading = true;
-  return http
-    .post(`${store.bit_login_url}/api/jwb/cookies`, {
-      username: sid,
-      password: password,
-    })
-    .then((res) => {
-      const responseData = res.data || res;
-      webvpn.jwb_cookie = responseData.cookie_str;
-      webvpn.loading = false;
-      if (webvpn.jwb_cookie) {
-        window.$message?.success("获取教务部 Cookies 成功OvO");
-      } else {
-        window.$message?.error(`获取教务部 Cookies 失败: 空的返回值`);
-      }
-      return webvpn.jwb_cookie;
-    })
-    .catch((err) => {
-      webvpn.loading = false;
-      const errorMsg = err.response?.data?.detail || err.message || "未知错误";
-      window.$message?.error(`获取教务部 Cookies 失败: ${errorMsg}`);
-      console.error(err);
-      return Promise.reject(err);
-    });
+  try {
+    const auth = await authenticateBitLogin(
+      { username: sid, password },
+      ["jwb"]
+    );
+    webvpn.jwb_cookie = auth.accessToken;
+    webvpn.verify_code = sid;
+    webvpn.verify_token = auth.accessToken;
+    window.$message?.success("统一身份认证验证成功OvO");
+    return webvpn.jwb_cookie;
+  } finally {
+    webvpn.loading = false;
+  }
 }
 
-function GetWebVPNJXZXEHALLCookie(sid: string, password: string) {
+async function GetWebVPNJXZXEHALLCookie(sid: string, password: string) {
   webvpn.loading = true;
-  return http
-    .post(`${store.bit_login_url}/api/jxzxehall/cookies`, {
-      username: sid,
-      password: password,
-    })
-    .then((res) => {
-      const responseData = res.data || res;
-      webvpn.jxzxehall_cookie = responseData.cookie_str;
-      webvpn.loading = false;
-      if (webvpn.jxzxehall_cookie) {
-        window.$message?.success("获取教学中心 Cookies 成功OvO");
-      } else {
-        window.$message?.error(`获取教学中心 Cookies 失败: 空的返回值`);
-      }
-      return webvpn.jxzxehall_cookie;
-    })
-    .catch((err) => {
-      webvpn.loading = false;
-      const errorMsg = err.response?.data?.detail || err.message || "未知错误";
-      window.$message?.error(`获取教学中心 Cookies 失败: ${errorMsg}`);
-      console.error(err);
-      return Promise.reject(err);
-    });
+  try {
+    const res = await bitLoginRequest<{ cookie_str: string }>(
+      { username: sid, password },
+      ["jxzxehall"],
+      "/api/jxzxehall/cookies"
+    );
+    webvpn.jxzxehall_cookie = res.data.cookie_str;
+    window.$message?.success("获取教学中心 Cookies 成功OvO");
+    return webvpn.jxzxehall_cookie;
+  } finally {
+    webvpn.loading = false;
+  }
 }
 
 

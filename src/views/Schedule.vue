@@ -7,10 +7,9 @@
 -->
 
 <script setup lang="ts">
-import http from "@/utils/request";
-import { OpenLink, webvpn, GetWebVPNJWBCookie } from "@/utils/tools";
-import { reactive, onMounted, watch } from "vue";
-import store from "@/utils/store";
+import { bitLoginRequest, bitLoginState } from "@/utils/bit-login";
+import { OpenLink } from "@/utils/tools";
+import { reactive } from "vue";
 import BitLoginSetting from "@/components/BitLoginSetting.vue";
 
 const user = reactive({
@@ -27,12 +26,12 @@ const schedule = reactive({
 
 function GetSchedule(username, password) {
   schedule.loading = true;
-  http
-    .post(`${store.bit_login_url}/api/jxzxehall/schedule_ics`, {
-      username: username,
-      password: password,
-      kksj: schedule.term,
-    })
+  bitLoginRequest<{ url: string; note: string }>(
+    { username, password },
+    ["jxzxehall"],
+    "/api/jxzxehall/schedule_ics",
+    { kksj: schedule.term }
+  )
     .then((res) => {
       schedule.url = res.data.url;
       schedule.msg = res.data.note;
@@ -50,7 +49,7 @@ function GetSchedule(username, password) {
       <template #header-extra>
         <BitLoginSetting />
       </template>
-      <n-space vertical v-if="!webvpn.jwb_cookie">
+      <n-space vertical v-if="!schedule.url">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input
           v-model:value="user.password"
@@ -72,7 +71,7 @@ function GetSchedule(username, password) {
           @click="GetSchedule(user.sid, user.password)"
           :disabled="!user.sid || !user.password"
           block
-          :loading="schedule.loading"
+          :loading="schedule.loading || bitLoginState.loading"
         >
           查询
         </n-button>
