@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import SmsOutlined from "@vicons/material/SmsOutlined";
+import { computed } from "vue";
 import ShieldOutlined from "@vicons/material/ShieldOutlined";
 import {
   bitLoginState,
   cancelBitLoginSms,
   submitBitLoginSms,
 } from "@/utils/bit-login";
+
+const smsCode = computed<string[]>({
+  get: () => bitLoginState.sms.code.split(""),
+  set: (value) => {
+    bitLoginState.sms.code = value.join("");
+    bitLoginState.sms.error = "";
+  },
+});
 
 function handleKeydown(event: KeyboardEvent): void {
   if (event.key === "Enter") submitBitLoginSms();
@@ -17,44 +25,37 @@ function handleKeydown(event: KeyboardEvent): void {
     :show="bitLoginState.sms.show"
     :mask-closable="false"
     :close-on-esc="false"
-    :auto-focus="false"
+    :auto-focus="true"
     transform-origin="center"
   >
-    <n-card class="sms-card" :bordered="false" role="dialog" aria-modal="true">
-      <div class="sms-heading">
-        <div class="sms-icon">
-          <n-icon :size="28"><SmsOutlined /></n-icon>
+    <n-card title="确 认 是 你 本 人" class="sms-card" :bordered="false" role="dialog" aria-modal="true">
+      <n-space vertical>
+        <div class="sms-security">
+          <n-icon :size="16"><ShieldOutlined /></n-icon>
+          <span>验证码仅用于完成本次登录，请勿告知他人。</span>
         </div>
-        <div>
-          <h2>确认是你本人</h2>
-          <p>统一身份认证需要短信验证</p>
+        
+        <div class="sms-phone">
+          验证码已发送至 <strong>{{ bitLoginState.sms.maskedPhone }}</strong>
         </div>
-      </div>
 
-      <div class="sms-phone">
-        验证码已发送至 <strong>{{ bitLoginState.sms.maskedPhone }}</strong>
-      </div>
+        <n-input-otp
+          v-model:value="smsCode"
+          class="sms-input"
+          :length="6"
+          size="large"
+          :allow-input="(value: string) => !value || /^\d+$/.test(value)"
+          :status="bitLoginState.sms.error ? 'error' : undefined"
+          @keydown="handleKeydown"
+        />
+        
+        <n-collapse-transition :show="Boolean(bitLoginState.sms.error)">
+          <div class="sms-error">{{ bitLoginState.sms.error }}</div>
+        </n-collapse-transition>
 
-      <n-input
-        v-model:value="bitLoginState.sms.code"
-        class="sms-input"
-        size="large"
-        maxlength="8"
-        inputmode="numeric"
-        autocomplete="one-time-code"
-        placeholder="请输入短信验证码"
-        :status="bitLoginState.sms.error ? 'error' : undefined"
-        @keydown="handleKeydown"
-        @input="bitLoginState.sms.error = ''"
-      />
-      <n-collapse-transition :show="Boolean(bitLoginState.sms.error)">
-        <div class="sms-error">{{ bitLoginState.sms.error }}</div>
-      </n-collapse-transition>
-
-      <div class="sms-security">
-        <n-icon :size="16"><ShieldOutlined /></n-icon>
-        <span>验证码仅用于完成本次登录，请勿告知他人</span>
-      </div>
+        <n-p class="acknowledgement">您的登录凭证仅供当前会话使用，BIT101 承诺不会在服务端留存您的凭证信息。</n-p>
+        <n-p class="acknowledgement">如果您正在遭遇电信诈骗，请拨打校内全天应急电话 <n-a href="tel:010-68916110">010-68916110</n-a>。</n-p>
+      </n-space>
 
       <n-space justify="end">
         <n-button @click="cancelBitLoginSms">
@@ -71,28 +72,6 @@ function handleKeydown(event: KeyboardEvent): void {
 <style scoped>
 .sms-card {
   width: min(420px, calc(100vw - 32px));
-  border-radius: 12px;
-  box-shadow: 0 18px 54px rgba(36, 93, 107, 0.2);
-}
-
-.sms-heading {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
-.sms-heading h2 {
-  margin: 0 0 4px;
-  color: var(--text-color-1);
-  font-size: 21px;
-  line-height: 1.2;
-}
-
-.sms-heading p {
-  margin: 0;
-  color: var(--text-color-3);
-  font-size: 14px;
 }
 
 .sms-icon {
@@ -107,7 +86,6 @@ function handleKeydown(event: KeyboardEvent): void {
 }
 
 .sms-phone {
-  margin-bottom: 12px;
   color: var(--text-color-2);
   font-size: 14px;
 }
@@ -116,23 +94,20 @@ function handleKeydown(event: KeyboardEvent): void {
   color: var(--text-color-1);
 }
 
-.sms-input :deep(input) {
-  font-size: 19px;
-  letter-spacing: 0.18em;
-}
-
 .sms-error {
-  margin-top: 7px;
   color: var(--error-color);
-  font-size: 13px;
 }
 
 .sms-security {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 16px 0 22px;
   color: var(--text-color-3);
-  font-size: 12px;
+  font-size: 14px;
+}
+
+.acknowledgement {
+  color: var(--text-color-3);
+  font-size: 14px;
 }
 </style>
