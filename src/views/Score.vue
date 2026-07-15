@@ -2,7 +2,7 @@
  * @Author: flwfdd
  * @Date: 2022-06-26 18:52:08
  * @LastEditTime: 2024-02-26 17:20:06
- * @Description: 
+ * @Description:
  * _(:з」∠)_
 -->
 <script setup lang="ts">
@@ -13,6 +13,8 @@ import BitLoginSetting from "@/components/BitLoginSetting.vue";
 import { DataTableRowKey } from "naive-ui";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, onMounted, watch } from "vue";
+import ServiceStatusAlert from "@/components/ServiceStatusAlert.vue";
+import { ServiceKey } from "@/utils/serviceStatus";
 
 const user = reactive({
   sid: store.grade_query.sid,
@@ -332,6 +334,8 @@ function GetReport(username, password) {
 
 <template>
   <n-space vertical>
+    <ServiceStatusAlert :service="ServiceKey.Score" />
+
     <n-card title="成寄查询">
       <template #header-extra>
         <BitLoginSetting />

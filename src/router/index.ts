@@ -135,6 +135,11 @@ const router = createRouter({
       component: () => import('@/views/admin/Billboard.vue')
     },
     {
+      path: '/admin/service-status/',
+      name: 'admin_service_status',
+      component: () => import('@/views/admin/ServiceStatus.vue')
+    },
+    {
       path: '/:pathMatch(.*)',
       name: '404',
       component: () => import('@/views/404.vue')
