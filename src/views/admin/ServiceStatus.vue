@@ -73,7 +73,12 @@ async function submit() {
       obj: "service_status",
       data: JSON.stringify(statusItems),
     });
-  } finally {
+  } catch (err: any) {
+    if (err.request && err.request.status >= 400) {
+      if (err.response.data.msg) window.$message.error(err.response.data.msg);
+      else window.$message.error("出错了Orz");
+    }
+  }finally {
     submitting.value = false;
   }
 }
