@@ -333,7 +333,7 @@ function GetReport(username, password) {
 </script>
 
 <template>
-  <n-space vertical>
+  <n-space vertical class="container">
     <ServiceStatusAlert :service="ServiceKey.Score" />
 
     <n-card title="成寄查询">
