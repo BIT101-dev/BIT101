@@ -7,6 +7,7 @@
  */
 import { reactive, watch } from "vue";
 import package_json from "../../package.json";
+import { EMPTY_SERVICE_STATUS, ServiceStatusResponse } from "./serviceStatus";
 
 let s = window.localStorage.getItem("store");
 let x: any = {};
@@ -26,6 +27,7 @@ const store = reactive({
   grade_query: x.grade_query || {},
   last_draft: x.last_draft ?? {},
   hide_bot: x.hide_bot ?? false,
+  service_status: x.service_status as ServiceStatusResponse ?? EMPTY_SERVICE_STATUS,
 });
 
 watch(store, () => {

@@ -11,6 +11,8 @@ import { bitLoginRequest, bitLoginState } from "@/utils/bit-login";
 import { OpenLink } from "@/utils/tools";
 import { reactive } from "vue";
 import BitLoginSetting from "@/components/BitLoginSetting.vue";
+import { ServiceKey } from "@/utils/serviceStatus";
+import ServiceStatusAlert from "@/components/ServiceStatusAlert.vue"
 
 const user = reactive({
   sid: "",
@@ -50,6 +52,7 @@ function GetSchedule(username, password) {
         <BitLoginSetting />
       </template>
       <n-space vertical v-if="!schedule.url">
+        <ServiceStatusAlert :service="ServiceKey.Schedule" />
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
         <n-input
           v-model:value="user.password"

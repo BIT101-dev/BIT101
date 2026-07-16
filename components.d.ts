@@ -85,6 +85,7 @@ declare module 'vue' {
     RenderLink: typeof import('./src/components/RenderLink.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ServiceStatusAlert: typeof import('./src/components/ServiceStatusAlert.vue')['default']
     Subscription: typeof import('./src/components/Subscription.vue')['default']
   }
 }
