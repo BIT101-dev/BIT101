@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { reactive } from "vue";
 import store from "@/utils/store";
 
-type BitLoginService = "jwb" | "jwb_cjd" | "jxzxehall";
+type BitLoginService = "webvpn" | "jwb" | "jwb_cjd" | "jxzxehall";
 
 interface ChallengeSnapshot {
   challenge_id: string;
@@ -211,6 +211,24 @@ export async function authenticateBitLogin(
   } finally {
     bitLoginState.loading = false;
   }
+}
+
+export async function getRegistrationJwt(
+  credentials: Credentials,
+  audience: string
+): Promise<string> {
+  const auth = await authenticateBitLogin(credentials, ["webvpn"]);
+  const response = await client.post<{
+    jwt?: string;
+    registration_token?: string;
+  }>(
+    loginUrl(`/api/auth/${auth.challengeId}/registration-token`),
+    { audience },
+    { headers: challengeHeaders(auth.accessToken) }
+  );
+  const jwt = response.data.jwt || response.data.registration_token;
+  if (!jwt) throw new Error("登录服务未返回注册 JWT");
+  return jwt;
 }
 
 export async function bitLoginRequest<T = any>(

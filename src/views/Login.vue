@@ -11,7 +11,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5"
 import store from '@/utils/store';
-import { authenticateBitLogin, bitLoginState } from '@/utils/bit-login';
+import { getRegistrationJwt, bitLoginState } from '@/utils/bit-login';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
@@ -109,12 +109,13 @@ function MailVerify() {
 
 async function VerifyIdentity() {
   try {
-    const auth = await authenticateBitLogin(
+    const sid = user.sid;
+    const jwt = await getRegistrationJwt(
       { username: user.sid, password: user.webvpn_password },
-      ["jwb"]
+      "bit101-main"
     );
-    user.verify_code = user.sid;
-    user.verify_token = auth.accessToken;
+    if (user.sid !== sid) throw new Error("学号已更改，请重新验证");
+    user.verify_token = jwt;
     window.$message.success("验证成功，请点击「注册」");
   } catch (error: any) {
     window.$message.error(error?.response?.data?.detail || error?.message || "统一身份认证失败");
@@ -140,10 +141,12 @@ function Login() {
 function Register() {
   form_ref.value?.validate((err) => {
     if (!err) {
+      const verification = user.verify_type === "webvpn"
+        ? { jwt: user.verify_token }
+        : { token: user.verify_token, code: user.verify_code };
       http.post('/user/register', {
         password: Md5.hashStr(user.password),
-        token: user.verify_token,
-        code: user.verify_code
+        ...verification
       }).then((res) => {
         store.fake_cookie = res.data.fake_cookie;
         CheckStatus();
@@ -153,6 +156,14 @@ function Register() {
     }
   })
 }
+
+watch(
+  () => [user.sid, user.verify_type],
+  () => {
+    user.verify_code = "";
+    user.verify_token = "";
+  }
+);
 
 onMounted(() => { CheckStatus(); })
 
@@ -252,7 +263,8 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
 
 
 
-            <n-button @click="Register" :disabled="!user.verify_code" block>注册</n-button>
+            <n-button @click="Register"
+              :disabled="user.verify_type === 'webvpn' ? !user.verify_token : !user.verify_code" block>注册</n-button>
           </n-form>
         </n-tab-pane>
       </n-tabs>
@@ -260,4 +272,3 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
     <br />
   </div>
 </template>
-
