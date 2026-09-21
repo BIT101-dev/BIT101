@@ -3,16 +3,19 @@ import { reactive } from "vue";
 import store from "@/utils/store";
 
 type BitLoginService = "jwb" | "jwb_cjd" | "jxzxehall";
+export type BitLoginAuthMethod = "password" | "sms";
 
 interface ChallengeSnapshot {
   challenge_id: string;
   access_token?: string;
-  status: "running" | "waiting_sms" | "processing" | "authenticated" | "failed" | "expired";
+  status: "running" | "waiting_captcha" | "waiting_sms" | "processing" | "authenticated" | "failed" | "expired";
   requested_services: BitLoginService[];
   ready_services: BitLoginService[];
   expires_in: number;
   masked_phone?: string;
   sms_purpose?: string;
+  captcha_image?: string;
+  captcha_purpose?: string;
   error?: string;
 }
 
@@ -23,6 +26,8 @@ interface ChallengeEnvelope {
 interface Credentials {
   username: string;
   password: string;
+  phone?: string;
+  authMethod?: BitLoginAuthMethod;
 }
 
 interface ChallengeSession {
@@ -48,11 +53,28 @@ interface SmsPrompt {
   reject: ((reason: Error) => void) | null;
 }
 
+interface CaptchaPrompt {
+  show: boolean;
+  code: string;
+  error: string;
+  image: string;
+  resolve: ((code: string) => void) | null;
+  reject: ((reason: Error) => void) | null;
+}
+
 const client = axios.create();
 let session: ChallengeSession | null = null;
 
 export const bitLoginState = reactive({
   loading: false,
+  captcha: {
+    show: false,
+    code: "",
+    error: "",
+    image: "",
+    resolve: null,
+    reject: null,
+  } as CaptchaPrompt,
   sms: {
     show: false,
     code: "",
@@ -62,6 +84,42 @@ export const bitLoginState = reactive({
     reject: null,
   } as SmsPrompt,
 });
+
+function waitForCaptchaCode(image: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const captcha = bitLoginState.captcha;
+    captcha.show = true;
+    captcha.code = "";
+    captcha.error = "";
+    captcha.image = image;
+    captcha.resolve = resolve;
+    captcha.reject = reject;
+  });
+}
+
+export function submitBitLoginCaptcha(): void {
+  const captcha = bitLoginState.captcha;
+  const code = captcha.code.trim();
+  if (!code || code.length > 16) {
+    captcha.error = "请输入图中的验证码";
+    return;
+  }
+  const resolve = captcha.resolve;
+  captcha.resolve = null;
+  captcha.reject = null;
+  captcha.show = false;
+  captcha.error = "";
+  resolve?.(code);
+}
+
+export function cancelBitLoginCaptcha(): void {
+  const captcha = bitLoginState.captcha;
+  const reject = captcha.reject;
+  captcha.resolve = null;
+  captcha.reject = null;
+  captcha.show = false;
+  reject?.(new Error("已取消图形验证码验证"));
+}
 
 function loginUrl(path: string): string {
   return `${store.bit_login_url}${path}`;
@@ -106,6 +164,11 @@ function updateSession(snapshot: ChallengeSnapshot, username: string): void {
   };
 }
 
+function requireSession(): ChallengeSession {
+  if (!session) throw new Error("登录会话未建立");
+  return session;
+}
+
 function waitForSmsCode(maskedPhone: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const sms = bitLoginState.sms;
@@ -147,7 +210,7 @@ async function pollChallenge(snapshot: ChallengeSnapshot): Promise<ChallengeSnap
   const deadline = Date.now() + Math.max(snapshot.expires_in, 1) * 1000;
   let current = snapshot;
   while (Date.now() < deadline) {
-    if (["waiting_sms", "authenticated", "failed", "expired"].includes(current.status)) {
+    if (["waiting_captcha", "waiting_sms", "authenticated", "failed", "expired"].includes(current.status)) {
       return current;
     }
     await new Promise((resolve) => window.setTimeout(resolve, 350));
@@ -175,15 +238,34 @@ export async function authenticateBitLogin(
       };
     }
 
-    if (!credentials.password) throw new Error("请重新输入统一身份认证密码");
+    const authMethod = credentials.authMethod || "password";
+    if (authMethod === "password" && !credentials.password) throw new Error("请重新输入统一身份认证密码");
+    if (authMethod === "sms" && !/^1\d{10}$/.test(credentials.phone || "")) {
+      throw new Error("请输入正确的 11 位绑定手机号");
+    }
     session = null;
     let response = await client.post<ChallengeSnapshot | ChallengeEnvelope>(loginUrl("/api/auth/start"), {
       username: credentials.username,
       password: credentials.password,
+      phone: credentials.phone || "",
+      auth_method: authMethod,
       services,
       wait_seconds: 1,
     });
     let snapshot = await pollChallenge(challengeSnapshot(response));
+
+    if (snapshot.status === "waiting_captcha") {
+      const code = await waitForCaptchaCode(snapshot.captcha_image || "");
+      response = await client.post<ChallengeSnapshot | ChallengeEnvelope>(
+        loginUrl(`/api/auth/${snapshot.challenge_id}/captcha`),
+        { code },
+        { headers: challengeHeaders(snapshot.access_token || "") }
+      );
+      snapshot = await pollChallenge({
+        ...challengeSnapshot(response),
+        access_token: snapshot.access_token,
+      });
+    }
 
     if (snapshot.status === "waiting_sms") {
       const code = await waitForSmsCode(snapshot.masked_phone || "绑定手机");
@@ -202,7 +284,7 @@ export async function authenticateBitLogin(
       throw new Error(snapshot.error || `统一身份认证未完成（${snapshot.status}）`);
     }
     updateSession(snapshot, credentials.username);
-    const current = session as ChallengeSession;
+    const current = requireSession();
     return {
       challengeId: current.challengeId,
       accessToken: current.accessToken,
