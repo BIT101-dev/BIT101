@@ -15,6 +15,8 @@ import BitLoginSetting from "@/components/BitLoginSetting.vue";
 const user = reactive({
   sid: "",
   password: "",
+  phone: "",
+  authMethod: "sms" as "password" | "sms",
 });
 
 const schedule = reactive({
@@ -24,10 +26,15 @@ const schedule = reactive({
   msg: "",
 });
 
-function GetSchedule(username, password) {
+function GetSchedule() {
   schedule.loading = true;
   bitLoginRequest<{ url: string; note: string }>(
-    { username, password },
+    {
+      username: user.sid,
+      password: user.password,
+      phone: user.phone,
+      authMethod: user.authMethod,
+    },
     ["jxzxehall"],
     "/api/jxzxehall/schedule_ics",
     { kksj: schedule.term }
@@ -51,11 +58,25 @@ function GetSchedule(username, password) {
       </template>
       <n-space vertical v-if="!schedule.url">
         <n-input v-model:value="user.sid" type="number" placeholder="学号" />
+        <n-radio-group v-model:value="user.authMethod" name="auth-method">
+          <n-space>
+            <n-radio value="sms">短信验证码（推荐）</n-radio>
+            <n-radio value="password">用户名密码</n-radio>
+          </n-space>
+        </n-radio-group>
         <n-input
+          v-if="user.authMethod === 'password'"
           v-model:value="user.password"
           type="password"
           show-password-on="click"
           placeholder="学校统一身份认证密码"
+        />
+        <n-input
+          v-else
+          v-model:value="user.phone"
+          type="text"
+          maxlength="11"
+          placeholder="统一身份认证绑定手机号"
         />
         <n-collapse>
           <n-collapse-item title="指定学期">
@@ -68,8 +89,8 @@ function GetSchedule(username, password) {
         </n-collapse>
 
         <n-button
-          @click="GetSchedule(user.sid, user.password)"
-          :disabled="!user.sid || !user.password"
+          @click="GetSchedule"
+          :disabled="!user.sid || (user.authMethod === 'password' ? !user.password : !/^1\d{10}$/.test(user.phone))"
           block
           :loading="schedule.loading || bitLoginState.loading"
         >

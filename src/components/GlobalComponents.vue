@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import MessageContent from './MessageContent.vue';
 import BitLoginSmsModal from './BitLoginSmsModal.vue';
+import BitLoginCaptchaModal from './BitLoginCaptchaModal.vue';
 
 
 </script>
@@ -17,4 +18,5 @@ import BitLoginSmsModal from './BitLoginSmsModal.vue';
     <MessageContent />
   </n-message-provider>
   <BitLoginSmsModal />
+  <BitLoginCaptchaModal />
 </template>
