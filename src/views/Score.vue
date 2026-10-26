@@ -7,15 +7,17 @@
 -->
 <script setup lang="ts">
 import router from "@/router";
-import { bitLoginRequest, bitLoginState } from "@/utils/bit-login";
+import http from "@/utils/request";
+import { hasSchoolCookie, isSchoolAuthRequired, schoolSession, withSchoolSession } from "@/utils/school";
+import { clearSchoolResults, readSchoolCache, resultKey, writeSchoolCache } from "@/utils/school-cache";
+import { FormatTime } from "@/utils/tools";
 import store from "@/utils/store";
-import BitLoginSetting from "@/components/BitLoginSetting.vue";
 import { DataTableRowKey } from "naive-ui";
 import { RowData } from "naive-ui/es/data-table/src/interface";
 import { reactive, ref, onMounted, watch } from "vue";
 
 const user = reactive({
-  sid: store.grade_query.sid,
+  sid: store.grade_query.sid || schoolSession.sid || "",
   password: "",
 });
 
@@ -101,10 +103,13 @@ const columns = [
 const ori_data = ref([] as any);
 const data = ref([] as any);
 const loading = ref(false);
-const detail = ref(false);
+const detail = ref(readSchoolCache<boolean>("score-detail")?.data === true);
 const search = ref("");
+const scoreCachedAt = ref(0);
+const requestGeneration = ref(0);
 const state = reactive({
   base_loaded: false,
+  need_auth: false,
 });
 const course_type = reactive({
   list: [] as any,
@@ -172,6 +177,14 @@ function Compute() {
       avg_gpa_sum += avg_gpa * credit;
     }
   }
+  if (credit_sum === 0) {
+    stat.credit = 0;
+    stat.score = "";
+    stat.gpa = "";
+    stat.avg_score = "";
+    stat.avg_gpa = "";
+    return;
+  }
   stat.credit = credit_sum;
   stat.score = (score_sum / credit_sum).toFixed(4);
   stat.avg_score = (avg_score_sum / credit_sum).toFixed(4);
@@ -218,69 +231,101 @@ function Filter() {
   Compute();
 }
 
-function GetList(username: string, password: string, _detail = false) {
+function ApplyScoreTable(table: string[][], _detail: boolean) {
+  if (!Array.isArray(table) || table.length === 0 || !Array.isArray(table[0])) {
+    throw new Error("成绩数据格式不正确");
+  }
+  const ori_head = table[0];
+  ori_data.value = [];
+  for (let i = 1; i < table.length; i++) {
+    const row: Record<string, string> = {};
+    for (const j in table[i]) {
+      row[ori_head[j]] = table[i][j];
+    }
+    ori_data.value.push(row);
+  }
+  let s;
+  const course_type_tmp: string[] = [];
+  const course_time_tmp: string[] = [];
+  course_type.list = [];
+  course_time.list = [];
+  for (const i of ori_data.value) {
+    s = i["课程性质"];
+    if (course_type_tmp.indexOf(s) == -1) {
+      course_type_tmp.push(s);
+      course_type.list.push({ label: s, value: s });
+    }
+    s = i["开课学期"];
+    if (course_time_tmp.indexOf(s) == -1) {
+      course_time_tmp.push(s);
+      course_time.list.push({ label: s, value: s });
+    }
+  }
+
+  if (!course_type.filter || course_type.filter.length == 0)
+    course_type.filter = course_type_tmp.concat();
+  else
+    course_type.filter = course_type.filter.filter(
+      (s: string) => course_type_tmp.indexOf(s) != -1
+    );
+
+  if (!course_time.filter || course_time.filter.length == 0)
+    course_time.filter = course_time_tmp.concat();
+  else
+    course_time.filter = course_time.filter.filter(
+      (s: string) => course_time_tmp.indexOf(s) != -1
+    );
+
+  Filter();
+  detail.value = _detail;
+  writeSchoolCache("score-detail", _detail);
+  state.base_loaded = true;
+}
+
+function RestoreScoreCache(): boolean {
+  const sid = user.sid.trim();
+  const cached = readSchoolCache<string[][]>(resultKey("score", sid, detail.value));
+  if (!cached || !Array.isArray(cached.data) || cached.data.length === 0) {
+    if (detail.value) {
+      detail.value = false;
+      writeSchoolCache("score-detail", false);
+      return RestoreScoreCache();
+    }
+    return false;
+  }
+  ApplyScoreTable(cached.data, detail.value);
+  scoreCachedAt.value = cached.cachedAt;
+  store.grade_query.sid = sid;
+  state.need_auth = false;
+  return true;
+}
+
+function HandleSchoolError(error: any, fallback: string) {
+  if (isSchoolAuthRequired(error)) state.need_auth = true;
+  if (!error?.response && !error?.__bit101Notified) window.$message.error(error?.message || fallback);
+}
+
+async function GetList(username: string, password: string, _detail = false) {
   loading.value = true;
-  bitLoginRequest<{ data: any[][] }>(
-    { username, password },
-    ["jwb"],
-    "/api/jwb/bit101/score",
-    { detail: _detail }
-  )
-    .then((res) => {
-      store.grade_query.sid = user.sid;
-      loading.value = false;
-      let ori_table = res.data.data;
-      let ori_head = ori_table[0];
-      ori_data.value = [];
-      for (let i = 1; i < ori_table.length; i++) {
-        let row = {};
-        for (let j in ori_table[i]) {
-          row[ori_head[j]] = ori_table[i][j];
-        }
-        ori_data.value.push(row);
-      }
-      let s;
-      let course_type_tmp: string[] = [];
-      let course_time_tmp: string[] = [];
-      course_type.list = [];
-      course_time.list = [];
-      for (let i of ori_data.value) {
-        s = i["课程性质"];
-        if (course_type_tmp.indexOf(s) == -1) {
-          course_type_tmp.push(s);
-          course_type.list.push({ label: s, value: s });
-        }
-
-        s = i["开课学期"];
-        if (course_time_tmp.indexOf(s) == -1) {
-          course_time_tmp.push(s);
-          course_time.list.push({ label: s, value: s });
-        }
-      }
-
-      // 保留之前的筛选
-      if (!course_type.filter || course_type.filter.length == 0)
-        course_type.filter = course_type_tmp.concat();
-      else
-        course_type.filter = course_type.filter.filter(
-          (s: string) => course_type_tmp.indexOf(s) != -1
-        );
-
-      if (!course_time.filter || course_time.filter.length == 0)
-        course_time.filter = course_time_tmp.concat();
-      else
-        course_time.filter = course_time.filter.filter(
-          (s: string) => course_time_tmp.indexOf(s) != -1
-        );
-
-      Filter();
-      detail.value = _detail;
-
-      state.base_loaded = true;
-    })
-    .catch(() => {
-      loading.value = false;
-    });
+  const sid = username.trim();
+  const generation = requestGeneration.value;
+  try {
+    const res = await withSchoolSession(sid, password, (cookie) => http.get("/score", {
+      params: { detail: _detail },
+      headers: { "webvpn-cookie": cookie },
+    }));
+    if (generation !== requestGeneration.value || user.sid.trim() !== sid) return;
+    const table = res.data.data;
+    ApplyScoreTable(table, _detail);
+    store.grade_query.sid = sid;
+    scoreCachedAt.value = Math.floor(Date.now() / 1000);
+    writeSchoolCache(resultKey("score", sid, _detail), table);
+    state.need_auth = false;
+  } catch (error: any) {
+    HandleSchoolError(error, "查询成绩失败");
+  } finally {
+    loading.value = false;
+  }
 }
 
 function downloadCsv() {
@@ -310,38 +355,107 @@ const modal_data = ref({});
 const report = reactive({
   loading: false,
   modal: false,
-  url: "",
+  images: [] as string[],
+  cachedAt: 0,
 });
-function GetReport(username, password) {
-  report.loading = true;
-  bitLoginRequest<{ data: { url: string } }>(
-    { username, password },
-    ["jwb_cjd"],
-    "/api/jwb/cjd/img"
-  )
-    .then((res) => {
-      report.url = res.data.data.url;
-      report.loading = false;
-      report.modal = true;
-    })
-    .catch(() => {
-      report.loading = false;
-    });
+
+function ResetScoreView() {
+  detail.value = false;
+  writeSchoolCache("score-detail", false);
+  search.value = "";
+  state.base_loaded = false;
+  state.need_auth = false;
+  ori_data.value = [];
+  data.value = [];
+  checkedRowKeys.value = [];
+  scoreCachedAt.value = 0;
+  report.images = [];
+  report.cachedAt = 0;
+  report.modal = false;
+  modal.value = false;
+  modal_data.value = {};
+  course_type.list = [];
+  course_time.list = [];
+  course_type.filter = [];
+  course_time.filter = [];
+  store.grade_query.course_type_filter = [];
+  store.grade_query.course_time_filter = [];
+  Object.assign(stat, { credit: 0, num: 0, score: "", gpa: "", avg_score: "", avg_gpa: "" });
 }
+
+function RestoreReportCache(): boolean {
+  const cached = readSchoolCache<string[]>(resultKey("report", user.sid.trim()));
+  if (!cached || !Array.isArray(cached.data) || cached.data.length === 0) return false;
+  report.images = cached.data;
+  report.cachedAt = cached.cachedAt;
+  return true;
+}
+
+async function GetReport(username: string, password: string, refresh = false) {
+  if (!refresh && RestoreReportCache()) {
+    report.modal = true;
+    return;
+  }
+  report.loading = true;
+  const sid = username.trim();
+  const generation = requestGeneration.value;
+  try {
+    const res = await withSchoolSession(sid, password, (cookie) => http.get("/score/report", {
+      headers: { "webvpn-cookie": cookie },
+    }));
+    if (generation !== requestGeneration.value || user.sid.trim() !== sid) return;
+    if (!Array.isArray(res.data.data) || res.data.data.length === 0) {
+      throw new Error("可信成绩单为空");
+    }
+    report.images = res.data.data;
+    report.cachedAt = Math.floor(Date.now() / 1000);
+    writeSchoolCache(resultKey("report", sid), report.images);
+    report.modal = true;
+    state.need_auth = false;
+  } catch (error: any) {
+    HandleSchoolError(error, "获取可信成绩单失败");
+    if (state.need_auth) report.modal = false;
+  } finally {
+    report.loading = false;
+  }
+}
+
+function ClearScoreCache() {
+  requestGeneration.value++;
+  clearSchoolResults("score", user.sid.trim());
+  clearSchoolResults("report", user.sid.trim());
+  ResetScoreView();
+  window.$message.success("已清除本地成绩缓存");
+}
+
+onMounted(() => {
+  RestoreScoreCache();
+  RestoreReportCache();
+});
+
+watch(() => user.sid, (sid, previous) => {
+  if (sid === previous) return;
+  requestGeneration.value++;
+  ResetScoreView();
+  RestoreScoreCache();
+  RestoreReportCache();
+});
+
+watch(() => schoolSession.cookie, (value, previous) => {
+  if (previous && !value) user.password = "";
+});
 </script>
 
 <template>
   <n-space vertical>
     <n-card title="成寄查询">
-      <template #header-extra>
-        <BitLoginSetting />
-      </template>
-      <n-space vertical v-if="!state.base_loaded">
+      <n-space vertical v-if="!state.base_loaded || state.need_auth">
         <n-input
           :input-props="{ id: 'sid' }"
           v-model:value="user.sid"
           type="number"
           placeholder="学号"
+          :disabled="loading || schoolSession.loading"
         />
         <n-input
           :input-props="{ id: 'password' }"
@@ -349,35 +463,53 @@ function GetReport(username, password) {
           type="password"
           show-password-on="click"
           placeholder="学校统一身份认证密码"
+          :disabled="loading || schoolSession.loading"
         />
+        <p v-if="hasSchoolCookie(user.sid)">已有学校会话，密码可留空。</p>
         <n-button
           id="submit"
           attr-type="submit"
-          @click="GetList(user.sid, user.password)"
-          :disabled="!user.sid || !user.password || bitLoginState.loading"
+          @click="GetList(user.sid, user.password, detail)"
+          :disabled="!user.sid || (!user.password && !hasSchoolCookie(user.sid)) || loading || schoolSession.loading"
           block
-          :loading="loading || bitLoginState.loading"
+          :loading="loading || schoolSession.loading"
         >
           查询
         </n-button>
+        <n-button v-if="state.base_loaded" text @click="ClearScoreCache" :disabled="loading || report.loading || schoolSession.loading">清除本地缓存</n-button>
       </n-space>
       <n-space vertical v-else>
         <n-button
+          @click="GetList(user.sid, user.password, detail)"
+          :disabled="loading || schoolSession.loading"
+          :loading="loading || schoolSession.loading"
+          block
+        >
+          刷新成绩
+        </n-button>
+        <n-button
           v-show="!detail"
           @click="GetList(user.sid, user.password, true)"
-          :disabled="loading || detail"
+          :disabled="loading || schoolSession.loading || detail"
           block
         >
           查询详细信息
         </n-button>
         <n-button
           @click="GetReport(user.sid, user.password)"
-          :disabled="loading || report.loading"
+          :disabled="loading || schoolSession.loading || report.loading"
           :loading="report.loading"
           block
         >
           获取可信成绩单
         </n-button>
+        <n-button @click="state.need_auth = true" :disabled="loading || schoolSession.loading || report.loading" block>
+          重新认证
+        </n-button>
+        <n-button @click="ClearScoreCache" :disabled="loading || report.loading || schoolSession.loading" block>
+          清除本地缓存
+        </n-button>
+        <p v-if="scoreCachedAt">上次更新：{{ FormatTime(scoreCachedAt) }}</p>
         <n-select
           v-model:value="course_type.filter"
           multiple
@@ -463,9 +595,15 @@ function GetReport(username, password) {
       preset="card"
       style="text-align: center; max-width: 666px"
     >
+      <p v-if="report.cachedAt">上次更新：{{ FormatTime(report.cachedAt) }}</p>
+      <n-button block :loading="report.loading" @click="GetReport(user.sid, user.password, true)">
+        刷新可信成绩单
+      </n-button>
       <n-scrollbar style="max-height: 88vh">
         <n-image
-          :src="report.url"
+          v-for="(image, index) in report.images"
+          :key="index"
+          :src="image"
           :img-props="{ style: 'width:100%;' }"
         ></n-image>
       </n-scrollbar>

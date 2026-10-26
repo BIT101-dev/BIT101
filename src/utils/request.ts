@@ -53,6 +53,19 @@ http.interceptors.response.use(
     } else if (err.request && err.request.status == 400) {
       if (err.response.data.msg) window.$message.error(err.response.data.msg);
       else window.$message.error("请检查请求参数awa");
+    } else if (err.request && err.request.status) {
+      const status = err.request.status;
+      const messages: Record<number, string> = {
+        429: "学校请求并发已满，请稍后重试",
+        413: "学校返回的内容过大",
+        502: "学校代理暂时不可用",
+        504: "学校代理响应超时",
+      };
+      window.$message.error(err.response?.data?.msg || messages[status] || `请求失败（HTTP ${status}）`);
+      err.__bit101Notified = true;
+    } else if (err.request) {
+      window.$message.error("无法连接服务器，请检查网络或服务器状态");
+      err.__bit101Notified = true;
     }
     return Promise.reject(err);
   }

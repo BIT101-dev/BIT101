@@ -11,7 +11,7 @@ import { FormRules, FormItemRule, FormInst } from 'naive-ui';
 import http from '@/utils/request';
 import { Md5 } from "ts-md5"
 import store from '@/utils/store';
-import { authenticateBitLogin, bitLoginState } from '@/utils/bit-login';
+import { verifySchool, clearSchoolCookie, schoolSession } from '@/utils/school';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
@@ -24,7 +24,16 @@ const user = reactive({
   verify_type: "webvpn",
   verify_code: "",
   verify_token: "",
+  verified_sid: "",
   webvpn_password: "",
+})
+
+const verify_request = ref(0);
+watch([() => user.sid, () => user.verify_type], () => {
+  verify_request.value++;
+  user.verify_token = "";
+  user.verify_code = "";
+  user.verified_sid = "";
 })
 
 const form_ref = ref<FormInst | null>(null);
@@ -94,10 +103,15 @@ function CheckStatus() {
 
 const count_down = ref(0); //倒计时
 function MailVerify() {
-  http.post('/user/mail_verify', {
-    sid: user.sid
-  })
+  const sid = user.sid.trim();
+  const request_id = ++verify_request.value;
+  user.verify_token = "";
+  user.verify_code = "";
+  user.verified_sid = "";
+  http.post('/user/mail_verify', { sid })
     .then(res => {
+      if (request_id !== verify_request.value || user.verify_type !== "mail" || user.sid.trim() !== sid) return;
+      user.verified_sid = sid;
       user.verify_token = res.data.token;
       count_down.value = 60;
       let itv = setInterval(() => {
@@ -108,16 +122,22 @@ function MailVerify() {
 }
 
 async function VerifyIdentity() {
+  const sid = user.sid.trim();
+  const request_id = ++verify_request.value;
+  user.verify_token = "";
+  user.verify_code = "";
+  user.verified_sid = "";
   try {
-    const auth = await authenticateBitLogin(
-      { username: user.sid, password: user.webvpn_password },
-      ["jwb"]
-    );
-    user.verify_code = user.sid;
-    user.verify_token = auth.accessToken;
+    const result = await verifySchool(sid, user.webvpn_password);
+    if (request_id !== verify_request.value || user.verify_type !== "webvpn" || user.sid.trim() !== sid) return;
+    user.verified_sid = sid;
+    user.verify_token = result.token;
+    user.verify_code = result.code;
     window.$message.success("验证成功，请点击「注册」");
   } catch (error: any) {
-    window.$message.error(error?.response?.data?.detail || error?.message || "统一身份认证失败");
+    if (!error?.__bit101Notified) {
+      window.$message.error(error?.response?.data?.msg || error?.response?.data?.detail || error?.message || "统一身份认证失败");
+    }
   }
 }
 
@@ -139,24 +159,38 @@ function Login() {
 
 function Register() {
   form_ref.value?.validate((err) => {
-    if (!err) {
-      http.post('/user/register', {
-        password: Md5.hashStr(user.password),
-        token: user.verify_token,
-        code: user.verify_code
-      }).then((res) => {
-        store.fake_cookie = res.data.fake_cookie;
-        CheckStatus();
-      })
-    } else {
+    if (err) {
       window.$message.error('请检查输入qwq')
+      return
     }
+    if (user.verified_sid !== user.sid.trim() || !user.verify_token || !user.verify_code) {
+      window.$message.error('请先完成当前学号的身份验证')
+      return
+    }
+    http.post('/user/register', {
+      password: Md5.hashStr(user.password),
+      token: user.verify_token,
+      code: user.verify_code
+    }).then((res) => {
+      store.fake_cookie = res.data.fake_cookie;
+      CheckStatus();
+    })
   })
 }
 
 onMounted(() => { CheckStatus(); })
 
-function Logout() { store.fake_cookie = ""; CheckStatus(); }
+function Logout() {
+  user.verify_token = "";
+  user.verify_code = "";
+  user.verified_sid = "";
+  user.password = "";
+  user.repassword = "";
+  user.webvpn_password = "";
+  clearSchoolCookie();
+  store.fake_cookie = "";
+  CheckStatus();
+}
 
 </script>
 
@@ -234,7 +268,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
                 </n-form-item-gi>
                 <n-gi span="4">
                   <n-button @click="VerifyIdentity"
-                    :disabled="!user.webvpn_password || !user.sid" :loading="bitLoginState.loading" block>验证</n-button>
+                    :disabled="!user.webvpn_password || !user.sid" :loading="schoolSession.loading" block>验证</n-button>
                 </n-gi>
               </n-grid>
             </template>
@@ -252,7 +286,7 @@ function Logout() { store.fake_cookie = ""; CheckStatus(); }
 
 
 
-            <n-button @click="Register" :disabled="!user.verify_code" block>注册</n-button>
+            <n-button @click="Register" :disabled="!user.verify_code || user.verified_sid !== user.sid.trim() || schoolSession.loading" block>注册</n-button>
           </n-form>
         </n-tab-pane>
       </n-tabs>

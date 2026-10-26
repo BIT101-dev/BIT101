@@ -15,7 +15,7 @@ else x = {};
 
 const store = reactive({
   version: package_json.version,
-  api_url: "https://bit101.flwfdd.xyz",
+  api_url: import.meta.env.VITE_API_URL || "https://bit101.flwfdd.xyz",
   // api_url: "http://127.0.0.1:8080",
   // api_url: "http://e5.flwfdd.xyz:8080",
   // api_url:"http://127.0.0.1:4523/m1/2401657-0-default",
