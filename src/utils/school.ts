@@ -2,6 +2,7 @@ import { reactive } from "vue";
 import http from "./request";
 import { encryptPassword } from "./EncryptPassword";
 import { readSchoolCache, removeSchoolCache, schoolSessionKey, writeSchoolCache } from "./school-cache";
+import { cancelSchoolSms, requestSchoolSms } from "./school-sms";
 
 interface StoredSchoolSession {
   sid: string;
@@ -25,6 +26,31 @@ interface SchoolVerification {
 let pending: { sid: string; request: Promise<SchoolVerification> } | null = null;
 let generation = 0;
 
+async function verifySchoolSms(challenge: string, maskedPhone: string): Promise<SchoolVerification> {
+  let errorMessage = "";
+  while (true) {
+    const code = await requestSchoolSms(maskedPhone, errorMessage);
+    try {
+      const result = await http.post("/user/webvpn_verify_sms", { challenge, code });
+      return result.data as SchoolVerification;
+    } catch (error: any) {
+      errorMessage = error?.response?.data?.msg || "短信验证失败，请重试";
+      if (errorMessage !== "短信验证码错误或已失效") throw error;
+    }
+  }
+}
+
+function storeVerification(username: string, data: SchoolVerification, expectedGeneration: number): SchoolVerification {
+  if (!data.webvpn_cookie) throw new Error("学校认证未返回有效会话");
+  if (!data.token || !data.code) throw new Error("统一身份认证返回的注册信息不完整");
+  if (expectedGeneration !== generation) throw new Error("学校会话已变化，请重新认证");
+  generation++;
+  schoolSession.sid = username;
+  schoolSession.cookie = data.webvpn_cookie;
+  writeSchoolCache("session", { sid: username, cookie: data.webvpn_cookie });
+  return data;
+}
+
 export async function verifySchool(sid: string, password: string): Promise<SchoolVerification> {
   const username = sid.trim();
   if (!username) throw new Error("请输入学号");
@@ -40,24 +66,23 @@ export async function verifySchool(sid: string, password: string): Promise<Schoo
     try {
       const init = await http.post("/user/webvpn_verify_init", { sid: username });
       const { salt, execution, cookie } = init.data;
-      const result = await http.post("/user/webvpn_verify", {
-        sid: username,
-        salt,
-        execution,
-        cookie,
-        fingerprint: init.data.fingerprint,
-        password: encryptPassword(password, salt),
-        captcha: encryptPassword("{}", salt),
-      });
-      if (!result.data.webvpn_cookie) throw new Error("学校认证未返回有效会话");
-      if (!result.data.token || !result.data.code) throw new Error("统一身份认证返回的注册信息不完整");
-      if (expectedGeneration !== generation) throw new Error("学校会话已变化，请重新认证");
-
-      generation++;
-      schoolSession.sid = username;
-      schoolSession.cookie = result.data.webvpn_cookie;
-      writeSchoolCache("session", { sid: username, cookie: result.data.webvpn_cookie });
-      return result.data as SchoolVerification;
+      try {
+        const result = await http.post("/user/webvpn_verify", {
+          sid: username,
+          salt,
+          execution,
+          cookie,
+          fingerprint: init.data.fingerprint,
+          password: encryptPassword(password, salt),
+          captcha: encryptPassword("{}", salt),
+        });
+        return storeVerification(username, result.data, expectedGeneration);
+      } catch (error: any) {
+        const challenge = error?.response?.data?.challenge;
+        if (error?.response?.status !== 409 || !challenge) throw error;
+        const verified = await verifySchoolSms(challenge, error.response.data.masked_phone || "绑定手机");
+        return storeVerification(username, verified, expectedGeneration);
+      }
     } finally {
       schoolSession.loading = false;
     }
@@ -132,6 +157,7 @@ export async function withSchoolSession<T>(
 }
 
 export function clearSchoolCookie() {
+  cancelSchoolSms();
   generation++;
   schoolSession.sid = "";
   schoolSession.cookie = "";
@@ -140,6 +166,7 @@ export function clearSchoolCookie() {
 
 window.addEventListener("storage", (event) => {
   if (event.key !== schoolSessionKey) return;
+  cancelSchoolSms();
   generation++;
   const current = readSchoolCache<StoredSchoolSession>("session")?.data;
   schoolSession.sid = current?.sid || "";

@@ -2,27 +2,27 @@
 import { computed } from "vue";
 import ShieldOutlined from "@vicons/material/ShieldOutlined";
 import {
-  bitLoginState,
-  cancelBitLoginSms,
-  submitBitLoginSms,
-} from "@/utils/bit-login";
+  schoolSmsState,
+  cancelSchoolSms,
+  submitSchoolSms,
+} from "@/utils/school-sms";
 
 const smsCode = computed<string[]>({
-  get: () => bitLoginState.sms.code.split(""),
+  get: () => schoolSmsState.code.split(""),
   set: (value) => {
-    bitLoginState.sms.code = value.join("");
-    bitLoginState.sms.error = "";
+    schoolSmsState.code = value.join("");
+    schoolSmsState.error = "";
   },
 });
 
 function handleKeydown(event: KeyboardEvent): void {
-  if (event.key === "Enter") submitBitLoginSms();
+  if (event.key === "Enter") submitSchoolSms();
 }
 </script>
 
 <template>
   <n-modal
-    :show="bitLoginState.sms.show"
+    :show="schoolSmsState.show"
     :mask-closable="false"
     :close-on-esc="false"
     :auto-focus="true"
@@ -36,7 +36,7 @@ function handleKeydown(event: KeyboardEvent): void {
         </div>
         
         <div class="sms-phone">
-          验证码已发送至 <strong>{{ bitLoginState.sms.maskedPhone }}</strong>
+          验证码已发送至 <strong>{{ schoolSmsState.maskedPhone }}</strong>
         </div>
 
         <n-input-otp
@@ -45,12 +45,12 @@ function handleKeydown(event: KeyboardEvent): void {
           :length="6"
           size="large"
           :allow-input="(value: string) => !value || /^\d+$/.test(value)"
-          :status="bitLoginState.sms.error ? 'error' : undefined"
+          :status="schoolSmsState.error ? 'error' : undefined"
           @keydown="handleKeydown"
         />
         
-        <n-collapse-transition :show="Boolean(bitLoginState.sms.error)">
-          <div class="sms-error">{{ bitLoginState.sms.error }}</div>
+        <n-collapse-transition :show="Boolean(schoolSmsState.error)">
+          <div class="sms-error">{{ schoolSmsState.error }}</div>
         </n-collapse-transition>
 
         <n-p class="acknowledgement">您的登录凭证仅供当前会话使用，BIT101 承诺不会在服务端留存您的凭证信息。</n-p>
@@ -58,10 +58,10 @@ function handleKeydown(event: KeyboardEvent): void {
       </n-space>
 
       <n-space justify="end">
-        <n-button @click="cancelBitLoginSms">
+        <n-button @click="cancelSchoolSms">
           取消
         </n-button>
-        <n-button type="primary" :disabled="!bitLoginState.sms.code" @click="submitBitLoginSms">
+        <n-button type="primary" :disabled="!schoolSmsState.code" @click="submitSchoolSms">
           继续验证
         </n-button>
       </n-space>

@@ -35,6 +35,9 @@ http.interceptors.response.use(
     return res;
   },
   (err) => {
+    if (err.response?.status === 409 && err.response?.data?.challenge) {
+      return Promise.reject(err);
+    }
     if (err.request&&err.request.status == 500) {
       if (err.response.data.msg) window.$message.error(err.response.data.msg);
       else window.$message.error("出错了Orz");
