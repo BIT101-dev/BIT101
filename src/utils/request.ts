@@ -17,6 +17,10 @@ http.interceptors.request.use(
   (config: any) => {
     if (config.url[0] == '/') config.url = store.api_url + config.url;
     config.headers['fake-cookie'] = store.fake_cookie;
+    if (config.url.startsWith(store.api_url + '/')) {
+      config.headers['X-BIT101-Platform'] = 'web';
+      config.headers['X-BIT101-Version'] = store.version;
+    }
     return config;
   },
   (err) => {
